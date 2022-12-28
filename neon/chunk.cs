@@ -24,6 +24,7 @@ namespace neon
             HitMap = new LovelyChunk(1024);
 
             Objects.Add(new Hero(contentManager, 2f, 2f));
+            Objects.Add(new Spike(contentManager, 15f, 15f));
         }
 
         public void AddObject(MapObject mapObject)
