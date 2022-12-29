@@ -1,6 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace neon
 {
@@ -19,8 +26,20 @@ namespace neon
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
             IsMouseVisible = true;
-            Window.AllowUserResizing = true;
+            _graphics.ApplyChanges();
+
+            this.IsFixedTimeStep = true;
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
+            _graphics.ApplyChanges();
+
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+
+            _graphics.ApplyChanges();
+
+            _graphics.IsFullScreen = false;
 
             _graphics.ApplyChanges();
         }
@@ -67,9 +86,9 @@ namespace neon
 
             worldChunk.Draw(_spriteBatch);
 
-            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
+            var fps = _frameCounter.AverageFramesPerSecond.ToString();
 
-            _spriteBatch.DrawString(mainFont, fps, new Vector2(1, 1), Color.White);
+            _spriteBatch.DrawString(mainFont, fps, new Vector2(1920 - mainFont.MeasureString(fps).X, 1), Color.White);
 
             _spriteBatch.End();
             
