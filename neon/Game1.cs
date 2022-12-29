@@ -12,6 +12,8 @@ namespace neon
         private SpriteBatch _spriteBatch;
         private Texture2D texture;
         private WorldChunk worldChunk;
+        private FrameCounter _frameCounter = new FrameCounter();
+        private SpriteFont mainFont;
 
         public Game1()
         {
@@ -38,6 +40,7 @@ namespace neon
 
             texture = Content.Load<Texture2D>("pxl");
             NoTexture = Content.Load<Texture2D>("no_texture");
+            mainFont = Content.Load<SpriteFont>("File");
             // TODO: use this.Content to load your game content here
         }
 
@@ -54,11 +57,19 @@ namespace neon
 
         protected override void Draw(GameTime gameTime)
         {
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            _frameCounter.Update(deltaTime);
+
             GraphicsDevice.Clear(new Color(5, 5, 6));
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
             worldChunk.Draw(_spriteBatch);
+
+            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
+
+            _spriteBatch.DrawString(mainFont, fps, new Vector2(1, 1), Color.White);
 
             _spriteBatch.End();
             

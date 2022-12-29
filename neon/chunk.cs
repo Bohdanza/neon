@@ -13,18 +13,22 @@ namespace neon
 {
     public class WorldChunk
     {
-        public const int UnitSize = 15;
+        public const int UnitSize = 5;
 
         public List<MapObject> Objects { get; private set; }
         public LovelyChunk HitMap { get; protected set; }
 
+        private Texture2D pxl;
+
         public WorldChunk(ContentManager contentManager)
         {
             Objects = new List<MapObject>();
-            HitMap = new LovelyChunk(1024);
+            HitMap = new LovelyChunk(4096);
 
             Objects.Add(new Hero(contentManager, 2f, 2f));
             Objects.Add(new Spike(contentManager, 15f, 15f));
+
+            pxl = contentManager.Load<Texture2D>("pxl");
         }
 
         public void AddObject(MapObject mapObject)
@@ -45,8 +49,20 @@ namespace neon
             for(int i=0; i<Objects.Count; i++)
             {
                 Objects[i].Draw(spriteBatch, (int)(Objects[i].Position.X * UnitSize), (int)(Objects[i].Position.Y * UnitSize),
-                    Color.White, 0f);
+                    Color.White, 1f);
             }
+
+            for(int i=0; i<200; i++)
+                for (int j = 0; j < 200; j++)
+                {
+                    var vl = HitMap.GetValue(i, j);
+
+                    if(vl.Count>0)
+                    {
+                        spriteBatch.Draw(pxl, new Vector2(i * UnitSize, j * UnitSize), null, Color.Green, 0f, new Vector2(0, 0),
+                            UnitSize, SpriteEffects.None, 0f);
+                    }
+                }
         }
     }
 }

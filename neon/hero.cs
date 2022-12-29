@@ -14,7 +14,7 @@ namespace neon
     public class Hero:MapObject
     {
         public Hero(ContentManager contentManager, float x, float y) : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            3f, new List<Tuple<int, int>> { new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0), new Tuple<int, int>(-1, 0) },
+            3f, new List<Tuple<int, int>> { new Tuple<int, int>(0, 0) },
             "hero", 0)
         {
 
@@ -25,16 +25,16 @@ namespace neon
             var ks = Keyboard.GetState();
 
             if (ks.IsKeyDown(Keys.W))
-                ChangeMovement(0, -0.3f);
+                ChangeMovement(0, -0.2f);
 
             if (ks.IsKeyDown(Keys.S))
-                ChangeMovement(0, 0.3f);
+                ChangeMovement(0, 0.2f);
 
             if (ks.IsKeyDown(Keys.A))
-                ChangeMovement(-0.3f, 0);
+                ChangeMovement(-0.2f, 0);
 
             if (ks.IsKeyDown(Keys.D))
-                ChangeMovement(0.3f, 0);
+                ChangeMovement(0.2f, 0);
 
             base.Update(contentManager, worldChunk);
         }

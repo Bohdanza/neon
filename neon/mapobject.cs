@@ -45,11 +45,18 @@ namespace neon
 
             EraseHitbox(worldChunk);
 
-            Position = new Vector2(Position.X + Movement.X, Position.Y + Movement.Y);
+            Position = new Vector2(Position.X + Movement.X, Position.Y);
         
             if(!HitboxClear(worldChunk))
             {
-                Position = new Vector2(Position.X - Movement.X, Position.Y - Movement.Y);
+                Position = new Vector2(Position.X - Movement.X, Position.Y);
+            }
+
+            Position = new Vector2(Position.X, Position.Y+Movement.Y);
+
+            if (!HitboxClear(worldChunk))
+            {
+                Position = new Vector2(Position.X, Position.Y-Movement.Y);
             }
 
             PutHitbox(worldChunk);

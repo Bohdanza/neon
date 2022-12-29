@@ -97,15 +97,12 @@ namespace neon
 
         public void RemoveObjectValue(int x, int y, MapObject value)
         {
-            if (children == null && Value.Contains(value))
+            if (children == null)
             {
-                Value.Remove(value);
+                if(Value.Contains(value))
+                    Value.Remove(value);
+                
                 return;
-            }
-
-            if (Size == 1)
-            {
-                Value.Remove(value);
             }
             else
             {
@@ -135,12 +132,6 @@ namespace neon
 
         public void AddObjectValue(int x, int y, MapObject value)
         {
-            if (children == null && !Value.Contains(value))
-            {
-                Value.Add(value);
-                return;
-            }
-
             if (Size == 1)
             {
                 if(!Value.Contains(value))
@@ -176,7 +167,7 @@ namespace neon
         {
             if (children == null)
             {
-                return Value;
+                return new List<MapObject>(Value);
             }
             
             if (x >= Size / 2 && y >= Size / 2)
