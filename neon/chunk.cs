@@ -13,7 +13,7 @@ namespace neon
 {
     public class WorldChunk
     {
-        public const int UnitSize = 17;
+        public const int UnitSize = 12;
 
         public List<MapObject> Objects { get; private set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -23,10 +23,16 @@ namespace neon
         public WorldChunk(ContentManager contentManager)
         {
             Objects = new List<MapObject>();
-            HitMap = new LovelyChunk(1024);
+            HitMap = new LovelyChunk(256);
 
-            Objects.Add(new Hero(contentManager, 2f, 2f));
-            Objects.Add(new Spike(contentManager, 15.5f, 15.5f));
+            Objects.Add(new Hero(contentManager, 2f, 2f, this));
+
+            var rnd = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                Objects.Add(new Spike(contentManager, rnd.Next(0, 100)+0.5f, rnd.Next(0, 100)+0.5f, this));
+            }
 
             pxl = contentManager.Load<Texture2D>("pxl");
         }

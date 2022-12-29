@@ -14,6 +14,10 @@ namespace neon
     public abstract class MapObject
     {
         //objects with different collision levels would ignore each other
+        /*CollisionLevel vocab
+         * 0-ground
+         * 1-sky
+         * 2-weapons, items*/
         public int CollsionLevel { get; private set; }
         protected List<Tuple<int, int>> Hitbox;
 
@@ -26,7 +30,7 @@ namespace neon
 
         public MapObject(ContentManager contentManager, 
             Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox, 
-            string textureName, int collisionLevel)
+            string textureName, int collisionLevel, WorldChunk worldChunk)
         {
             CollsionLevel = collisionLevel;
             
@@ -37,29 +41,40 @@ namespace neon
             Weight = weight;
 
             Texture = new DynamicTexture(contentManager, textureName);
+
+            PutHitbox(worldChunk);
         }
 
         public virtual void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
             Texture.Update(contentManager);
 
-            EraseHitbox(worldChunk);
+            Vector2 ppos = new Vector2(Position.X, Position.Y);
 
             Position = new Vector2(Position.X + Movement.X, Position.Y);
-        
-            if(!HitboxClear(worldChunk))
+
+            if ((int)ppos.X != (int)Position.X && !HitboxClear(worldChunk))
             {
                 Position = new Vector2(Position.X - Movement.X, Position.Y);
             }
 
             Position = new Vector2(Position.X, Position.Y+Movement.Y);
 
-            if (!HitboxClear(worldChunk))
+            if ((int)ppos.Y != (int)Position.Y && !HitboxClear(worldChunk))
             {
                 Position = new Vector2(Position.X, Position.Y-Movement.Y);
             }
 
-            PutHitbox(worldChunk);
+            if ((int)ppos.X != (int)Position.X || (int)ppos.Y != (int)Position.Y)
+            {
+                Vector2 npos = new Vector2(Position.X, Position.Y);
+
+                Position = new Vector2(ppos.X, ppos.Y);
+                EraseHitbox(worldChunk);
+
+                Position = new Vector2(npos.X, npos.Y);
+                PutHitbox(worldChunk);
+            }
 
             ChangeMovement(-Movement.X, -Movement.Y);
         }
