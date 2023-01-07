@@ -13,6 +13,8 @@ namespace neon
 {   
     public abstract class MapObject
     {
+        public bool Alive { get; protected set; } = true;
+
         //objects with different collision levels would ignore each other
         /*CollisionLevel vocab
          * 0-ground
@@ -26,7 +28,7 @@ namespace neon
         public Vector2 Position { get; protected set; }
         public Vector2 Movement { get; protected set; }
         
-        public DynamicTexture Texture { get; private set; }
+        public DynamicTexture Texture { get; protected set; }
 
         public MapObject(ContentManager contentManager, 
             Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox, 
@@ -59,7 +61,7 @@ namespace neon
             }
 
             Position = new Vector2(Position.X, Position.Y+Movement.Y);
-
+            
             if ((int)ppos.Y != (int)Position.Y && !HitboxClear(worldChunk))
             {
                 Position = new Vector2(Position.X, Position.Y-Movement.Y);
@@ -70,7 +72,7 @@ namespace neon
                 Vector2 npos = new Vector2(Position.X, Position.Y);
 
                 Position = new Vector2(ppos.X, ppos.Y);
-                EraseHitbox(worldChunk);
+                EraseHitbox(worldChunk); 
 
                 Position = new Vector2(npos.X, npos.Y);
                 PutHitbox(worldChunk);

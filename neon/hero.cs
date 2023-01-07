@@ -38,6 +38,12 @@ namespace neon
             if (ks.IsKeyDown(Keys.D))
                 ChangeMovement(0.2f, 0);
 
+            if(ks.IsKeyDown(Keys.C))
+            {
+                worldChunk.Objects.Add(new RevolverBullet(contentManager, new Vector2(Position.X + 1, Position.Y),
+                    new Vector2(0.5f, 0), worldChunk));
+            }
+
             base.Update(contentManager, worldChunk);
         }
     }

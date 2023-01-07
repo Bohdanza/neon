@@ -47,6 +47,7 @@ namespace neon
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Console.WriteLine();
 
             worldChunk = new WorldChunk(Content);
 
