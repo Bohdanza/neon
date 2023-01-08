@@ -38,10 +38,20 @@ namespace neon
             if (ks.IsKeyDown(Keys.D))
                 ChangeMovement(0.2f, 0);
 
-            if(ks.IsKeyDown(Keys.C))
+            var ms = Mouse.GetState();
+
+            if (ms.LeftButton==ButtonState.Pressed)
             {
-                worldChunk.Objects.Add(new RevolverBullet(contentManager, new Vector2(Position.X + 1, Position.Y),
-                    new Vector2(0.5f, 0), worldChunk));
+                Vector2 screen = worldChunk.GetScreenPosition(this);
+
+                float dir = Game1.GetDirection(screen, new Vector2(ms.X, ms.Y));
+                dir += (float)Math.PI;
+
+                float spd = 0.5f;
+
+                worldChunk.Objects.Add(new RevolverBullet(contentManager,
+                    new Vector2(Position.X + (float)Math.Cos(dir)*5f, Position.Y + (float)Math.Sin(dir)*5f),
+                    new Vector2((float)Math.Cos(dir) * spd, (float)Math.Sin(dir) * spd), worldChunk));
             }
 
             base.Update(contentManager, worldChunk);

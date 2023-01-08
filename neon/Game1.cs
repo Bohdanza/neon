@@ -95,5 +95,15 @@ namespace neon
             
             base.Draw(gameTime);
         }
+
+        public static float GetDistance(Vector2 v1, Vector2 v2)
+        {
+            return (float)Math.Sqrt((v1.X - v2.X) * (v1.X - v2.X) + (v1.Y - v2.Y) * (v1.Y - v2.Y));
+        }
+
+        public static float GetDirection(Vector2 v1, Vector2 v2)
+        {
+            return (float)Math.Atan2(v1.Y - v2.Y, v1.X - v2.X);
+        }
     }
 }

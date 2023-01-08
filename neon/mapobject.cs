@@ -29,6 +29,7 @@ namespace neon
         public Vector2 Movement { get; protected set; }
         
         public DynamicTexture Texture { get; protected set; }
+        private bool HitboxPut = false;
 
         public MapObject(ContentManager contentManager, 
             Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox, 
@@ -43,12 +44,16 @@ namespace neon
             Weight = weight;
 
             Texture = new DynamicTexture(contentManager, textureName);
-
-            PutHitbox(worldChunk);
         }
 
         public virtual void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
+            if(!HitboxPut)
+            {
+                PutHitbox(worldChunk);
+                HitboxPut = true;
+            }
+
             Texture.Update(contentManager);
 
             Vector2 ppos = new Vector2(Position.X, Position.Y);

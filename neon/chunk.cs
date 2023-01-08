@@ -13,12 +13,16 @@ namespace neon
 {
     public class WorldChunk
     {
+        public int ScreenX { get; protected set; } = 0;
+        public int ScreenY { get; protected set; } = 0;
+
         public const int UnitSize = 12;
 
         public List<MapObject> Objects { get; private set; }
         public LovelyChunk HitMap { get; protected set; }
 
         private Texture2D pxl;
+        private MapObject hero;
 
         public WorldChunk(ContentManager contentManager)
         {
@@ -26,6 +30,7 @@ namespace neon
             HitMap = new LovelyChunk(1024);
 
             Objects.Add(new Hero(contentManager, 2f, 2f, this));
+            hero = Objects[0];
 
             var rnd = new Random();
 
@@ -45,8 +50,11 @@ namespace neon
 
         public void Update(ContentManager contentManager)
         {
-            int l = 1;
+            ScreenX -= ((int)(hero.Position.X * UnitSize)+ScreenX-960) / 32;
+            ScreenY -= ((int)(hero.Position.Y * UnitSize)+ScreenY-540) / 18;
 
+            int l = 1;
+            
             for(int i=0; i<Objects.Count; i+=l)
             {
                 l = 1;
@@ -65,7 +73,7 @@ namespace neon
         {
             for(int i=0; i<Objects.Count; i++)
             {
-                Objects[i].Draw(spriteBatch, (int)(Objects[i].Position.X * UnitSize), (int)(Objects[i].Position.Y * UnitSize),
+                Objects[i].Draw(spriteBatch, ScreenX+(int)(Objects[i].Position.X * UnitSize), ScreenY+(int)(Objects[i].Position.Y * UnitSize),
                     Color.White, 1f);
             }
 
@@ -80,6 +88,11 @@ namespace neon
                             UnitSize, SpriteEffects.None, 0f);
                     }
                 }*/
+        }
+
+        public Vector2 GetScreenPosition(MapObject mapObject)
+        {
+            return new Vector2(mapObject.Position.X * UnitSize + ScreenX, mapObject.Position.Y*UnitSize + ScreenY);
         }
     }
 }
