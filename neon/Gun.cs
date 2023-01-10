@@ -44,9 +44,14 @@ namespace neon
         {
             Texture2D whatToDraw = Texture.GetCurrentFrame();
 
-            spriteBatch.Draw(whatToDraw, new Vector2(x, y-whatToDraw.Height/2), null, color, 
-                Rotation,
-                new Vector2(whatToDraw.Width/2, whatToDraw.Height/2), 1f, SpriteEffects.None, depth);
+            if (Rotation >= Math.PI*1.5 || Rotation < Math.PI / 2)
+                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2), null, color,
+                    Rotation,
+                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.None, depth);
+            else
+                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2), null, color,
+                    Rotation,
+                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.FlipVertically, depth);
         }
     }
 }
