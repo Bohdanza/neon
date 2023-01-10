@@ -74,7 +74,7 @@ namespace neon
             for(int i=0; i<Objects.Count; i++)
             {
                 Objects[i].Draw(spriteBatch, ScreenX+(int)(Objects[i].Position.X * UnitSize), ScreenY+(int)(Objects[i].Position.Y * UnitSize),
-                    Color.White, 1f);
+                    Color.White, 0.5f);
             }
 
             /*for (int i = 0; i < 200; i++)

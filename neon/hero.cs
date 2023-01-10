@@ -11,15 +11,18 @@ using System.Runtime.InteropServices;
 
 namespace neon
 {
-    public class Hero:MapObject
+    public class Hero:Mob
     {
+        protected Gun GunInHand=null;
+
         public Hero(ContentManager contentManager, float x, float y, WorldChunk worldChunk) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            3f, new List<Tuple<int, int>> { new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0), new Tuple<int, int>(-1, 0),
+            3f, 35,
+            new List<Tuple<int, int>> { new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0), new Tuple<int, int>(-1, 0),
             new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
-            "hero", 0, worldChunk)
+            "hero", worldChunk)
         {
-
+            GunInHand = new Colt(contentManager, new Vector2(x, y), new Vector2(0f, 0f), worldChunk);
         }
 
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
@@ -40,21 +43,36 @@ namespace neon
 
             var ms = Mouse.GetState();
 
-            if (ms.LeftButton==ButtonState.Pressed)
+            if (GunInHand != null)
             {
                 Vector2 screen = worldChunk.GetScreenPosition(this);
 
                 float dir = Game1.GetDirection(screen, new Vector2(ms.X, ms.Y));
                 dir += (float)Math.PI;
 
-                float spd = 0.5f;
+                GunInHand.UpdateInHand(contentManager);
+                GunInHand.Rotation = dir;
+                GunInHand.Position=Position;
 
-                worldChunk.Objects.Add(new RevolverBullet(contentManager,
-                    new Vector2(Position.X + (float)Math.Cos(dir)*5f, Position.Y + (float)Math.Sin(dir)*5f),
-                    new Vector2((float)Math.Cos(dir) * spd, (float)Math.Sin(dir) * spd), worldChunk));
+                if (ms.LeftButton == ButtonState.Pressed)
+                { 
+                    GunInHand.ShootInDirection(contentManager, dir, worldChunk);
+                }
             }
 
             base.Update(contentManager, worldChunk);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
+        {
+            base.Draw(spriteBatch, x, y, color, depth);
+
+            if (GunInHand != null)
+            {
+                Texture2D whatToDraw = Texture.GetCurrentFrame();
+
+                GunInHand.Draw(spriteBatch, x, y, color, 1f);
+            }
         }
     }
 }

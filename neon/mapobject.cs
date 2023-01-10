@@ -25,7 +25,7 @@ namespace neon
 
         public float Weight { get; protected set; }
         
-        public Vector2 Position { get; protected set; }
+        public Vector2 Position { get; set; }
         public Vector2 Movement { get; protected set; }
         
         public DynamicTexture Texture { get; protected set; }
