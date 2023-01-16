@@ -81,7 +81,7 @@ namespace neon
 
             _frameCounter.Update(deltaTime);
 
-            GraphicsDevice.Clear(new Color(178, 122, 26));
+            GraphicsDevice.Clear(new Color(178, 126, 66));
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 

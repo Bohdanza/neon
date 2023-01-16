@@ -13,10 +13,13 @@ namespace neon
 {
     public class WorldChunk
     {
+        public int CurrentChunkX { get; private set; }
+        public int CurrentChunkY { get; private set; }
+
         public int ScreenX { get; protected set; } = 0;
         public int ScreenY { get; protected set; } = 0;
 
-        public const int UnitSize = 12;
+        public const int UnitSize = 8;
 
         public List<MapObject> Objects { get; private set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -27,7 +30,7 @@ namespace neon
         public WorldChunk(ContentManager contentManager)
         {
             Objects = new List<MapObject>();
-            HitMap = new LovelyChunk(1024);
+            HitMap = new LovelyChunk(256);
 
             Objects.Add(new Hero(contentManager, 2f, 2f, this));
             hero = Objects[0];

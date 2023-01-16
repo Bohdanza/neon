@@ -36,7 +36,7 @@ namespace neon
         {
             if (Movement.X > 0)
                 Direction = 1;
-            else
+            else   
                 Direction = 0;
 
             base.Update(contentManager, worldChunk);
@@ -48,6 +48,11 @@ namespace neon
 
             pdir = Direction;
             pact = Action;
+        }
+
+        public virtual void Damage(int damage)
+        {
+
         }
     }
 }
