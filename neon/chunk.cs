@@ -31,14 +31,14 @@ namespace neon
         public WorldChunk(ContentManager contentManager)
         {
             sand = contentManager.Load<Texture2D>("sand");
+            
+            var rnd = new Random();
 
             Objects = new List<MapObject>();
-            HitMap = new LovelyChunk(256);
+            HitMap = new LovelyChunk((int)Math.Pow(2, 8));
 
             Objects.Add(new Hero(contentManager, HitMap.Size/2, HitMap.Size/2, this));
             hero = Objects[0];
-
-            var rnd = new Random();
 
             for (int i = 2; i < HitMap.Size; i+=4)
                 for (int j = 2; j < HitMap.Size; j += 4)
@@ -62,7 +62,7 @@ namespace neon
         {
             //  ScreenX -= ((int)(hero.Position.X * UnitSize)+ScreenX-960) / 32;
             //  ScreenY -= ((int)(hero.Position.Y * UnitSize)+ScreenY-540) / 18;
-
+            
             ScreenX = -(int)(hero.Position.X * UnitSize - 960);
             ScreenY = -(int)(hero.Position.Y * UnitSize - 540);
 

@@ -15,7 +15,7 @@ namespace neon
     {
         public Colt(ContentManager contentManager, Vector2 position, Vector2 movement, WorldChunk worldChunk):
             base(contentManager, position, movement, 5f, new List<Tuple<int, int>> { }, "colt", worldChunk, 
-                new List<int> { 30, 30, 30, 30, 30, 300})
+                new List<int> { 15, 15, 15, 15, 15, 300})
         { }
 
         public override void ShootInDirection(ContentManager contentManager, float Direction, WorldChunk worldChunk)

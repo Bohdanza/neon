@@ -15,6 +15,7 @@ namespace neon
     {
         protected Gun GunInHand=null;
         public float Speed { get; private set; } = 0.4f;
+        public float GunRotationSpeed { get; protected set; } = 0.1f;
 
         public Hero(ContentManager contentManager, float x, float y, WorldChunk worldChunk) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
@@ -48,11 +49,38 @@ namespace neon
             {
                 Vector2 screen = worldChunk.GetScreenPosition(this);
 
-                float dir = Game1.GetDirection(screen, new Vector2(ms.X, ms.Y));
-                dir += (float)Math.PI;
+                float dir = Game1.GetDirection(new Vector2(ms.X, ms.Y), screen);
+                dir += (float)Math.PI * 2;
+                dir %= (float)(Math.PI * 2);
 
                 GunInHand.UpdateInHand(contentManager);
-                GunInHand.Rotation = dir;
+
+                if (GunInHand.Rotation < 0f)
+                    GunInHand.Rotation += (float)Math.PI*2;
+                else
+                    GunInHand.Rotation %= (float)Math.PI*2;
+
+                if (dir != GunInHand.Rotation)
+                {
+                    if ((dir > GunInHand.Rotation
+                        && dir - GunInHand.Rotation < GunInHand.Rotation + Math.PI * 2 - dir) ||
+                        (dir < GunInHand.Rotation
+                        && dir + Math.PI * 2 - GunInHand.Rotation < GunInHand.Rotation - dir))
+                    {
+                        if (Math.Abs(dir - GunInHand.Rotation) > GunRotationSpeed)
+                            GunInHand.Rotation += GunRotationSpeed;
+                        else
+                            GunInHand.Rotation = dir;
+                    }
+                    else
+                    {
+                        if (Math.Abs(dir - GunInHand.Rotation) > GunRotationSpeed)
+                            GunInHand.Rotation -= GunRotationSpeed;
+                        else
+                            GunInHand.Rotation = dir;
+                    }
+                }
+
                 GunInHand.Position=Position;
 
                 if (ms.LeftButton == ButtonState.Pressed)
