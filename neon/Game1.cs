@@ -89,7 +89,8 @@ namespace neon
 
             var fps = _frameCounter.AverageFramesPerSecond.ToString();
 
-            _spriteBatch.DrawString(mainFont, fps, new Vector2(1920 - mainFont.MeasureString(fps).X, 1), Color.White);
+            _spriteBatch.DrawString(mainFont, fps, new Vector2(1920 - mainFont.MeasureString(fps).X, 1), Color.White, 0f, 
+                new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
 
             _spriteBatch.End();
             
@@ -99,6 +100,15 @@ namespace neon
         public static float GetDistance(Vector2 v1, Vector2 v2)
         {
             return (float)Math.Sqrt((v1.X - v2.X) * (v1.X - v2.X) + (v1.Y - v2.Y) * (v1.Y - v2.Y));
+        }
+
+        public static float GetDistance(float x1, float y1, float x2, float y2)
+        {
+            return (float)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+        }
+        public static float GetDistance(int x1, int y1, int x2, int y2)
+        {
+            return (float)Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         }
 
         public static float GetDirection(Vector2 v1, Vector2 v2)

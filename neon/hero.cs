@@ -14,10 +14,11 @@ namespace neon
     public class Hero:Mob
     {
         protected Gun GunInHand=null;
+        public float Speed { get; private set; } = 0.4f;
 
         public Hero(ContentManager contentManager, float x, float y, WorldChunk worldChunk) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            100f, 35,
+            3f, 35,
             new List<Tuple<int, int>> { new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0), new Tuple<int, int>(-1, 0),
             new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
             "hero", worldChunk)
@@ -30,16 +31,16 @@ namespace neon
             var ks = Keyboard.GetState();
 
             if (ks.IsKeyDown(Keys.W))
-                ChangeMovement(0, -0.2f);
+                ChangeMovement(0, -Speed);
 
             if (ks.IsKeyDown(Keys.S))
-                ChangeMovement(0, 0.2f);
+                ChangeMovement(0, Speed);
 
             if (ks.IsKeyDown(Keys.A))
-                ChangeMovement(-0.2f, 0);
+                ChangeMovement(-Speed, 0);
 
             if (ks.IsKeyDown(Keys.D))
-                ChangeMovement(0.2f, 0);
+                ChangeMovement(Speed, 0);
 
             var ms = Mouse.GetState();
 

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace neon
-{   
+{
     public abstract class MapObject
     {
         public bool Alive { get; protected set; } = true;
@@ -24,19 +24,19 @@ namespace neon
         protected List<Tuple<int, int>> Hitbox;
 
         public float Weight { get; protected set; }
-        
+
         public Vector2 Position { get; set; }
         public Vector2 Movement { get; protected set; }
-        
+
         public DynamicTexture Texture { get; protected set; }
         private bool HitboxPut = false;
 
-        public MapObject(ContentManager contentManager, 
-            Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox, 
+        public MapObject(ContentManager contentManager,
+            Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox,
             string textureName, int collisionLevel, WorldChunk worldChunk)
         {
             CollsionLevel = collisionLevel;
-            
+
             Position = position;
             Movement = movement;
 
@@ -48,7 +48,7 @@ namespace neon
 
         public virtual void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
-            if(!HitboxPut)
+            if (!HitboxPut)
             {
                 PutHitbox(worldChunk);
                 HitboxPut = true;
@@ -65,11 +65,11 @@ namespace neon
                 Position = new Vector2(Position.X - Movement.X, Position.Y);
             }
 
-            Position = new Vector2(Position.X, Position.Y+Movement.Y);
-            
+            Position = new Vector2(Position.X, Position.Y + Movement.Y);
+
             if ((int)ppos.Y != (int)Position.Y && !HitboxClear(worldChunk))
             {
-                Position = new Vector2(Position.X, Position.Y-Movement.Y);
+                Position = new Vector2(Position.X, Position.Y - Movement.Y);
             }
 
             if ((int)ppos.X != (int)Position.X || (int)ppos.Y != (int)Position.Y)
@@ -77,7 +77,7 @@ namespace neon
                 Vector2 npos = new Vector2(Position.X, Position.Y);
 
                 Position = new Vector2(ppos.X, ppos.Y);
-                EraseHitbox(worldChunk); 
+                EraseHitbox(worldChunk);
 
                 Position = new Vector2(npos.X, npos.Y);
                 PutHitbox(worldChunk);
@@ -90,7 +90,7 @@ namespace neon
         {
             Texture2D whatToDraw = Texture.GetCurrentFrame();
 
-            spriteBatch.Draw(whatToDraw, new Vector2(x - whatToDraw.Width / 2, y - whatToDraw.Height), null, color, 0f, 
+            spriteBatch.Draw(whatToDraw, new Vector2(x - whatToDraw.Width / 2, y - whatToDraw.Height), null, color, 0f,
                 new Vector2(0, 0), 1f, SpriteEffects.None, depth);
         }
 
@@ -118,7 +118,7 @@ namespace neon
 
             return true;
         }
-        
+
         protected void EraseHitbox(WorldChunk worldChunk)
         {
             LovelyChunk chunk = worldChunk.HitMap;
@@ -192,6 +192,14 @@ namespace neon
             }
 
             Movement = new Vector2(Movement.X + x, Movement.Y + y);
+        }
+
+        public int ComparePositionTo(MapObject mapObject)
+        {
+            if (Position.Y == mapObject.Position.Y)
+                return Position.X.CompareTo(mapObject.Position.X);
+
+            return Position.Y.CompareTo(mapObject.Position.Y);
         }
     }
 }
