@@ -39,7 +39,7 @@ namespace neon
 
             for (int i = 0; i < 100; i++)
             {
-                Objects.Add(new Spike(contentManager, rnd.Next(0, 2046)+0.5f, rnd.Next(0, 2046)+0.5f, this));
+                Objects.Add(new Spike(contentManager, rnd.Next(0, 254)+0.5f, rnd.Next(0, 254)+0.5f, this));
             }
 
             pxl = contentManager.Load<Texture2D>("pxl");
@@ -57,7 +57,7 @@ namespace neon
             ScreenY -= ((int)(hero.Position.Y * UnitSize)+ScreenY-540) / 18;
 
             int l = 1;
-            
+
             for(int i=0; i<Objects.Count; i+=l)
             {
                 l = 1;
@@ -70,14 +70,21 @@ namespace neon
                     l = 0;
                 }
             }
+
+            Objects.Sort((a, b) => a.Position.Y.CompareTo(b.Position.Y));
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for(int i=0; i<Objects.Count; i++)
+            float dpt = 0f;
+            float dptStep = 0.5f / Objects.Count;
+
+            for (int i=0; i<Objects.Count; i++)
             {
                 Objects[i].Draw(spriteBatch, ScreenX+(int)(Objects[i].Position.X * UnitSize), ScreenY+(int)(Objects[i].Position.Y * UnitSize),
-                    Color.White, 0.5f);
+                    Color.White, dpt);
+
+                dpt += dptStep;
             }
 
             /*for (int i = 0; i < 200; i++)
