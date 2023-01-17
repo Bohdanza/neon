@@ -56,6 +56,12 @@ namespace neon
             ScreenX -= ((int)(hero.Position.X * UnitSize)+ScreenX-960) / 32;
             ScreenY -= ((int)(hero.Position.Y * UnitSize)+ScreenY-540) / 18;
 
+            ScreenX = Math.Min(0, ScreenX);
+            ScreenY = Math.Min(0, ScreenY);
+
+            ScreenX = Math.Max(-HitMap.Size * UnitSize+1920, ScreenX);
+            ScreenY = Math.Max(-HitMap.Size * UnitSize+1080, ScreenY);
+
             int l = 1;
 
             for(int i=0; i<Objects.Count; i+=l)

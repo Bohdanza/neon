@@ -17,7 +17,7 @@ namespace neon
 
         public Hero(ContentManager contentManager, float x, float y, WorldChunk worldChunk) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            3f, 35,
+            100f, 35,
             new List<Tuple<int, int>> { new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0), new Tuple<int, int>(-1, 0),
             new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
             "hero", worldChunk)
