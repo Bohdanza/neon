@@ -15,11 +15,7 @@ namespace neon
     {
         public Tersol(ContentManager contentManager, Vector2 position, WorldChunk worldChunk):
             base(contentManager, position, 5f, 10, 
-                new List<Tuple<int, int>>()
-                {
-                    new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0),  new Tuple<int, int>(2, 0),
-                     new Tuple<int, int>(0, 0),
-                }, 
+                new HitboxFabricator().CreateHitbox(@"hitboxes\terasol.png"),
                 "tersol", worldChunk)
         { }
     }

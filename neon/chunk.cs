@@ -27,6 +27,7 @@ namespace neon
         private Texture2D pxl;
         private Texture2D sand;
         private MapObject hero;
+        private bool HitInspect = false;
 
         public WorldChunk(ContentManager contentManager)
         {
@@ -91,6 +92,16 @@ namespace neon
             }
 
             Objects.Sort((a, b) => a.ComparePositionTo(b));
+
+            var ks = Keyboard.GetState();
+
+            if (ks.IsKeyDown(Keys.F7))
+            {
+                if (HitInspect)
+                    HitInspect = false;
+                else
+                    HitInspect = true;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -113,17 +124,21 @@ namespace neon
                 dpt += dptStep;
             }
 
-            /*for (int i = 0; i < 200; i++)
-                for (int j = 0; j < 200; j++)
-                {
-                    var vl = HitMap.GetValue(i, j);
-
-                    if(vl.Count>0)
+            if (HitInspect)
+            {
+                for (int i = 0; i < HitMap.Size; i++)
+                    for (int j = 0; j < HitMap.Size; j++)
                     {
-                        spriteBatch.Draw(pxl, new Vector2(i * UnitSize, j * UnitSize), null, Color.Green, 0f, new Vector2(0, 0),
-                            UnitSize, SpriteEffects.None, 0f);
+                        var vl = HitMap.GetValue(i, j);
+
+                        if (vl.Count > 0)
+                        {
+                            spriteBatch.Draw(pxl, new Vector2(ScreenX + i * UnitSize, ScreenY+ j * UnitSize),
+                                null, Color.Green, 0f, new Vector2(0, 0),
+                                UnitSize*2, SpriteEffects.None, 0f);
+                        }
                     }
-                }*/
+            }
         }
 
         public Vector2 GetScreenPosition(MapObject mapObject)
