@@ -37,21 +37,46 @@ namespace neon
 
             Position = new Vector2(Position.X + Movement.X, Position.Y);
 
-            if (Alive && (int)ppos.X != (int)Position.X && !HitboxClear(worldChunk))
+            if (Alive && (int)ppos.X != (int)Position.X)
             {
-                Alive = false;
+                HashSet<MapObject> obst = HitboxObstructions(worldChunk);
+
+                if (obst.Count > 0)
+                {
+                    Alive = false;
+                    
+                    foreach(var co in obst)
+                        if(co is Mob)
+                        {
+                            ((Mob)co).Damage(Damage);
+                        }
+                }
             }
 
             Position = new Vector2(Position.X, Position.Y + Movement.Y);
 
-            if (Alive && (int)ppos.Y != (int)Position.Y && !HitboxClear(worldChunk))
+            if (Alive && (int)ppos.Y != (int)Position.Y)
             {
-                Alive = false;
+                HashSet<MapObject> obst = HitboxObstructions(worldChunk);
+
+                if (obst.Count > 0)
+                {
+                    Alive = false;
+
+                    foreach (var co in obst)
+                        if (co is Mob)
+                        {
+                            ((Mob)co).Damage(Damage);
+                        }
+                }
             }
 
             ChangeMovement(-Movement.X, -Movement.Y);
-            
+        }
 
+        public virtual Bullet Copy(ContentManager contentManager, WorldChunk worldChunk)
+        {
+            return null;
         }
     }
 }

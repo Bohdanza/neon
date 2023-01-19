@@ -16,6 +16,12 @@ namespace neon
         public RevolverBullet(ContentManager contentManager, Vector2 position, Vector2 movement, WorldChunk worldChunk) :
             base(contentManager, position, movement, 10000f, 35, new List<Tuple<int, int>> { new Tuple<int, int>(0, 0) },
                 "peacemaker", worldChunk, 1000)
-        { }        
+        { }
+
+        public override Bullet Copy(ContentManager contentManager, WorldChunk worldChunk)
+        {
+            return new RevolverBullet(contentManager, new Vector2(Position.X, Position.Y),
+                new Vector2(Movement.X, Movement.Y), worldChunk);
+        }
     }
 }

@@ -119,6 +119,30 @@ namespace neon
             return true;
         }
 
+        protected HashSet<MapObject> HitboxObstructions(WorldChunk worldChunk)
+        {
+            HashSet<MapObject> ans = new HashSet<MapObject>();
+
+            LovelyChunk chunk = worldChunk.HitMap;
+            int x1 = (int)Position.X, y1 = (int)Position.Y;
+
+            foreach (var currentHitPoint in Hitbox)
+            {
+                int x2 = x1 + currentHitPoint.Item1;
+                int y2 = y1 + currentHitPoint.Item2;
+
+                //if (x2 < 0 || y2 < 0 || x2 >= chunk.Size || y2 >= chunk.Size) 
+
+                List<MapObject> mpo = chunk.GetValue(x2, y2);
+
+                for (int i = 0; i < mpo.Count; i++)
+                    if (mpo[i] != this && mpo[i].CollsionLevel == CollsionLevel)
+                        ans.Add(mpo[i]);
+            }
+
+            return ans;
+        }
+
         protected void EraseHitbox(WorldChunk worldChunk)
         {
             LovelyChunk chunk = worldChunk.HitMap;

@@ -11,15 +11,15 @@ using System.Runtime.InteropServices;
 
 namespace neon
 {
-    public abstract class Gun:MapObject
+    public abstract class Gun : MapObject
     {
         public float Rotation { get; set; }
         public int TimeTillShot { get; protected set; }
-        public List<int> ShootingPauses { get; protected set; } 
+        public List<int> ShootingPauses { get; protected set; }
         protected int CurrentPause { get; private set; }
 
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
-            List<Tuple<int, int>> hitbox, string textureName, WorldChunk worldChunk, List<int> shootingPauses):
+            List<Tuple<int, int>> hitbox, string textureName, WorldChunk worldChunk, List<int> shootingPauses) :
             base(contentManager, position, movement, weight, hitbox, textureName, 0, worldChunk)
         {
             ShootingPauses = shootingPauses;
@@ -44,7 +44,7 @@ namespace neon
         {
             Texture2D whatToDraw = Texture.GetCurrentFrame();
 
-            if (Rotation >= Math.PI*1.5 || Rotation < Math.PI / 2)
+            if (Rotation >= Math.PI * 1.5 || Rotation < Math.PI / 2)
                 spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2), null, color,
                     Rotation,
                     new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.None, depth);

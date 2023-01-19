@@ -20,7 +20,7 @@ namespace neon
         [JsonProperty]
         public string BaseName { get; protected set; }
 
-        protected List<Texture2D> Textures { get; set; }
+        public List<Texture2D> Textures { get; protected set; }
         public int CurrentTexture { get; protected set; }
 
         public DynamicTexture(ContentManager contentManager, string name)

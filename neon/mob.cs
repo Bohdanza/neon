@@ -34,25 +34,37 @@ namespace neon
 
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
-            if (Movement.X > 0)
-                Direction = 1;
-            else   
-                Direction = 0;
-
-            base.Update(contentManager, worldChunk);
-            
-            if(Action!=pact||pdir!=Direction)
+            if (Action != pact || pdir != Direction)
             {
                 Texture = new DynamicTexture(contentManager, TextureName + "_" + Action + "_" + Direction.ToString() + "_");
             }
 
             pdir = Direction;
             pact = Action;
+
+            if (Action == "die" && Texture.CurrentTexture >= Texture.Textures.Count - 1)
+                return;
+
+            if (Movement.X > 0)
+                Direction = 1;
+            else
+                Direction = 0;
+
+            base.Update(contentManager, worldChunk);
         }
 
         public virtual void Damage(int damage)
         {
+            HP -= damage;
 
+            if (HP <= 0)
+            {
+                Action = "die";
+                return;
+            }
+
+            if (damage > 0)
+                Action = "dam";
         }
     }
 }

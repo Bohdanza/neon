@@ -100,7 +100,7 @@ namespace neon
             {
                 Texture2D whatToDraw = Texture.GetCurrentFrame();
 
-                GunInHand.Draw(spriteBatch, x, y, color, depth+0.001f);
+                GunInHand.Draw(spriteBatch, x, y, color, depth+0.000001f);
             }
         }
     }

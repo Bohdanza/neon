@@ -35,10 +35,13 @@ namespace neon
             var rnd = new Random();
 
             Objects = new List<MapObject>();
-            HitMap = new LovelyChunk((int)Math.Pow(2, 8));
+            HitMap = new LovelyChunk(256);
 
             Objects.Add(new Hero(contentManager, HitMap.Size/2, HitMap.Size/2, this));
             hero = Objects[0];
+
+            Objects.Add(new Tersol(contentManager, new Vector2(HitMap.Size / 2 + 10, HitMap.Size / 2),
+                this));
 
             for (int i = 2; i < HitMap.Size; i+=4)
                 for (int j = 2; j < HitMap.Size; j += 4)
