@@ -115,5 +115,10 @@ namespace neon
         {
             return (float)Math.Atan2(v1.Y - v2.Y, v1.X - v2.X);
         }
+
+        public static Vector2 DirectionToVector(float direction)
+        {
+            return new Vector2((float)Math.Cos(direction), (float)Math.Sin(direction));
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace neon
 
         private Texture2D pxl;
         private Texture2D sand;
-        private MapObject hero;
+        public MapObject Hero { get; protected set; }
         private bool HitInspect = false;
 
         public WorldChunk(ContentManager contentManager)
@@ -39,7 +39,7 @@ namespace neon
             HitMap = new LovelyChunk(256);
 
             Objects.Add(new Hero(contentManager, HitMap.Size/2, HitMap.Size/2, this));
-            hero = Objects[0];
+            Hero = Objects[0];
 
             Objects.Add(new Tersol(contentManager, new Vector2(HitMap.Size / 2 + 10, HitMap.Size / 2),
                 this));
@@ -64,11 +64,11 @@ namespace neon
 
         public void Update(ContentManager contentManager)
         {
-            //  ScreenX -= ((int)(hero.Position.X * UnitSize)+ScreenX-960) / 32;
-            //  ScreenY -= ((int)(hero.Position.Y * UnitSize)+ScreenY-540) / 18;
+            //  ScreenX -= ((int)(Hero.Position.X * UnitSize)+ScreenX-960) / 32;
+            //  ScreenY -= ((int)(Hero.Position.Y * UnitSize)+ScreenY-540) / 18;
             
-            ScreenX = -(int)(hero.Position.X * UnitSize - 960);
-            ScreenY = -(int)(hero.Position.Y * UnitSize - 540);
+            ScreenX = -(int)(Hero.Position.X * UnitSize - 960);
+            ScreenY = -(int)(Hero.Position.Y * UnitSize - 540);
 
             ScreenX = Math.Min(0, ScreenX);
             ScreenY = Math.Min(0, ScreenY);
