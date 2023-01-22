@@ -26,19 +26,8 @@ namespace neon
             float dst = Game1.GetDistance(worldChunk.Hero.Position.X, worldChunk.Hero.Position.Y,
                 Position.X, Position.Y);
 
-            if(dst<ComfortMin||dst>ComfortMax)
-            {
-                float dir = Game1.GetDirection(Position, worldChunk.Hero.Position);
-
-                if (dst > ComfortMax)
-                    dir += (float)Math.PI;
-
-                ChangeMovement(Game1.DirectionToVector(dir));
-            }
-            else
-            {
                 var rnd = new Random();
-
+                
                 float dir = Game1.GetDirection(Movement, new Vector2(0, 0));
 
                 if (dir < 0)
@@ -47,10 +36,9 @@ namespace neon
                 if (dir > Math.PI)
                     dir -= (float)Math.PI;
 
-                dir += (float)(rnd.NextDouble() * Math.PI * 2 / 5)-(float)(Math.PI/5);
+                dir += (float)((rnd.NextDouble()-0.5) * Math.PI * 2);
 
                 ChangeMovement(Game1.DirectionToVector(dir));
-            }
 
             base.Update(contentManager, worldChunk);
         }

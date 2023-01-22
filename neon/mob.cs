@@ -14,7 +14,7 @@ namespace neon
     public abstract class Mob:MapObject
     {
         public int HP { get; protected set; }
-        public string Action { get; private set; }
+        public string Action { get; protected set; }
         public int Direction { get; private set; } = 0;
 
         private int pdir = 1;

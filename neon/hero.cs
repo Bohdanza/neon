@@ -24,7 +24,8 @@ namespace neon
             new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
             "hero", worldChunk)
         {
-            GunInHand = new Colt(contentManager, new Vector2(x, y), new Vector2(0f, 0f), worldChunk);
+           // GunInHand = new Colt(contentManager, new Vector2(x, y), new Vector2(0f, 0f), worldChunk);
+            Action = "wa";
         }
 
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
@@ -88,6 +89,11 @@ namespace neon
                     GunInHand.ShootInDirection(contentManager, dir, worldChunk);
                 }
             }
+
+            if (Math.Abs(Movement.X) > 0.001 || Math.Abs(Movement.Y) > 0.001)
+                Action = "wa";
+            else
+                Action = "id";
 
             base.Update(contentManager, worldChunk);
         }
