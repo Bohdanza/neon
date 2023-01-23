@@ -13,7 +13,7 @@ namespace neon
 {
     public class Hero:Mob
     {
-        protected Gun GunInHand=null;
+        public Gun GunInHand { get; protected set; } = null;
         public float Speed { get; private set; } = 0.4f;
         public float GunRotationSpeed { get; protected set; } = 0.1f;
 

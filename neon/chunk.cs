@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace neon
 {
@@ -29,19 +30,53 @@ namespace neon
         public MapObject Hero { get; protected set; }
         private bool HitInspect = false;
 
-        public WorldChunk(ContentManager contentManager, int currentChunkX, int currentChunkY)
+        public WorldChunk(ContentManager contentManager, int currentChunkX, int currentChunkY, Hero hero)
         {
             CurrentChunkX = currentChunkX;
             CurrentChunkY = currentChunkY;
 
             sand = contentManager.Load<Texture2D>("sand");
-            
-            var rnd = new Random();
+            pxl = contentManager.Load<Texture2D>("pxl");
 
             Objects = new List<MapObject>();
             HitMap = new LovelyChunk(256);
 
-            Objects.Add(new Hero(contentManager, HitMap.Size/2, HitMap.Size/2, this));
+            Generate(contentManager, null);
+        }
+
+        public void Save(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            using (StreamWriter sw = new StreamWriter(path + CurrentChunkX.ToString() + "_" + CurrentChunkY))
+            {
+                var jsonSerializerSettings = new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                };
+
+                for (int i = 0; i < Objects.Count; i++)
+                {
+                    sw.WriteLine(JsonConvert.SerializeObject(Objects[i], jsonSerializerSettings));
+                }
+            }
+        }
+
+        public void Load(ContentManager contentManager, Hero hero)
+        {
+            
+        }
+
+        public void Generate(ContentManager contentManager, Hero hero)
+        {
+            var rnd = new Random();
+
+            if (hero == null)
+                Objects.Add(new Hero(contentManager, HitMap.Size / 2, HitMap.Size / 2, this));
+            else
+                Objects.Add(hero);
+
             Hero = Objects[0];
 
             if (CurrentChunkX == 0 && CurrentChunkY == 0)
@@ -50,16 +85,14 @@ namespace neon
             Objects.Add(new Tersol(contentManager, new Vector2(HitMap.Size / 2 + 10, HitMap.Size / 2),
                 this));
 
-            for (int i = 2; i < HitMap.Size; i+=4)
+            for (int i = 2; i < HitMap.Size; i += 4)
                 for (int j = 2; j < HitMap.Size; j += 4)
                 {
-                    if (Game1.GetDistance(HitMap.Size / 2, HitMap.Size / 2, i, j) >= 
-                        rnd.Next(HitMap.Size/2 - HitMap.Size/10, HitMap.Size/2-2))
-                            Objects.Add(new Spike(contentManager, i + (float)(rnd.NextDouble() * 2f)-1f,
-                            j + (float)(rnd.NextDouble() * 2f) - 1f, this));
+                    if (Game1.GetDistance(HitMap.Size / 2, HitMap.Size / 2, i, j) >=
+                        rnd.Next(HitMap.Size / 2 - HitMap.Size / 10, HitMap.Size / 2 - 2))
+                        Objects.Add(new Spike(contentManager, i + (float)(rnd.NextDouble() * 2f) - 1f,
+                        j + (float)(rnd.NextDouble() * 2f) - 1f, this));
                 }
-
-            pxl = contentManager.Load<Texture2D>("pxl");
         }
 
         public void AddObject(MapObject mapObject)

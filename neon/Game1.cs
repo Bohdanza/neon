@@ -49,7 +49,7 @@ namespace neon
             // TODO: Add your initialization logic here
             Console.WriteLine();
 
-            worldChunk = new WorldChunk(Content, 0, 0);
+            worldChunk = new WorldChunk(Content, 0, 0, null);
 
             base.Initialize();
         }
@@ -67,7 +67,11 @@ namespace neon
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                worldChunk.Save(@"chunks\");
+                
                 Exit();
+            }
 
             // TODO: Add your update logic here
             worldChunk.Update(Content);

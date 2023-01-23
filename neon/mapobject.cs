@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace neon
 {
@@ -28,7 +29,9 @@ namespace neon
         public Vector2 Position { get; set; }
         public Vector2 Movement { get; protected set; }
 
+        [JsonIgnore]
         public DynamicTexture Texture { get; protected set; }
+        [JsonIgnore]
         private bool HitboxPut = false;
 
         public MapObject(ContentManager contentManager,
