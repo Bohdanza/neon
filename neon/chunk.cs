@@ -16,8 +16,8 @@ namespace neon
         public int CurrentChunkX { get; private set; }
         public int CurrentChunkY { get; private set; }
 
-        public int ScreenX { get; protected set; } = 0;
-        public int ScreenY { get; protected set; } = 0;
+        public int ScreenX { get;  set; } = 0;
+        public int ScreenY { get;  set; } = 0;
 
         public const int UnitSize = 8;
 
@@ -29,8 +29,11 @@ namespace neon
         public MapObject Hero { get; protected set; }
         private bool HitInspect = false;
 
-        public WorldChunk(ContentManager contentManager)
+        public WorldChunk(ContentManager contentManager, int currentChunkX, int currentChunkY)
         {
+            CurrentChunkX = currentChunkX;
+            CurrentChunkY = currentChunkY;
+
             sand = contentManager.Load<Texture2D>("sand");
             
             var rnd = new Random();
@@ -40,6 +43,9 @@ namespace neon
 
             Objects.Add(new Hero(contentManager, HitMap.Size/2, HitMap.Size/2, this));
             Hero = Objects[0];
+
+            if (CurrentChunkX == 0 && CurrentChunkY == 0)
+                Objects.Add(new Idol(contentManager, HitMap.Size / 2, 60f, this));
 
             Objects.Add(new Tersol(contentManager, new Vector2(HitMap.Size / 2 + 10, HitMap.Size / 2),
                 this));
@@ -64,11 +70,11 @@ namespace neon
 
         public void Update(ContentManager contentManager)
         {
-            //  ScreenX -= ((int)(Hero.Position.X * UnitSize)+ScreenX-960) / 32;
-            //  ScreenY -= ((int)(Hero.Position.Y * UnitSize)+ScreenY-540) / 18;
+            ScreenX -= ((int)(Hero.Position.X * UnitSize)+ScreenX-960) / 16;
+            ScreenY -= ((int)(Hero.Position.Y * UnitSize)+ScreenY-540) / 16;
             
-            ScreenX = -(int)(Hero.Position.X * UnitSize - 960);
-            ScreenY = -(int)(Hero.Position.Y * UnitSize - 540);
+            //ScreenX = -(int)(Hero.Position.X * UnitSize - 960);
+            //ScreenY = -(int)(Hero.Position.Y * UnitSize - 540);
 
             ScreenX = Math.Min(0, ScreenX);
             ScreenY = Math.Min(0, ScreenY);
@@ -126,8 +132,8 @@ namespace neon
 
             if (HitInspect)
             {
-                for (int i = 0; i < HitMap.Size; i++)
-                    for (int j = 0; j < HitMap.Size; j++)
+                for (int i = 0; i < HitMap.Size*2; i++)
+                    for (int j = 0; j < HitMap.Size*2; j++)
                     {
                         var vl = HitMap.GetValue(i, j);
 
@@ -135,7 +141,7 @@ namespace neon
                         {
                             spriteBatch.Draw(pxl, new Vector2(ScreenX + i * UnitSize, ScreenY+ j * UnitSize),
                                 null, Color.Green, 0f, new Vector2(0, 0),
-                                UnitSize*2, SpriteEffects.None, 0f);
+                                UnitSize, SpriteEffects.None, 0f);
                         }
                     }
             }

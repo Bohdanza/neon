@@ -25,7 +25,7 @@ namespace neon
             ShootingPauses = shootingPauses;
         }
 
-        public virtual void ShootInDirection(ContentManager contentManager, float Direction, WorldChunk worldChunk)
+        public virtual void ShootInDirection(ContentManager contentManager, float Direction, WorldChunk worldChunk, MapObject owner)
         {
             TimeTillShot = ShootingPauses[CurrentPause];
 

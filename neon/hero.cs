@@ -24,7 +24,7 @@ namespace neon
             new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
             "hero", worldChunk)
         {
-           // GunInHand = new Colt(contentManager, new Vector2(x, y), new Vector2(0f, 0f), worldChunk);
+            GunInHand = new Spear(contentManager, new Vector2(x, y-2), Movement, worldChunk);
             Action = "wa";
         }
 
@@ -33,16 +33,28 @@ namespace neon
             var ks = Keyboard.GetState();
 
             if (ks.IsKeyDown(Keys.W))
+            {
+               // worldChunk.ScreenY--;
                 ChangeMovement(0, -Speed);
+            }
 
             if (ks.IsKeyDown(Keys.S))
+            {
+               // worldChunk.ScreenY++;
                 ChangeMovement(0, Speed);
+            }
 
             if (ks.IsKeyDown(Keys.A))
+            {
+                //worldChunk.ScreenX--;
                 ChangeMovement(-Speed, 0);
+            }
 
             if (ks.IsKeyDown(Keys.D))
+            {
+                //worldChunk.ScreenX++;
                 ChangeMovement(Speed, 0);
+            }
 
             var ms = Mouse.GetState();
 
@@ -50,7 +62,8 @@ namespace neon
             {
                 Vector2 screen = worldChunk.GetScreenPosition(this);
 
-                float dir = Game1.GetDirection(new Vector2(ms.X, ms.Y), screen);
+                float dir = Game1.GetDirection(new Vector2(ms.X, ms.Y), 
+                    new Vector2(screen.X, screen.Y+Position.Y-GunInHand.Position.Y));
                 dir += (float)Math.PI * 2;
                 dir %= (float)(Math.PI * 2);
 
@@ -82,11 +95,11 @@ namespace neon
                     }
                 }
 
-                GunInHand.Position=Position;
+                GunInHand.Position=new Vector2(Position.X, Position.Y-5);
 
                 if (ms.LeftButton == ButtonState.Pressed)
                 { 
-                    GunInHand.ShootInDirection(contentManager, dir, worldChunk);
+                    GunInHand.ShootInDirection(contentManager, dir, worldChunk, this);
                 }
             }
 
@@ -97,7 +110,7 @@ namespace neon
 
             base.Update(contentManager, worldChunk);
         }
-
+        
         public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
         {
             base.Draw(spriteBatch, x, y, color, depth);
@@ -106,7 +119,7 @@ namespace neon
             {
                 Texture2D whatToDraw = Texture.GetCurrentFrame();
 
-                GunInHand.Draw(spriteBatch, x, y, color, depth+0.000001f);
+                GunInHand.Draw(spriteBatch, x, y-5*WorldChunk.UnitSize, color, depth+0.000001f);
             }
         }
     }
