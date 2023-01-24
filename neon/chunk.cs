@@ -30,7 +30,8 @@ namespace neon
         public MapObject Hero { get; protected set; }
         private bool HitInspect = false;
 
-        public WorldChunk(ContentManager contentManager, int currentChunkX, int currentChunkY, Hero hero)
+        public WorldChunk(ContentManager contentManager, int currentChunkX, int currentChunkY, 
+            Hero hero, string path)
         {
             CurrentChunkX = currentChunkX;
             CurrentChunkY = currentChunkY;
@@ -41,7 +42,18 @@ namespace neon
             Objects = new List<MapObject>();
             HitMap = new LovelyChunk(256);
 
-            Generate(contentManager, null);
+            Objects = new List<MapObject>();
+
+            if(File.Exists(path+currentChunkX.ToString()+"_"+currentChunkY.ToString()))
+            {
+              //  try
+              //  {
+                    Load(contentManager, path + currentChunkX.ToString() + "_" + currentChunkY.ToString());
+              //  }
+              //  catch { }
+            }
+            else
+                Generate(contentManager, null);
         }
 
         public void Save(string path)
@@ -49,23 +61,41 @@ namespace neon
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            using (StreamWriter sw = new StreamWriter(path + CurrentChunkX.ToString() + "_" + CurrentChunkY))
+            using (StreamWriter sw = new StreamWriter(path + CurrentChunkX.ToString() + "_" + CurrentChunkY.ToString()))
             {
                 var jsonSerializerSettings = new JsonSerializerSettings()
                 {
-                    TypeNameHandling = TypeNameHandling.All
+                    TypeNameHandling = TypeNameHandling.Objects
                 };
 
                 for (int i = 0; i < Objects.Count; i++)
                 {
-                    sw.WriteLine(JsonConvert.SerializeObject(Objects[i], jsonSerializerSettings));
+                    sw.WriteLine(JsonConvert.SerializeObject(Objects[i], jsonSerializerSettings)+"#");
                 }
             }
         }
 
-        public void Load(ContentManager contentManager, Hero hero)
+        public void Load(ContentManager contentManager, string path)
         {
-            
+            List<string> data = new List<string>();
+
+            using(StreamReader sr = new StreamReader(path))
+            {
+                data = sr.ReadToEnd().Split('#').ToList();
+            }
+
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.TypeNameHandling = TypeNameHandling.Objects;
+
+            for (int i=0; i<data.Count-1; i++)
+            {
+                MapObject mapObject = (MapObject)JsonConvert.DeserializeObject<MapObject>(data[i], jss);
+
+                Objects.Add(mapObject);
+
+                if (Objects[i] is Hero)
+                    this.Hero = Objects[i];
+            }
         }
 
         public void Generate(ContentManager contentManager, Hero hero)

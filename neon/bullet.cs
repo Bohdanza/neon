@@ -8,12 +8,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace neon
 {
     public abstract class Bullet : MapObject
     {
+        [JsonProperty]
         public int Damage { get; protected set; }
+        [JsonProperty]
         public int Lifetime { get; protected set; }
 
         public Bullet(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, 
@@ -26,6 +29,9 @@ namespace neon
 
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
+            if (Texture == null)
+                Texture = new DynamicTexture(contentManager, TextureName);
+
             Lifetime--;
 
             if (Lifetime <= 0)

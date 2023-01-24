@@ -8,14 +8,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace neon
 {
     public abstract class Gun : MapObject
     {
         public float Rotation { get; set; }
+        [JsonProperty]
         public int TimeTillShot { get; protected set; }
+        [JsonProperty]
         public List<int> ShootingPauses { get; protected set; }
+        [JsonProperty]
         protected int CurrentPause { get; private set; }
 
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
@@ -35,6 +39,9 @@ namespace neon
 
         public virtual void UpdateInHand(ContentManager contentManager)
         {
+            if (Texture == null)
+                Texture = new DynamicTexture(contentManager, TextureName);
+
             Texture.Update(contentManager);
 
             TimeTillShot--;

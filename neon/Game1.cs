@@ -49,7 +49,7 @@ namespace neon
             // TODO: Add your initialization logic here
             Console.WriteLine();
 
-            worldChunk = new WorldChunk(Content, 0, 0, null);
+            worldChunk = new WorldChunk(Content, 0, 0, null, @"chunks\");
 
             base.Initialize();
         }

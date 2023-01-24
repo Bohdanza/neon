@@ -8,13 +8,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace neon
 {
     public class Hero:Mob
     {
+        [JsonProperty]
         public Gun GunInHand { get; protected set; } = null;
+        [JsonProperty]
         public float Speed { get; private set; } = 0.4f;
+        [JsonProperty]
         public float GunRotationSpeed { get; protected set; } = 0.1f;
 
         public Hero(ContentManager contentManager, float x, float y, WorldChunk worldChunk) 

@@ -14,6 +14,9 @@ namespace neon
 {
     public abstract class MapObject
     {
+        [JsonProperty]
+        protected string TextureName = "";
+        [JsonProperty]
         public bool Alive { get; protected set; } = true;
 
         //objects with different collision levels would ignore each other
@@ -21,16 +24,21 @@ namespace neon
          * 0-ground
          * 1-sky
          * 2-weapons, items*/
+        [JsonProperty]
         public int CollsionLevel { get; private set; }
+        [JsonProperty]
         protected List<Tuple<int, int>> Hitbox;
 
+        [JsonProperty]
         public float Weight { get; protected set; }
 
         public Vector2 Position { get; set; }
+        
+        [JsonProperty]
         public Vector2 Movement { get; protected set; }
 
         [JsonIgnore]
-        public DynamicTexture Texture { get; protected set; }
+        public DynamicTexture Texture { get; protected set; } = null;
         [JsonIgnore]
         private bool HitboxPut = false;
 
@@ -46,11 +54,17 @@ namespace neon
             Hitbox = hitbox;
             Weight = weight;
 
-            Texture = new DynamicTexture(contentManager, textureName);
+            TextureName = textureName;
         }
+
+        [JsonConstructor]
+        public MapObject() { }
 
         public virtual void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
+            if (Texture == null)
+                Texture = new DynamicTexture(contentManager, TextureName);
+
             if (!HitboxPut)
             {
                 PutHitbox(worldChunk);

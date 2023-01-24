@@ -8,12 +8,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace neon
 {
     public abstract class Monster:Mob
     {
+        [JsonProperty]
         protected int ComfortMin = 30;
+        [JsonProperty]
         protected int ComfortMax = 60;
 
         public Monster(ContentManager contentManager, Vector2 position, float weight,

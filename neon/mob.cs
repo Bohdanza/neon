@@ -8,19 +8,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace neon
 {
     public abstract class Mob:MapObject
     {
+        [JsonProperty]
         public int HP { get; protected set; }
+        [JsonProperty]
         public string Action { get; protected set; }
+        [JsonIgnore]
         public int Direction { get; private set; } = 0;
-
+        [JsonIgnore]
         private int pdir = 1;
+        [JsonIgnore]
         private string pact = "";
-        private string TextureName = "";
-        
 
         public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp,
             List<Tuple<int, int>> hitbox, string textureName, WorldChunk worldChunk):
