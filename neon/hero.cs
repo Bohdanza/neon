@@ -121,8 +121,6 @@ namespace neon
 
             if (GunInHand != null)
             {
-                Texture2D whatToDraw = Texture.GetCurrentFrame();
-
                 GunInHand.Draw(spriteBatch, x, y-5*WorldChunk.UnitSize, color, depth+0.000001f);
             }
         }

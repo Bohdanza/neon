@@ -55,7 +55,62 @@ namespace neon
 
         public void Update(ContentManager contentManager)
         {
+            int px = worldChunk.CurrentChunkX;
+            int py = worldChunk.CurrentChunkY;
+
             worldChunk.Update(contentManager);
+
+            if(worldChunk.Hero.Position.X<3)
+            {
+                Hero wh = (Hero)worldChunk.Hero;
+
+                wh.Position = new Vector2(worldChunk.HitMap.Size - 3, wh.Position.Y);
+
+                worldChunk.Objects.Remove(wh);
+                worldChunk.Save(Path);
+
+                worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkX - 1, worldChunk.CurrentChunkY,
+                    wh, Path);
+            }
+            else if (worldChunk.Hero.Position.X > worldChunk.HitMap.Size-2)
+            {
+                Hero wh = (Hero)worldChunk.Hero;
+
+                wh.Position = new Vector2(4, wh.Position.Y);
+
+                worldChunk.Objects.Remove(wh);
+                worldChunk.Save(Path);
+
+                worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkX + 1, worldChunk.CurrentChunkY,
+                    wh, Path);
+            }
+            else if (worldChunk.Hero.Position.Y<3)
+            {
+                Hero wh = (Hero)worldChunk.Hero;
+
+                wh.Position = new Vector2(wh.Position.X, worldChunk.HitMap.Size-3);
+
+                worldChunk.Objects.Remove(wh);
+                worldChunk.Save(Path);
+
+                worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkX, worldChunk.CurrentChunkY-1,
+                    wh, Path);
+            }
+            else if (worldChunk.Hero.Position.Y > worldChunk.HitMap.Size - 2)
+            {
+                Hero wh = (Hero)worldChunk.Hero;
+
+                wh.Position = new Vector2(wh.Position.X, 4);
+
+                worldChunk.Objects.Remove(wh);
+                worldChunk.Save(Path);
+
+                worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkY, worldChunk.CurrentChunkY+1,
+                    wh, Path);
+            }
+
+            if(px!=worldChunk.CurrentChunkX||py!=worldChunk.CurrentChunkY)
+                worldChunk.Update(contentManager);
         }
 
         public void Draw(SpriteBatch spriteBatch)

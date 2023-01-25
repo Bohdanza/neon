@@ -54,7 +54,13 @@ namespace neon
               //  catch { }
             }
             else
-                Generate(contentManager, null);
+                Generate(contentManager, hero);
+
+            if(Hero==null)
+            {
+                Hero = hero;
+                Objects.Add(Hero);
+            }
         }
 
         public void Save(string path)
@@ -148,7 +154,8 @@ namespace neon
                 for (int j = 2; j < HitMap.Size; j += 4)
                 {
                     if (Game1.GetDistance(HitMap.Size / 2, HitMap.Size / 2, i, j) >=
-                        rnd.Next(HitMap.Size / 2 - HitMap.Size / 10, HitMap.Size / 2 - 2))
+                        rnd.Next(HitMap.Size / 2 - HitMap.Size / 10, HitMap.Size / 2 - 2)
+                        && i/4!=HitMap.Size/8 && j / 4 != HitMap.Size / 8)
                         Objects.Add(new Spike(contentManager, i + (float)(rnd.NextDouble() * 2f) - 1f,
                         j + (float)(rnd.NextDouble() * 2f) - 1f, this));
                 }
