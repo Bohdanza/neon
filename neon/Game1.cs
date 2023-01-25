@@ -18,7 +18,7 @@ namespace neon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D texture;
-        private WorldChunk worldChunk;
+        private World world;
         private FrameCounter _frameCounter = new FrameCounter();
         private SpriteFont mainFont;
 
@@ -49,7 +49,7 @@ namespace neon
             // TODO: Add your initialization logic here
             Console.WriteLine();
 
-            worldChunk = new WorldChunk(Content, 0, 0, null, @"chunks\");
+            world = new World(Content, "worlds\\world1");
 
             base.Initialize();
         }
@@ -68,13 +68,12 @@ namespace neon
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                worldChunk.Save(@"chunks\");
-                
+                world.Save();
                 Exit();
             }
 
             // TODO: Add your update logic here
-            worldChunk.Update(Content);
+            world.Update(Content);
 
             base.Update(gameTime);
         }
@@ -89,7 +88,7 @@ namespace neon
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
-            worldChunk.Draw(_spriteBatch);
+            world.Draw(_spriteBatch);
 
             var fps = _frameCounter.AverageFramesPerSecond.ToString();
 
