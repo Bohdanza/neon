@@ -14,9 +14,9 @@ namespace neon
 {
     public abstract class MapObject
     {
-        [JsonProperty]
+        [JsonProperty("tname")]
         protected string TextureName = "";
-        [JsonProperty]
+        [JsonProperty("al")]
         public bool Alive { get; protected set; } = true;
 
         //objects with different collision levels would ignore each other
@@ -24,17 +24,18 @@ namespace neon
          * 0-ground
          * 1-sky
          * 2-weapons, items*/
-        [JsonProperty]
+        [JsonProperty("coll")]
         public int CollsionLevel { get; private set; }
-        [JsonProperty]
+        [JsonProperty("hbt")]
         protected List<Tuple<int, int>> Hitbox;
 
-        [JsonProperty]
+        [JsonProperty("wgh")]
         public float Weight { get; protected set; }
 
+        [JsonProperty("pos")]
         public Vector2 Position { get; set; }
         
-        [JsonProperty]
+        [JsonProperty("mov")]
         public Vector2 Movement { get; protected set; }
 
         [JsonIgnore]

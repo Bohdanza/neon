@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace neon
 {
@@ -70,7 +71,23 @@ namespace neon
 
                 for (int i = 0; i < Objects.Count; i++)
                 {
-                    sw.WriteLine(JsonConvert.SerializeObject(Objects[i], jsonSerializerSettings)+"#");
+                    StringBuilder wstr=new StringBuilder(JsonConvert.SerializeObject(Objects[i], jsonSerializerSettings) + "#");
+                    int bg = 0;
+                    string check_for = "System.Private.CoreLib";
+
+                    for (int j = 0; j < wstr.Length; j++)
+                    {
+                        if (j-bg<check_for.Length && wstr[j] != check_for[j - bg])
+                            bg = j;
+                        else if(j-bg==check_for.Length)
+                        {
+                            wstr[bg] = '~';
+                            wstr.Remove(bg + 1, j - bg-1);
+                            j = bg;
+                        }
+                    }
+
+                    sw.WriteLine(wstr.ToString());
                 }
             }
         }
@@ -89,7 +106,19 @@ namespace neon
 
             for (int i=0; i<data.Count-1; i++)
             {
-                MapObject mapObject = (MapObject)JsonConvert.DeserializeObject<MapObject>(data[i], jss);
+                StringBuilder stb = new StringBuilder(data[i]);
+                string check_for = "System.Private.CoreLib";
+
+                for (int j=0; j<stb.Length; j++)
+                {
+                    if(stb[j]=='~')
+                    {
+                        stb.Remove(j, 1);
+                        stb.Insert(j, check_for);
+                    }
+                }
+
+                MapObject mapObject = (MapObject)JsonConvert.DeserializeObject<MapObject>(stb.ToString(), jss);
 
                 Objects.Add(mapObject);
 
