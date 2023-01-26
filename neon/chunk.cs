@@ -31,6 +31,9 @@ namespace neon
         public MapObject Hero { get; protected set; }
         private bool HitInspect = false;
 
+        public int Biome { get; private set; }
+        public int RoomType { get; private set; }
+
         public WorldChunk(ContentManager contentManager, int currentChunkX, int currentChunkY, 
             Hero hero, string path)
         {
@@ -41,7 +44,6 @@ namespace neon
             pxl = contentManager.Load<Texture2D>("pxl");
 
             Objects = new List<MapObject>();
-            HitMap = new LovelyChunk(256);
 
             Objects = new List<MapObject>();
 
@@ -70,6 +72,8 @@ namespace neon
 
             using (StreamWriter sw = new StreamWriter(path + CurrentChunkX.ToString() + "_" + CurrentChunkY.ToString()))
             {
+                sw.WriteLine(Biome.ToString() + "#" + RoomType.ToString() + "#" + HitMap.Size.ToString() + "#");
+
                 var jsonSerializerSettings = new JsonSerializerSettings()
                 {
                     TypeNameHandling = TypeNameHandling.Objects
@@ -107,10 +111,15 @@ namespace neon
                 data = sr.ReadToEnd().Split('#').ToList();
             }
 
+            Biome = Int32.Parse(data[0]);
+            RoomType = Int32.Parse(data[1]);
+
+            HitMap = new LovelyChunk(Int32.Parse(data[2]));
+
             JsonSerializerSettings jss = new JsonSerializerSettings();
             jss.TypeNameHandling = TypeNameHandling.Objects;
 
-            for (int i=0; i<data.Count-1; i++)
+            for (int i=3; i<data.Count-1; i++)
             {
                 StringBuilder stb = new StringBuilder(data[i]);
                 string check_for = "System.Private.CoreLib";
@@ -128,14 +137,26 @@ namespace neon
 
                 Objects.Add(mapObject);
 
-                if (Objects[i] is Hero)
-                    this.Hero = Objects[i];
+                if (Objects[i-3] is Hero)
+                    this.Hero = Objects[i-3];
             }
         }
 
         public void Generate(ContentManager contentManager, Hero hero)
         {
             var rnd = new Random();
+
+            Biome = rnd.Next(0, 1);
+            RoomType = rnd.Next(0, 1);
+
+            int sz = 0;
+
+            if (RoomType == 0)
+                sz = 256;
+            else
+                sz = 128;
+
+            HitMap = new LovelyChunk(sz);
 
             if (hero == null)
                 Objects.Add(new Hero(contentManager, HitMap.Size / 2, HitMap.Size / 2, this));
@@ -154,11 +175,17 @@ namespace neon
                 for (int j = 2; j < HitMap.Size; j += 4)
                 {
                     if (Game1.GetDistance(HitMap.Size / 2, HitMap.Size / 2, i, j) >=
-                        rnd.Next(HitMap.Size / 2 - HitMap.Size / 10, HitMap.Size / 2 - 2)
+                        rnd.Next(HitMap.Size / 2 - 10, HitMap.Size / 2 - 2)
                         && i/4!=HitMap.Size/8 && j / 4 != HitMap.Size / 8)
                         Objects.Add(new Spike(contentManager, i + (float)(rnd.NextDouble() * 2f) - 1f,
                         j + (float)(rnd.NextDouble() * 2f) - 1f, this));
                 }
+
+            for(int i=0; i<100; i++)
+            {
+                Objects.Add(new Coin(contentManager, new Vector2((float)rnd.NextDouble() * HitMap.Size,
+                    (float)rnd.NextDouble() * HitMap.Size), rnd.Next(0, 13), this));
+            }
         }
 
         public void AddObject(MapObject mapObject)
