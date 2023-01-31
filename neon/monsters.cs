@@ -16,7 +16,7 @@ namespace neon
         public Tersol(ContentManager contentManager, Vector2 position, WorldChunk worldChunk):
             base(contentManager, position, 5f, 10, 
                 new HitboxFabricator().CreateHitbox(@"hitboxes\terasol.png"),
-                "tersol", worldChunk)
+                "tersol", 0.3f, worldChunk)
         { }
     }
 }

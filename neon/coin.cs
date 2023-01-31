@@ -18,7 +18,7 @@ namespace neon
         public const float PickUpDistance = 5f;
 
         public Coin(ContentManager contentManager, Vector2 position, int value, WorldChunk worldChunk):
-            base(contentManager, position, new Vector2(0, 0), 2f, new List<Tuple<int, int>>(),
+            base(contentManager, position, new Vector2(0, 0), 1f, new List<Tuple<int, int>>(),
                 "coin"+(value/3).ToString()+"_", 0, worldChunk)
         { }
 
@@ -34,8 +34,8 @@ namespace neon
                 {
                     float dir = Game1.GetDirection(worldChunk.Hero.Position, Position);
 
-                    ChangeMovement((float)Math.Cos(dir) * ((Hero)worldChunk.Hero).Speed * 6,
-                        (float)Math.Sin(dir) * ((Hero)worldChunk.Hero).Speed * 6);
+                    ChangeMovement((float)Math.Cos(dir) * ((Hero)worldChunk.Hero).Speed * 5f,
+                        (float)Math.Sin(dir) * ((Hero)worldChunk.Hero).Speed*5f);
                 }
             }
 

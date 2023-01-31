@@ -21,8 +21,6 @@ namespace neon
         [JsonIgnore]
         public int Direction { get; private set; } = 0;
         [JsonIgnore]
-        private int pdir = 1;
-        [JsonIgnore]
         private string pact = "";
 
         public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp,
@@ -37,12 +35,11 @@ namespace neon
 
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
-            if (Action != pact || pdir != Direction)
+            if (Action != pact)
             {
-                Texture = new DynamicTexture(contentManager, TextureName + "_" + Action + "_" + Direction.ToString() + "_");
+                Texture = new DynamicTexture(contentManager, TextureName + "_" + Action + "_");
             }
 
-            pdir = Direction;
             pact = Action;
 
             if (Action == "die" && Texture.CurrentTexture >= Texture.Textures.Count - 1)
@@ -68,6 +65,18 @@ namespace neon
 
             if (damage > 0)
                 Action = "dam";
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
+        {
+            Texture2D whatToDraw = Texture.GetCurrentFrame();
+
+            if(Direction==1)
+                spriteBatch.Draw(whatToDraw, new Vector2(x - whatToDraw.Width / 2, y - whatToDraw.Height), null, color, 0f,
+                    new Vector2(0, 0), 1f, SpriteEffects.None, depth);
+            else
+                spriteBatch.Draw(whatToDraw, new Vector2(x - whatToDraw.Width / 2, y - whatToDraw.Height), null, color, 0f,
+                    new Vector2(0, 0), 1f, SpriteEffects.FlipHorizontally, depth);
         }
     }
 }

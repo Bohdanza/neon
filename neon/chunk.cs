@@ -18,10 +18,10 @@ namespace neon
         public int CurrentChunkX { get; private set; }
         public int CurrentChunkY { get; private set; }
 
-        public int ScreenX { get;  set; } = 0;
-        public int ScreenY { get;  set; } = 0;
+        public int ScreenX { get; set; } = 0;
+        public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 8;
+        public const int UnitSize = 10;
 
         public List<MapObject> Objects { get; private set; }
         public LovelyChunk HitMap { get; protected set; }

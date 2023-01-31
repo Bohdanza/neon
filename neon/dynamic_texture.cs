@@ -14,7 +14,7 @@ namespace neon
 {
     public class DynamicTexture
     {
-        public const int FrameDelay = 1;
+        public const int FrameDelay = 5;
         private int TimeSinceLastUpdate = 0;
 
         [JsonProperty]

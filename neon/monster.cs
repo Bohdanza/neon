@@ -19,29 +19,44 @@ namespace neon
         [JsonProperty]
         protected int ComfortMax = 60;
 
+        [JsonIgnore]
+        public MapObject Target = null;
+        protected float Speed = 1;
+
+        private float dir = 0f; 
+
         public Monster(ContentManager contentManager, Vector2 position, float weight,
-            int hp, List<Tuple<int, int>> hitbox, string textureName, WorldChunk worldChunk):
+            int hp, List<Tuple<int, int>> hitbox, string textureName, float speed, WorldChunk worldChunk):
             base(contentManager, position, new Vector2(0, 0), weight, hp, hitbox, textureName, worldChunk)
-        { }
+        {
+            Speed = speed;
+        }
 
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
-            float dst = Game1.GetDistance(worldChunk.Hero.Position.X, worldChunk.Hero.Position.Y,
-                Position.X, Position.Y);
+            var rnd = new Random();
+                    
+            //float dir1 = Game1.GetDirection(Movement, new Vector2(0, 0));
 
-                var rnd = new Random();
-                
-                float dir = Game1.GetDirection(Movement, new Vector2(0, 0));
+            if (dir < 0)
+                dir += (float)Math.PI;
 
-                if (dir < 0)
-                    dir += (float)Math.PI;
+            if (dir > Math.PI)
+                dir -= (float)Math.PI;
 
-                if (dir > Math.PI)
-                    dir -= (float)Math.PI;
+            if(rnd.Next(0, 1000)<10)
+                dir = (float)(rnd.NextDouble() * Math.PI*2);
 
-                dir += (float)((rnd.NextDouble()-0.5) * Math.PI * 2);
+            if (dir > Math.PI*1.5)
+            {
+                int x = 0;
+            }
+            
+            dir += (float)Math.PI;     
 
-                ChangeMovement(Game1.DirectionToVector(dir));
+            Vector2 vector = Game1.DirectionToVector(dir);
+
+            ChangeMovement(new Vector2(vector.X*Speed, vector.Y*Speed));
 
             base.Update(contentManager, worldChunk);
         }

@@ -71,6 +71,7 @@ namespace neon
 
                 worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkX - 1, worldChunk.CurrentChunkY,
                     wh, Path);
+                SaveCoords();
             }
             else if (worldChunk.Hero.Position.X > worldChunk.HitMap.Size-2)
             {
@@ -83,6 +84,7 @@ namespace neon
 
                 worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkX + 1, worldChunk.CurrentChunkY,
                     wh, Path);
+                SaveCoords();
             }
             else if (worldChunk.Hero.Position.Y<3)
             {
@@ -95,6 +97,7 @@ namespace neon
 
                 worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkX, worldChunk.CurrentChunkY-1,
                     wh, Path);
+                SaveCoords();
             }
             else if (worldChunk.Hero.Position.Y > worldChunk.HitMap.Size - 2)
             {
@@ -107,6 +110,7 @@ namespace neon
 
                 worldChunk = new WorldChunk(contentManager, worldChunk.CurrentChunkY, worldChunk.CurrentChunkY+1,
                     wh, Path);
+                SaveCoords();
             }
 
             if(px!=worldChunk.CurrentChunkX||py!=worldChunk.CurrentChunkY)
@@ -121,6 +125,16 @@ namespace neon
         public void Save()
         {
             worldChunk.Save(Path);
+            SaveCoords();
+        }
+
+        public void SaveCoords()
+        {
+            using (StreamWriter sw = new StreamWriter(Path + "current"))
+            {
+                sw.WriteLine(worldChunk.CurrentChunkX.ToString() + "\n" 
+                    + worldChunk.CurrentChunkY.ToString());
+            }
         }
     }
 }
