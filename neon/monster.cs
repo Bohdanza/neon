@@ -47,11 +47,6 @@ namespace neon
             if(rnd.Next(0, 1000)<10)
                 dir = (float)(rnd.NextDouble() * Math.PI*2);
 
-            if (dir > Math.PI*1.5)
-            {
-                int x = 0;
-            }
-            
             dir += (float)Math.PI;     
 
             Vector2 vector = Game1.DirectionToVector(dir);

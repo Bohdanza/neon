@@ -21,7 +21,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 10;
+        public const int UnitSize = 25;
 
         public List<MapObject> Objects { get; private set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -276,6 +276,40 @@ namespace neon
         public Vector2 GetScreenPosition(MapObject mapObject)
         {
             return new Vector2(mapObject.Position.X * UnitSize + ScreenX, mapObject.Position.Y*UnitSize + ScreenY);
+        }
+    
+        public bool LineClear(int x1, int y1, int x2, int y2, int obstacleLevel)
+        {
+            float xc = x1, yc = y1;
+            float stepx = x2 - x1, stepy = y2 - y1;
+        
+            if(stepx>stepy)
+            {
+                stepy = (float)(1 / stepx * stepy);
+                stepx = 1;
+            }
+
+            if (stepy > stepx)
+            {
+                stepx = (float)(1 / stepy * stepx);
+                stepy = 1;
+            }
+
+            while((int)xc!=x2||(int)yc!=y2)
+            {
+                var q = HitMap.GetValue((int)xc, (int)yc);
+
+                foreach(MapObject mapObject in q)
+                {
+                    if (mapObject.CollsionLevel == obstacleLevel)
+                        return false;
+                }
+
+                xc += stepx;
+                yc += stepy;
+            }
+
+            return true;
         }
     }
 }
