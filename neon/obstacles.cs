@@ -45,4 +45,15 @@ namespace neon
             "pike"+new Random().Next(0, 3).ToString()+"_", 0, worldChunk)
         {}
     }
+
+    public class Rock:MapObject
+    {
+        public Rock(ContentManager contentManager, float x, float y, WorldChunk worldChunk, int subtype):
+            base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f, 
+                new HitboxFabricator().CreateHitbox(@"hitboxes\rock"+subtype.ToString()+".png"), "rock"+subtype.ToString()+"_",
+                0, worldChunk)
+        {
+            
+        }
+    }
 }

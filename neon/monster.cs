@@ -35,7 +35,7 @@ namespace neon
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
             var rnd = new Random();
-                    
+
             //float dir1 = Game1.GetDirection(Movement, new Vector2(0, 0));
 
             if (dir < 0)
@@ -44,19 +44,14 @@ namespace neon
             if (dir > Math.PI)
                 dir -= (float)Math.PI;
 
-            if(rnd.Next(0, 1000)<10)
-                dir = (float)(rnd.NextDouble() * Math.PI*2);
+            if (rnd.Next(0, 1000) < 10)
+                dir = (float)(rnd.NextDouble() * Math.PI * 2);
 
-            if (dir > Math.PI*1.5)
-            {
-                int x = 0;
-            }
-            
-            dir += (float)Math.PI;     
+            dir += (float)Math.PI;
 
             Vector2 vector = Game1.DirectionToVector(dir);
 
-            ChangeMovement(new Vector2(vector.X*Speed, vector.Y*Speed));
+            ChangeMovement(new Vector2(vector.X * Speed, vector.Y * Speed));
 
             base.Update(contentManager, worldChunk);
         }

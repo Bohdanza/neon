@@ -25,7 +25,7 @@ namespace neon
         public override void Update(ContentManager contentManager, WorldChunk worldChunk)
         {
             float dst = Game1.GetDistance(Position, worldChunk.Hero.Position);
-
+         
             if (dst < CollectionDistance)
             {
                 if (dst < PickUpDistance)

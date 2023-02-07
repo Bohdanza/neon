@@ -29,6 +29,15 @@ namespace neon
         [JsonProperty("hbt")]
         protected List<Tuple<int, int>> Hitbox;
 
+        [JsonProperty("mix")]
+        public int HitboxMinX { get; protected set; }
+        [JsonProperty("max")]
+        public int HitboxMaxX { get; protected set; }
+        [JsonProperty("miy")]
+        public int HitboxMinY { get; protected set; }
+        [JsonProperty("may")]
+        public int HitboxMaxY { get; protected set; }
+
         [JsonProperty("wgh")]
         public float Weight { get; protected set; }
 
@@ -53,6 +62,20 @@ namespace neon
             Movement = movement;
 
             Hitbox = hitbox;
+
+            HitboxMaxX = -100000;
+            HitboxMaxY = -100000;
+            HitboxMinY = 100000;
+            HitboxMinX = 100000;
+
+            for (int i=0; i<Hitbox.Count; i++)
+            {
+                HitboxMaxX = Math.Max(HitboxMaxX, Hitbox[i].Item1);
+                HitboxMaxY = Math.Max(HitboxMaxY, Hitbox[i].Item2);
+                HitboxMinX = Math.Min(HitboxMinX, Hitbox[i].Item1);
+                HitboxMinY = Math.Min(HitboxMinY, Hitbox[i].Item2);
+            }
+
             Weight = weight;
 
             TextureName = textureName;

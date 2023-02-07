@@ -28,7 +28,7 @@ namespace neon
             new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
             "hero", worldChunk)
         {
-            GunInHand = new Spear(contentManager, new Vector2(x, y-2), Movement, worldChunk);
+           // GunInHand = new Spear(contentManager, new Vector2(x, y-2), Movement, worldChunk);
             Action = "wa";
         }
 
