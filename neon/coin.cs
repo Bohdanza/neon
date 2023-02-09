@@ -17,14 +17,14 @@ namespace neon
         public const float CollectionDistance = 30f;
         public const float PickUpDistance = 5f;
 
-        public Coin(ContentManager contentManager, Vector2 position, int value, WorldChunk worldChunk):
+        public Coin(ContentManager contentManager, Vector2 position, int value, World world):
             base(contentManager, position, new Vector2(0, 0), 1f, new List<Tuple<int, int>>(),
-                "coin"+(value/3).ToString()+"_", 0, worldChunk)
+                "coin"+(value/3).ToString()+"_", 0, world)
         { }
 
-        public override void Update(ContentManager contentManager, WorldChunk worldChunk)
+        public override void Update(ContentManager contentManager, World world)
         {
-            float dst = Game1.GetDistance(Position, worldChunk.Hero.Position);
+            float dst = Game1.GetDistance(Position, world.Hero.Position);
          
             if (dst < CollectionDistance)
             {
@@ -32,14 +32,14 @@ namespace neon
                     Alive = false;
                 else
                 {
-                    float dir = Game1.GetDirection(worldChunk.Hero.Position, Position);
+                    float dir = Game1.GetDirection(world.Hero.Position, Position);
 
-                    ChangeMovement((float)Math.Cos(dir) * ((Hero)worldChunk.Hero).Speed * 5f,
-                        (float)Math.Sin(dir) * ((Hero)worldChunk.Hero).Speed*5f);
+                    ChangeMovement((float)Math.Cos(dir) * ((Hero)world.Hero).Speed * 5f,
+                        (float)Math.Sin(dir) * ((Hero)world.Hero).Speed*5f);
                 }
             }
 
-            base.Update(contentManager, worldChunk);
+            base.Update(contentManager, world);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)

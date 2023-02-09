@@ -26,13 +26,13 @@ namespace neon
         private float dir = 0f; 
 
         public Monster(ContentManager contentManager, Vector2 position, float weight,
-            int hp, List<Tuple<int, int>> hitbox, string textureName, float speed, WorldChunk worldChunk):
-            base(contentManager, position, new Vector2(0, 0), weight, hp, hitbox, textureName, worldChunk)
+            int hp, List<Tuple<int, int>> hitbox, string textureName, float speed, World world):
+            base(contentManager, position, new Vector2(0, 0), weight, hp, hitbox, textureName, world)
         {
             Speed = speed;
         }
 
-        public override void Update(ContentManager contentManager, WorldChunk worldChunk)
+        public override void Update(ContentManager contentManager, World world)
         {
             var rnd = new Random();
 
@@ -53,7 +53,7 @@ namespace neon
 
             ChangeMovement(new Vector2(vector.X * Speed, vector.Y * Speed));
 
-            base.Update(contentManager, worldChunk);
+            base.Update(contentManager, world);
         }
     }
 }

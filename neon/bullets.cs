@@ -13,22 +13,22 @@ namespace neon
 {
     public class RevolverBullet:Bullet
     {
-        public RevolverBullet(ContentManager contentManager, Vector2 position, Vector2 movement, WorldChunk worldChunk) :
+        public RevolverBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
             base(contentManager, position, movement, 10000f, 35, new List<Tuple<int, int>> { new Tuple<int, int>(0, 0) },
-                "peacemaker", worldChunk, 1000)
+                "peacemaker", world, 1000)
         { }
 
-        public override Bullet Copy(ContentManager contentManager, WorldChunk worldChunk)
+        public override Bullet Copy(ContentManager contentManager, World world)
         {
             return new RevolverBullet(contentManager, new Vector2(Position.X, Position.Y),
-                new Vector2(Movement.X, Movement.Y), worldChunk);
+                new Vector2(Movement.X, Movement.Y), world);
         }
     }
     public class SpearBullet : Bullet
     {
-        public SpearBullet(ContentManager contentManager, Vector2 position, Vector2 movement, WorldChunk worldChunk) :
+        public SpearBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
             base(contentManager, position, movement, 10000f, 20, new HitboxFabricator().CreateHitbox(@"hitboxes\spearhit.png"),
-                "spearhit", worldChunk, 9)
+                "spearhit", world, 9)
         { }
     }
 }

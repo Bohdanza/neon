@@ -21,42 +21,42 @@ namespace neon
         [JsonProperty]
         public float GunRotationSpeed { get; protected set; } = 0.1f;
 
-        public Hero(ContentManager contentManager, float x, float y, WorldChunk worldChunk) 
+        public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
             3f, 35,
             new List<Tuple<int, int>> { new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0), new Tuple<int, int>(-1, 0),
             new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
-            "hero", worldChunk)
+            "hero", world)
         {
-           // GunInHand = new Spear(contentManager, new Vector2(x, y-2), Movement, worldChunk);
+           // GunInHand = new Spear(contentManager, new Vector2(x, y-2), Movement, world);
             Action = "wa";
         }
 
-        public override void Update(ContentManager contentManager, WorldChunk worldChunk)
+        public override void Update(ContentManager contentManager, World world)
         {
             var ks = Keyboard.GetState();
 
             if (ks.IsKeyDown(Keys.W))
             {
-               // worldChunk.ScreenY--;
+               // world.ScreenY--;
                 ChangeMovement(0, -Speed);
             }
 
             if (ks.IsKeyDown(Keys.S))
             {
-               // worldChunk.ScreenY++;
+               // world.ScreenY++;
                 ChangeMovement(0, Speed);
             }
 
             if (ks.IsKeyDown(Keys.A))
             {
-                //worldChunk.ScreenX--;
+                //world.ScreenX--;
                 ChangeMovement(-Speed, 0);
             }
 
             if (ks.IsKeyDown(Keys.D))
             {
-                //worldChunk.ScreenX++;
+                //world.ScreenX++;
                 ChangeMovement(Speed, 0);
             }
 
@@ -64,7 +64,7 @@ namespace neon
 
             if (GunInHand != null)
             {
-                Vector2 screen = worldChunk.GetScreenPosition(this);
+                Vector2 screen = world.GetScreenPosition(this);
 
                 float dir = Game1.GetDirection(new Vector2(ms.X, ms.Y), 
                     new Vector2(screen.X, screen.Y+Position.Y-GunInHand.Position.Y));
@@ -103,7 +103,7 @@ namespace neon
 
                 if (ms.LeftButton == ButtonState.Pressed)
                 { 
-                    GunInHand.ShootInDirection(contentManager, dir, worldChunk, this);
+                    GunInHand.ShootInDirection(contentManager, dir, world, this);
                 }
             }
 
@@ -112,7 +112,7 @@ namespace neon
             else
                 Action = "id";
 
-            base.Update(contentManager, worldChunk);
+            base.Update(contentManager, world);
         }
         
         public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
@@ -121,7 +121,7 @@ namespace neon
 
             if (GunInHand != null)
             {
-                GunInHand.Draw(spriteBatch, x, y-5*WorldChunk.UnitSize, color, depth+0.000001f);
+                GunInHand.Draw(spriteBatch, x, y-5*World.UnitSize, color, depth+0.000001f);
             }
         }
     }

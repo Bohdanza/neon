@@ -24,8 +24,8 @@ namespace neon
         private string pact = "";
 
         public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp,
-            List<Tuple<int, int>> hitbox, string textureName, WorldChunk worldChunk):
-            base(contentManager, position, movement, weight, hitbox, textureName+"_id_0_", 0, worldChunk)
+            List<Tuple<int, int>> hitbox, string textureName, World world):
+            base(contentManager, position, movement, weight, hitbox, textureName+"_id_0_", 0, world)
         {
             Action = "id";
             HP = hp;
@@ -33,7 +33,7 @@ namespace neon
             TextureName = textureName;
         }
 
-        public override void Update(ContentManager contentManager, WorldChunk worldChunk)
+        public override void Update(ContentManager contentManager, World world)
         {
             if (Action != pact)
             {
@@ -50,7 +50,7 @@ namespace neon
             else
                 Direction = 0;
 
-            base.Update(contentManager, worldChunk);
+            base.Update(contentManager, world);
         }
 
         public virtual void Damage(int damage)

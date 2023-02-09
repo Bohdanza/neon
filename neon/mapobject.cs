@@ -54,7 +54,7 @@ namespace neon
 
         public MapObject(ContentManager contentManager,
             Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox,
-            string textureName, int collisionLevel, WorldChunk worldChunk)
+            string textureName, int collisionLevel, World world)
         {
             CollsionLevel = collisionLevel;
 
@@ -84,14 +84,14 @@ namespace neon
         [JsonConstructor]
         public MapObject() { }
 
-        public virtual void Update(ContentManager contentManager, WorldChunk worldChunk)
+        public virtual void Update(ContentManager contentManager, World world)
         {
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
 
             if (!HitboxPut)
             {
-                PutHitbox(worldChunk);
+                PutHitbox(world);
                 HitboxPut = true;
             }
 
@@ -101,14 +101,14 @@ namespace neon
 
             Position = new Vector2(Position.X + Movement.X, Position.Y);
 
-            if ((int)ppos.X != (int)Position.X && !HitboxClear(worldChunk))
+            if ((int)ppos.X != (int)Position.X && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X - Movement.X, Position.Y);
             }
 
             Position = new Vector2(Position.X, Position.Y + Movement.Y);
 
-            if ((int)ppos.Y != (int)Position.Y && !HitboxClear(worldChunk))
+            if ((int)ppos.Y != (int)Position.Y && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X, Position.Y - Movement.Y);
             }
@@ -118,10 +118,10 @@ namespace neon
                 Vector2 npos = new Vector2(Position.X, Position.Y);
 
                 Position = new Vector2(ppos.X, ppos.Y);
-                EraseHitbox(worldChunk);
+                EraseHitbox(world);
 
                 Position = new Vector2(npos.X, npos.Y);
-                PutHitbox(worldChunk);
+                PutHitbox(world);
             }
 
             ChangeMovement(-Movement.X, -Movement.Y);
@@ -137,9 +137,9 @@ namespace neon
 
         //Fellow adventurer, from here on lies the realm of hitboxes
         //In which nothing should be changed
-        protected bool HitboxClear(WorldChunk worldChunk)
+        protected bool HitboxClear(World world)
         {
-            LovelyChunk chunk = worldChunk.HitMap;
+            LovelyChunk chunk = world.HitMap;
             int x1 = (int)Position.X, y1 = (int)Position.Y;
 
             foreach (var currentHitPoint in Hitbox)
@@ -160,11 +160,11 @@ namespace neon
             return true;
         }
 
-        protected HashSet<MapObject> HitboxObstructions(WorldChunk worldChunk)
+        protected HashSet<MapObject> HitboxObstructions(World world)
         {
             HashSet<MapObject> ans = new HashSet<MapObject>();
 
-            LovelyChunk chunk = worldChunk.HitMap;
+            LovelyChunk chunk = world.HitMap;
             int x1 = (int)Position.X, y1 = (int)Position.Y;
 
             foreach (var currentHitPoint in Hitbox)
@@ -184,9 +184,9 @@ namespace neon
             return ans;
         }
 
-        protected void EraseHitbox(WorldChunk worldChunk)
+        public void EraseHitbox(World world)
         {
-            LovelyChunk chunk = worldChunk.HitMap;
+            LovelyChunk chunk = world.HitMap;
             int x1 = (int)Position.X, y1 = (int)Position.Y;
 
             foreach (var currentHitPoint in Hitbox)
@@ -201,9 +201,9 @@ namespace neon
             }
         }
 
-        protected void PutHitbox(WorldChunk worldChunk)
+        protected void PutHitbox(World world)
         {
-            LovelyChunk chunk = worldChunk.HitMap;
+            LovelyChunk chunk = world.HitMap;
             int x1 = (int)Position.X, y1 = (int)Position.Y;
 
             foreach (var currentHitPoint in Hitbox)

@@ -23,13 +23,13 @@ namespace neon
         protected int CurrentPause { get; private set; }
 
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
-            List<Tuple<int, int>> hitbox, string textureName, WorldChunk worldChunk, List<int> shootingPauses) :
-            base(contentManager, position, movement, weight, hitbox, textureName, 0, worldChunk)
+            List<Tuple<int, int>> hitbox, string textureName, World world, List<int> shootingPauses) :
+            base(contentManager, position, movement, weight, hitbox, textureName, 0, world)
         {
             ShootingPauses = shootingPauses;
         }
 
-        public virtual void ShootInDirection(ContentManager contentManager, float Direction, WorldChunk worldChunk, MapObject owner)
+        public virtual void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
         {
             TimeTillShot = ShootingPauses[CurrentPause];
 

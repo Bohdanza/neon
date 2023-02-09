@@ -20,14 +20,14 @@ namespace neon
         public int Lifetime { get; protected set; }
 
         public Bullet(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, 
-            int damage, List<Tuple<int, int>> hitbox, string textureName, WorldChunk worldChunk, int lifetime):
-            base(contentManager, position, movement, weight, hitbox, textureName, 0, worldChunk)
+            int damage, List<Tuple<int, int>> hitbox, string textureName, World world, int lifetime):
+            base(contentManager, position, movement, weight, hitbox, textureName, 0, world)
         {
             Damage = damage;
             Lifetime = lifetime;
         }
 
-        public override void Update(ContentManager contentManager, WorldChunk worldChunk)
+        public override void Update(ContentManager contentManager, World world)
         {
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
@@ -45,7 +45,7 @@ namespace neon
 
             if (Alive && (int)ppos.X != (int)Position.X)
             {
-                HashSet<MapObject> obst = HitboxObstructions(worldChunk);
+                HashSet<MapObject> obst = HitboxObstructions(world);
 
                 if (obst.Count > 0)
                 {
@@ -63,7 +63,7 @@ namespace neon
 
             if (Alive && (int)ppos.Y != (int)Position.Y)
             {
-                HashSet<MapObject> obst = HitboxObstructions(worldChunk);
+                HashSet<MapObject> obst = HitboxObstructions(world);
 
                 if (obst.Count > 0)
                 {
@@ -96,7 +96,7 @@ namespace neon
                     new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.FlipVertically, depth);
         }
 
-        public virtual Bullet Copy(ContentManager contentManager, WorldChunk worldChunk)
+        public virtual Bullet Copy(ContentManager contentManager, World world)
         {
             return null;
         }

@@ -13,43 +13,43 @@ namespace neon
 {
     public class Colt:Gun
     {
-        public Colt(ContentManager contentManager, Vector2 position, Vector2 movement, WorldChunk worldChunk):
-            base(contentManager, position, movement, 5f, new List<Tuple<int, int>> { }, "colt", worldChunk, 
+        public Colt(ContentManager contentManager, Vector2 position, Vector2 movement, World world):
+            base(contentManager, position, movement, 5f, new List<Tuple<int, int>> { }, "colt", world, 
                 new List<int> { 15, 15, 15, 15, 15, 300})
         { }
 
-        public override void ShootInDirection(ContentManager contentManager, float Direction, WorldChunk worldChunk, MapObject owner)
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
         {
             if (TimeTillShot > 0)
                 return;
 
-            worldChunk.Objects.Add(new RevolverBullet(contentManager,
+            world.Objects.Add(new RevolverBullet(contentManager,
                 new Vector2(Position.X + (float)Math.Cos(Direction) * 5f, Position.Y + (float)Math.Sin(Direction) * 5f),
-                new Vector2((float)Math.Cos(Direction), (float)Math.Sin(Direction)), worldChunk));
+                new Vector2((float)Math.Cos(Direction), (float)Math.Sin(Direction)), world));
 
-            base.ShootInDirection(contentManager, Direction, worldChunk, owner);
+            base.ShootInDirection(contentManager, Direction, world, owner);
         }
     }
 
     public class Spear : Gun
     {
-        public Spear(ContentManager contentManager, Vector2 position, Vector2 movement, WorldChunk worldChunk) :
-            base(contentManager, position, movement, 10f, new List<Tuple<int, int>> { }, "spear", worldChunk,
+        public Spear(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
+            base(contentManager, position, movement, 10f, new List<Tuple<int, int>> { }, "spear", world,
                 new List<int> { 40 })
         { }
         
-        public override void ShootInDirection(ContentManager contentManager, float Direction, WorldChunk worldChunk, MapObject owner)
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
         {
             if (TimeTillShot > 0)
                 return;
 
-            worldChunk.Objects.Add(new SpearBullet(contentManager,
+            world.Objects.Add(new SpearBullet(contentManager,
                 new Vector2(Position.X + (float)Math.Cos(Direction) * 20f, Position.Y + (float)Math.Sin(Direction) * 20f),
-                new Vector2((float)Math.Cos(Direction)*0.1f, (float)Math.Sin(Direction)*0.1f), worldChunk));
+                new Vector2((float)Math.Cos(Direction)*0.1f, (float)Math.Sin(Direction)*0.1f), world));
 
             owner.ChangeMovement((float)Math.Cos(Direction) * 10f, (float)Math.Sin(Direction) * 10f);
 
-            base.ShootInDirection(contentManager, Direction, worldChunk, owner);
+            base.ShootInDirection(contentManager, Direction, world, owner);
         }
     }
 }
