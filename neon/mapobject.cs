@@ -50,7 +50,7 @@ namespace neon
         [JsonIgnore]
         public DynamicTexture Texture { get; protected set; } = null;
         [JsonIgnore]
-        private bool HitboxPut = false;
+        public bool HitboxPut = false;
 
         public MapObject(ContentManager contentManager,
             Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox,

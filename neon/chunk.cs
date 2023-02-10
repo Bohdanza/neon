@@ -105,17 +105,19 @@ namespace neon
 
             if (ymovage != 0)
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0 - Math.Min(0, xmovage); i < 3 - Math.Max(0, xmovage); i++)
                 {
-                    loaderChunk.SaveDelete(Path, i, 1-ymovage, this);
+                    loaderChunk.SaveDelete(Path, i, 1 - ymovage, this);
                 }
             }
 
-            foreach(var currentObject in Objects)
+            foreach (var currentObject in Objects)
             {
                 currentObject.Position = new Vector2(
                     currentObject.Position.X - xmovage * (float)WorldSize / 3,
                     currentObject.Position.Y - ymovage * (float)WorldSize / 3);
+
+                currentObject.HitboxPut = false;
             }
 
             if (xmovage != 0)
@@ -130,7 +132,7 @@ namespace neon
             {
                 for (int i = 0-Math.Min(0, xmovage); i < 3-Math.Max(0, xmovage); i++)
                 {
-                    loaderChunk.SaveDelete(Path, i, 1 - ymovage, this);
+                    loaderChunk.FillChunk(i, 1 + ymovage, this, contentManager);
                 }
             }
 
@@ -362,11 +364,12 @@ namespace neon
                 yOffset + chunkSize / 2),
                 world));
 
-            for (int i = 0; i < 100; i++)
-            {
-                world.Objects.Add(new Coin(contentManager, new Vector2(xOffset+(float)rnd.NextDouble() * chunkSize,
-                    yOffset+(float)rnd.NextDouble() * chunkSize), rnd.Next(0, 13), world));
-            }
+            int rockCount = rnd.Next(1, 4);
+
+            for (int i = 0; i < rockCount; i++)
+                world.Objects.Add(new Rock(contentManager,
+                    xOffset + (float)rnd.NextDouble() * chunkSize,
+                    yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 4))); 
         }
 
         public void SaveDelete(string path, int xRelative, int yRelative, World world)
