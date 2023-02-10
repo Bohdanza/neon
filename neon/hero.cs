@@ -88,7 +88,7 @@ namespace neon
                         if (Math.Abs(dir - GunInHand.Rotation) > GunRotationSpeed)
                             GunInHand.Rotation += GunRotationSpeed;
                         else
-                            GunInHand.Rotation = dir;
+                            GunInHand.Rotation = dir;   
                     }
                     else
                     {
