@@ -10,12 +10,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Text;
-using System.Drawing;
 
 namespace neon
 {
     public class World
     {
+        public HitboxFabricator WorldHitboxFabricator;
         public const int WorldSize = 512;
 
         public int CurrentChunkX { get; private set; }
@@ -32,15 +32,17 @@ namespace neon
         private Texture2D pxl;
         private Texture2D sand;
         public MapObject Hero { get; protected set; }
-        private bool HitInspect = false;
+        private bool HitInspect = false, ChunkBorders=false;
 
         public int Biome { get; private set; }
         public string Path { get; private set; }
 
-        private int timeSincef7 = 0;
+        private int timeSincef7 = 0, timeSincef8 = 0;
 
         public World(ContentManager contentManager, string path)
         {
+            WorldHitboxFabricator = new HitboxFabricator();
+
             CurrentChunkX = -1;
             CurrentChunkY = -1;
 
@@ -122,6 +124,9 @@ namespace neon
                 currentObject.HitboxPut = false;
             }
 
+            CurrentChunkX += xmovage;
+            CurrentChunkY += ymovage;
+
             if (xmovage != 0)
             {
                 for (int i = 0; i < 3; i++)
@@ -188,8 +193,6 @@ namespace neon
                 int qy = ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
 
                 SaveDelete(xmov, ymov, contentManager);
-                CurrentChunkX += xmov;
-                CurrentChunkY += ymov;
 
                 int qn = ScreenX - ((int)(Hero.Position.X * UnitSize) + ScreenX - 960);
                 int qm = ScreenY - ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
@@ -231,6 +234,18 @@ namespace neon
                 else
                     HitInspect = true;
             }
+
+            timeSincef8++;
+
+            if (ks.IsKeyDown(Keys.F8) && timeSincef8 >= 5)
+            {
+                timeSincef8 = 0;
+
+                if (ChunkBorders)
+                    ChunkBorders = false;
+                else
+                    ChunkBorders = true;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -267,6 +282,25 @@ namespace neon
                                 UnitSize, SpriteEffects.None, 0f);
                         }
                     }
+            }
+
+            if(ChunkBorders)
+            {
+                spriteBatch.Draw(pxl,
+                    new Vector2(WorldSize * UnitSize / 3 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f, 
+                    new Vector2(0, 0), new Vector2(2, WorldSize*UnitSize), SpriteEffects.None, 1f);
+
+                spriteBatch.Draw(pxl,
+                    new Vector2(WorldSize * UnitSize / 3*2 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0, 0), new Vector2(2, WorldSize * UnitSize), SpriteEffects.None, 1f);
+
+                spriteBatch.Draw(pxl,
+                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
+
+                spriteBatch.Draw(pxl,
+                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3*2 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
             }
         }
 

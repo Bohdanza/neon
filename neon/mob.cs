@@ -23,6 +23,10 @@ namespace neon
         [JsonIgnore]
         private string pact = "";
 
+        [JsonConstructor]
+        public Mob() : base()
+        { }
+
         public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp,
             string hitboxPath, string textureName, World world):
             base(contentManager, position, movement, weight, hitboxPath, textureName+"_id_0_", 0, world)

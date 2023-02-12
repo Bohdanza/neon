@@ -13,6 +13,8 @@ namespace neon
 {
     public class Idol:MapObject
     {
+        public Idol() : base() { }
+
         public Idol(ContentManager contentManager, float x, float y, World world) : 
             base(contentManager, new Vector2(x, y),
             new Vector2(0f, 0f), 10000000f,
@@ -29,8 +31,10 @@ namespace neon
         }
     }
 
-    public class Spike:MapObject
+    public class Spike : MapObject
     {
+        public Spike():base(){}
+
         public Spike(ContentManager contentManager, float x, float y, World world):base(contentManager, new Vector2(x, y), 
             new Vector2(0f, 0f), 10000000f, 
             null, 
@@ -40,6 +44,8 @@ namespace neon
 
     public class Rock:MapObject
     {
+        public Rock() : base() { }
+
         public Rock(ContentManager contentManager, float x, float y, World world, int subtype):
             base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f, 
                 @"hitboxes\rock"+subtype.ToString()+".png", "rock"+subtype.ToString()+"_",

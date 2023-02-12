@@ -13,6 +13,8 @@ namespace neon
 {
     public class Tersol:Monster
     {
+        public Tersol() : base() { }
+
         public Tersol(ContentManager contentManager, Vector2 position, World world):
             base(contentManager, position, 5f, 10, 
                 @"hitboxes\terasol.png",

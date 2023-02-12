@@ -27,7 +27,7 @@ namespace neon
         [JsonProperty("coll")]
         public int CollsionLevel { get; private set; }
         [JsonIgnore]
-        protected List<Tuple<int, int>> Hitbox;
+        protected List<Tuple<int, int>> Hitbox=null;
         [JsonProperty("pth")]
         private string HitboxPath=null;
 
@@ -54,6 +54,10 @@ namespace neon
         [JsonIgnore]
         public bool HitboxPut = false;
 
+        [JsonConstructor]
+        public MapObject()
+        {}
+
         public MapObject(ContentManager contentManager,
             Vector2 position, Vector2 movement, float weight, string hitboxPath,
             string textureName, int collisionLevel, World world)
@@ -65,8 +69,8 @@ namespace neon
 
             HitboxPath = hitboxPath;
 
-            if (hitboxPath != null)
-                Hitbox = new HitboxFabricator().CreateHitbox(hitboxPath);
+            if (HitboxPath != null)
+                Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
             else
                 Hitbox = new List<Tuple<int, int>>();
 
@@ -88,17 +92,16 @@ namespace neon
             TextureName = textureName;
         }
 
-        [JsonConstructor]
-        public MapObject(string hitboxPath)
-        {
-            if (HitboxPath != null)
-                Hitbox = new HitboxFabricator().CreateHitbox(HitboxPath);
-            else
-                Hitbox = new List<Tuple<int, int>>();
-        }
-
         public virtual void Update(ContentManager contentManager, World world)
         {
+            if (Hitbox == null)
+            {
+                if (HitboxPath != null)
+                    Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
+                else
+                    Hitbox = new List<Tuple<int, int>>();
+            }
+
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
 

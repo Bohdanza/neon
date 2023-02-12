@@ -22,6 +22,8 @@ namespace neon
         [JsonProperty]
         protected int CurrentPause { get; private set; }
 
+        public Gun():base() { }
+
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
             string hitboxPath, string textureName, World world, List<int> shootingPauses) :
             base(contentManager, position, movement, weight, hitboxPath, textureName, 0, world)

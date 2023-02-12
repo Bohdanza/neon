@@ -17,6 +17,8 @@ namespace neon
         public const float CollectionDistance = 30f;
         public const float PickUpDistance = 5f;
 
+        public Coin() : base() { }
+
         public Coin(ContentManager contentManager, Vector2 position, int value, World world):
             base(contentManager, position, new Vector2(0, 0), 1f, null,
                 "coin"+(value/3).ToString()+"_", 0, world)

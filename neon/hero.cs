@@ -21,6 +21,8 @@ namespace neon
         [JsonProperty]
         public float GunRotationSpeed { get; protected set; } = 0.1f;
 
+        public Hero() : base() { }
+
         public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
             3f, 35,
