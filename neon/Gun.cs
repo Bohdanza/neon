@@ -23,8 +23,8 @@ namespace neon
         protected int CurrentPause { get; private set; }
 
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
-            List<Tuple<int, int>> hitbox, string textureName, World world, List<int> shootingPauses) :
-            base(contentManager, position, movement, weight, hitbox, textureName, 0, world)
+            string hitboxPath, string textureName, World world, List<int> shootingPauses) :
+            base(contentManager, position, movement, weight, hitboxPath, textureName, 0, world)
         {
             ShootingPauses = shootingPauses;
         }

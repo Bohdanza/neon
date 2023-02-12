@@ -24,8 +24,7 @@ namespace neon
         public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
             3f, 35,
-            new List<Tuple<int, int>> { new Tuple<int, int>(0, 0), new Tuple<int, int>(1, 0), new Tuple<int, int>(-1, 0),
-            new Tuple<int, int>(0, -1), new Tuple<int, int>(1, -1), new Tuple<int, int>(-1, -1)},
+            @"hitboxes\hero.png",
             "hero", world)
         {
            // GunInHand = new Spear(contentManager, new Vector2(x, y-2), Movement, world);

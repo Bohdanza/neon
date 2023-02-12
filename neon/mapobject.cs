@@ -26,8 +26,10 @@ namespace neon
          * 2-weapons, items*/
         [JsonProperty("coll")]
         public int CollsionLevel { get; private set; }
-        [JsonProperty("hbt")]
+        [JsonIgnore]
         protected List<Tuple<int, int>> Hitbox;
+        [JsonProperty("pth")]
+        private string HitboxPath=null;
 
         [JsonProperty("mix")]
         public int HitboxMinX { get; protected set; }
@@ -53,7 +55,7 @@ namespace neon
         public bool HitboxPut = false;
 
         public MapObject(ContentManager contentManager,
-            Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox,
+            Vector2 position, Vector2 movement, float weight, string hitboxPath,
             string textureName, int collisionLevel, World world)
         {
             CollsionLevel = collisionLevel;
@@ -61,7 +63,12 @@ namespace neon
             Position = position;
             Movement = movement;
 
-            Hitbox = hitbox;
+            HitboxPath = hitboxPath;
+
+            if (hitboxPath != null)
+                Hitbox = new HitboxFabricator().CreateHitbox(hitboxPath);
+            else
+                Hitbox = new List<Tuple<int, int>>();
 
             HitboxMaxX = -100000;
             HitboxMaxY = -100000;
@@ -82,7 +89,13 @@ namespace neon
         }
 
         [JsonConstructor]
-        public MapObject() { }
+        public MapObject(string hitboxPath)
+        {
+            if (HitboxPath != null)
+                Hitbox = new HitboxFabricator().CreateHitbox(HitboxPath);
+            else
+                Hitbox = new List<Tuple<int, int>>();
+        }
 
         public virtual void Update(ContentManager contentManager, World world)
         {

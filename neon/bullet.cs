@@ -20,8 +20,8 @@ namespace neon
         public int Lifetime { get; protected set; }
 
         public Bullet(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, 
-            int damage, List<Tuple<int, int>> hitbox, string textureName, World world, int lifetime):
-            base(contentManager, position, movement, weight, hitbox, textureName, 0, world)
+            int damage, string hitboxPath, string textureName, World world, int lifetime):
+            base(contentManager, position, movement, weight, hitboxPath, textureName, 0, world)
         {
             Damage = damage;
             Lifetime = lifetime;

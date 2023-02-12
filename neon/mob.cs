@@ -24,8 +24,8 @@ namespace neon
         private string pact = "";
 
         public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp,
-            List<Tuple<int, int>> hitbox, string textureName, World world):
-            base(contentManager, position, movement, weight, hitbox, textureName+"_id_0_", 0, world)
+            string hitboxPath, string textureName, World world):
+            base(contentManager, position, movement, weight, hitboxPath, textureName+"_id_0_", 0, world)
         {
             Action = "id";
             HP = hp;

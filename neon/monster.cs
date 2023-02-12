@@ -26,8 +26,8 @@ namespace neon
         private float dir = 0f; 
 
         public Monster(ContentManager contentManager, Vector2 position, float weight,
-            int hp, List<Tuple<int, int>> hitbox, string textureName, float speed, World world):
-            base(contentManager, position, new Vector2(0, 0), weight, hp, hitbox, textureName, world)
+            int hp, string hitboxPath, string textureName, float speed, World world):
+            base(contentManager, position, new Vector2(0, 0), weight, hp, hitboxPath, textureName, world)
         {
             Speed = speed;
         }

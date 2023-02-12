@@ -18,7 +18,7 @@ namespace neon
         public const float PickUpDistance = 5f;
 
         public Coin(ContentManager contentManager, Vector2 position, int value, World world):
-            base(contentManager, position, new Vector2(0, 0), 1f, new List<Tuple<int, int>>(),
+            base(contentManager, position, new Vector2(0, 0), 1f, null,
                 "coin"+(value/3).ToString()+"_", 0, world)
         { }
 

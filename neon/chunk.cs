@@ -16,7 +16,7 @@ namespace neon
 {
     public class World
     {
-        public const int WorldSize = 256;
+        public const int WorldSize = 512;
 
         public int CurrentChunkX { get; private set; }
         public int CurrentChunkY { get; private set; }
@@ -24,7 +24,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 25;
+        public const int UnitSize = 13;
 
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -36,6 +36,8 @@ namespace neon
 
         public int Biome { get; private set; }
         public string Path { get; private set; }
+
+        private int timeSincef7 = 0;
 
         public World(ContentManager contentManager, string path)
         {
@@ -218,8 +220,12 @@ namespace neon
 
             var ks = Keyboard.GetState();
 
-            if (ks.IsKeyDown(Keys.F7))
+            timeSincef7++;
+
+            if (ks.IsKeyDown(Keys.F7)&&timeSincef7>=5)
             {
+                timeSincef7 = 0;
+
                 if (HitInspect)
                     HitInspect = false;
                 else
@@ -364,7 +370,7 @@ namespace neon
                 yOffset + chunkSize / 2),
                 world));
 
-            int rockCount = rnd.Next(1, 4);
+            int rockCount = rnd.Next(5, 16);
 
             for (int i = 0; i < rockCount; i++)
                 world.Objects.Add(new Rock(contentManager,
