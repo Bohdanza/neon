@@ -66,14 +66,13 @@ namespace neon
 
         protected override void Update(GameTime gameTime)
         {
+            world.Update(Content);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 world.Save();
                 Exit();
             }
-
-            // TODO: Add your update logic here
-            world.Update(Content);
 
             base.Update(gameTime);
         }

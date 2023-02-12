@@ -34,7 +34,6 @@ namespace neon
         public MapObject Hero { get; protected set; }
         private bool HitInspect = false, ChunkBorders=false;
 
-        public int Biome { get; private set; }
         public string Path { get; private set; }
 
         private int timeSincef7 = 0, timeSincef8 = 0;
@@ -237,7 +236,7 @@ namespace neon
 
             timeSincef8++;
 
-            if (ks.IsKeyDown(Keys.F8) && timeSincef8 >= 5)
+            if (ks.IsKeyDown(Keys.F8) && timeSincef8 >= 10)
             {
                 timeSincef8 = 0;
 
@@ -417,31 +416,34 @@ namespace neon
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
+            string str = "";
+            var jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Objects
+            };
+
+            for (int i = 0; i < world.Objects.Count; i++)
+            {
+                if (world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
+                    world.Objects[i].Position.X < (xRelative + 1) * (float)World.WorldSize / 3 &&
+                    world.Objects[i].Position.Y >= yRelative * (float)World.WorldSize / 3 &&
+                    world.Objects[i].Position.Y < (yRelative + 1) * (float)World.WorldSize / 3)
+                {
+                    world.Objects[i].Position = new Vector2(
+                        world.Objects[i].Position.X - xRelative * World.WorldSize / 3,
+                        world.Objects[i].Position.Y - yRelative * World.WorldSize / 3);
+
+                    str+=JsonConvert.SerializeObject(world.Objects[i], jsonSerializerSettings) + "#";
+
+                    world.Objects.RemoveAt(i);
+                    i--;
+                }
+            }
+
             using (StreamWriter sw = new StreamWriter(path + (xRelative + world.CurrentChunkX).ToString()
                 + "_" + (yRelative + world.CurrentChunkY).ToString()))
             {
-                var jsonSerializerSettings = new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.Objects
-                };
-
-                for (int i = 0; i < world.Objects.Count; i++)
-                {
-                    if (world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
-                        world.Objects[i].Position.X < (xRelative + 1) * (float)World.WorldSize / 3 &&
-                        world.Objects[i].Position.Y >= yRelative * (float)World.WorldSize / 3 &&
-                        world.Objects[i].Position.Y < (yRelative + 1) * (float)World.WorldSize / 3)
-                    {
-                        world.Objects[i].Position = new Vector2(
-                            world.Objects[i].Position.X - xRelative * World.WorldSize / 3,
-                            world.Objects[i].Position.Y - yRelative * World.WorldSize / 3);
-
-                        sw.WriteLine(JsonConvert.SerializeObject(world.Objects[i], jsonSerializerSettings) + "#");
-
-                        world.Objects.RemoveAt(i);
-                        i--;
-                    }
-                }
+                sw.WriteLine(str);
             }
         }
     }
