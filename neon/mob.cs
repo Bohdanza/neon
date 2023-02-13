@@ -76,11 +76,15 @@ namespace neon
             Texture2D whatToDraw = Texture.GetCurrentFrame();
 
             if(Direction==1)
-                spriteBatch.Draw(whatToDraw, new Vector2(x - whatToDraw.Width / 2, y - whatToDraw.Height), null, color, 0f,
-                    new Vector2(0, 0), 1f, SpriteEffects.None, depth);
+                spriteBatch.Draw(whatToDraw, 
+                    new Vector2(x - whatToDraw.Width*Game1.PixelScale / 2, y - whatToDraw.Height*Game1.PixelScale), 
+                    null, color, 0f,
+                    new Vector2(0, 0), Game1.PixelScale, SpriteEffects.None, depth);
             else
-                spriteBatch.Draw(whatToDraw, new Vector2(x - whatToDraw.Width / 2, y - whatToDraw.Height), null, color, 0f,
-                    new Vector2(0, 0), 1f, SpriteEffects.FlipHorizontally, depth);
+                spriteBatch.Draw(whatToDraw, 
+                    new Vector2(x - whatToDraw.Width*Game1.PixelScale / 2, y - whatToDraw.Height * Game1.PixelScale),
+                    null, color, 0f,
+                    new Vector2(0, 0), Game1.PixelScale, SpriteEffects.FlipHorizontally, depth);
         }
     }
 }

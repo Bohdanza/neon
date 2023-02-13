@@ -24,7 +24,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 13;
+        public const int UnitSize = 12;
 
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -146,7 +146,7 @@ namespace neon
 
             Hero.Position = new Vector2(
                     Hero.Position.X - xmovage * (float)WorldSize / 3,
-                    Hero.Position.Y - ymovage * (float)WorldSize / 3);
+                    Hero.Position.Y - ymovage * (float)WorldSize / 3);      
         }
 
         public void Save()

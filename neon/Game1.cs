@@ -13,6 +13,7 @@ namespace neon
 {
     public class Game1 : Game
     {
+        public const int PixelScale = 6;
         public static Texture2D NoTexture;
 
         private GraphicsDeviceManager _graphics;
@@ -85,7 +86,7 @@ namespace neon
 
             GraphicsDevice.Clear(new Color(178, 126, 66));
 
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack);
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp);
 
             world.Draw(_spriteBatch);
 
