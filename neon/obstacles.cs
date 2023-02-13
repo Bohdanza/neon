@@ -13,10 +13,12 @@ namespace neon
 {
     public class Idol:MapObject
     {
+        public Idol() : base() { }
+
         public Idol(ContentManager contentManager, float x, float y, World world) : 
             base(contentManager, new Vector2(x, y),
             new Vector2(0f, 0f), 10000000f,
-            new HitboxFabricator().CreateHitbox(@"hitboxes\idol.png"),
+            @"hitboxes\idol.png",
             "idol_0_", 0, world)
         { }
 
@@ -29,28 +31,24 @@ namespace neon
         }
     }
 
-    public class Spike:MapObject
+    public class Spike : MapObject
     {
+        public Spike():base(){}
+
         public Spike(ContentManager contentManager, float x, float y, World world):base(contentManager, new Vector2(x, y), 
             new Vector2(0f, 0f), 10000000f, 
-            new List<Tuple<int, int>> { 
-                new Tuple<int, int>(0, 0), new Tuple<int, int>(-1, 0), 
-                new Tuple<int, int>(1, 0), new Tuple<int, int>(2, 0),
-                new Tuple<int, int>(0, -1), new Tuple<int, int>(-1, -1),
-                new Tuple<int, int>(1, -1), new Tuple<int, int>(2, -1),
-                new Tuple<int, int>(0, -2), new Tuple<int, int>(-1, -2),
-                new Tuple<int, int>(1, -2), new Tuple<int, int>(2, -2),
-                new Tuple<int, int>(0, -3), new Tuple<int, int>(-1, -3),
-                new Tuple<int, int>(1, -3), new Tuple<int, int>(2, -3)}, 
+            null, 
             "pike"+new Random().Next(0, 3).ToString()+"_", 0, world)
         {}
     }
 
     public class Rock:MapObject
     {
+        public Rock() : base() { }
+
         public Rock(ContentManager contentManager, float x, float y, World world, int subtype):
             base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f, 
-                new HitboxFabricator().CreateHitbox(@"hitboxes\rock"+subtype.ToString()+".png"), "rock"+subtype.ToString()+"_",
+                @"hitboxes\rock"+subtype.ToString()+".png", "rock"+subtype.ToString()+"_",
                 0, world)
         {
             

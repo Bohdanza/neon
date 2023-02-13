@@ -13,8 +13,10 @@ namespace neon
 {
     public class Colt:Gun
     {
+        public Colt() : base() { }
+
         public Colt(ContentManager contentManager, Vector2 position, Vector2 movement, World world):
-            base(contentManager, position, movement, 5f, new List<Tuple<int, int>> { }, "colt", world, 
+            base(contentManager, position, movement, 5f, null, "colt", world, 
                 new List<int> { 15, 15, 15, 15, 15, 300})
         { }
 
@@ -33,8 +35,10 @@ namespace neon
 
     public class Spear : Gun
     {
+        public Spear() : base() { }
+   
         public Spear(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 10f, new List<Tuple<int, int>> { }, "spear", world,
+            base(contentManager, position, movement, 10f, null, "spear", world,
                 new List<int> { 40 })
         { }
         

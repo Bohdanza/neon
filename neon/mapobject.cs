@@ -26,8 +26,10 @@ namespace neon
          * 2-weapons, items*/
         [JsonProperty("coll")]
         public int CollsionLevel { get; private set; }
-        [JsonProperty("hbt")]
-        protected List<Tuple<int, int>> Hitbox;
+        [JsonIgnore]
+        protected List<Tuple<int, int>> Hitbox=null;
+        [JsonProperty("pth")]
+        private string HitboxPath=null;
 
         [JsonProperty("mix")]
         public int HitboxMinX { get; protected set; }
@@ -50,10 +52,14 @@ namespace neon
         [JsonIgnore]
         public DynamicTexture Texture { get; protected set; } = null;
         [JsonIgnore]
-        private bool HitboxPut = false;
+        public bool HitboxPut = false;
+
+        [JsonConstructor]
+        public MapObject()
+        {}
 
         public MapObject(ContentManager contentManager,
-            Vector2 position, Vector2 movement, float weight, List<Tuple<int, int>> hitbox,
+            Vector2 position, Vector2 movement, float weight, string hitboxPath,
             string textureName, int collisionLevel, World world)
         {
             CollsionLevel = collisionLevel;
@@ -61,7 +67,12 @@ namespace neon
             Position = position;
             Movement = movement;
 
-            Hitbox = hitbox;
+            HitboxPath = hitboxPath;
+
+            if (HitboxPath != null)
+                Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
+            else
+                Hitbox = new List<Tuple<int, int>>();
 
             HitboxMaxX = -100000;
             HitboxMaxY = -100000;
@@ -81,11 +92,16 @@ namespace neon
             TextureName = textureName;
         }
 
-        [JsonConstructor]
-        public MapObject() { }
-
         public virtual void Update(ContentManager contentManager, World world)
         {
+            if (Hitbox == null)
+            {
+                if (HitboxPath != null)
+                    Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
+                else
+                    Hitbox = new List<Tuple<int, int>>();
+            }
+
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
 

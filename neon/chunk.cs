@@ -10,13 +10,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Text;
-using System.Drawing;
 
 namespace neon
 {
     public class World
     {
-        public const int WorldSize = 256;
+        public HitboxFabricator WorldHitboxFabricator;
+        public const int WorldSize = 512;
 
         public int CurrentChunkX { get; private set; }
         public int CurrentChunkY { get; private set; }
@@ -24,7 +24,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 25;
+        public const int UnitSize = 13;
 
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -32,13 +32,16 @@ namespace neon
         private Texture2D pxl;
         private Texture2D sand;
         public MapObject Hero { get; protected set; }
-        private bool HitInspect = false;
+        private bool HitInspect = false, ChunkBorders=false;
 
-        public int Biome { get; private set; }
         public string Path { get; private set; }
+
+        private int timeSincef7 = 0, timeSincef8 = 0;
 
         public World(ContentManager contentManager, string path)
         {
+            WorldHitboxFabricator = new HitboxFabricator();
+
             CurrentChunkX = -1;
             CurrentChunkY = -1;
 
@@ -105,18 +108,23 @@ namespace neon
 
             if (ymovage != 0)
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0 - Math.Min(0, xmovage); i < 3 - Math.Max(0, xmovage); i++)
                 {
-                    loaderChunk.SaveDelete(Path, i, 1-ymovage, this);
+                    loaderChunk.SaveDelete(Path, i, 1 - ymovage, this);
                 }
             }
 
-            foreach(var currentObject in Objects)
+            foreach (var currentObject in Objects)
             {
                 currentObject.Position = new Vector2(
                     currentObject.Position.X - xmovage * (float)WorldSize / 3,
                     currentObject.Position.Y - ymovage * (float)WorldSize / 3);
+
+                currentObject.HitboxPut = false;
             }
+
+            CurrentChunkX += xmovage;
+            CurrentChunkY += ymovage;
 
             if (xmovage != 0)
             {
@@ -130,7 +138,7 @@ namespace neon
             {
                 for (int i = 0-Math.Min(0, xmovage); i < 3-Math.Max(0, xmovage); i++)
                 {
-                    loaderChunk.SaveDelete(Path, i, 1 - ymovage, this);
+                    loaderChunk.FillChunk(i, 1 + ymovage, this, contentManager);
                 }
             }
 
@@ -184,8 +192,6 @@ namespace neon
                 int qy = ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
 
                 SaveDelete(xmov, ymov, contentManager);
-                CurrentChunkX += xmov;
-                CurrentChunkY += ymov;
 
                 int qn = ScreenX - ((int)(Hero.Position.X * UnitSize) + ScreenX - 960);
                 int qm = ScreenY - ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
@@ -216,12 +222,28 @@ namespace neon
 
             var ks = Keyboard.GetState();
 
-            if (ks.IsKeyDown(Keys.F7))
+            timeSincef7++;
+
+            if (ks.IsKeyDown(Keys.F7)&&timeSincef7>=5)
             {
+                timeSincef7 = 0;
+
                 if (HitInspect)
                     HitInspect = false;
                 else
                     HitInspect = true;
+            }
+
+            timeSincef8++;
+
+            if (ks.IsKeyDown(Keys.F8) && timeSincef8 >= 10)
+            {
+                timeSincef8 = 0;
+
+                if (ChunkBorders)
+                    ChunkBorders = false;
+                else
+                    ChunkBorders = true;
             }
         }
 
@@ -259,6 +281,25 @@ namespace neon
                                 UnitSize, SpriteEffects.None, 0f);
                         }
                     }
+            }
+
+            if(ChunkBorders)
+            {
+                spriteBatch.Draw(pxl,
+                    new Vector2(WorldSize * UnitSize / 3 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f, 
+                    new Vector2(0, 0), new Vector2(2, WorldSize*UnitSize), SpriteEffects.None, 1f);
+
+                spriteBatch.Draw(pxl,
+                    new Vector2(WorldSize * UnitSize / 3*2 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0, 0), new Vector2(2, WorldSize * UnitSize), SpriteEffects.None, 1f);
+
+                spriteBatch.Draw(pxl,
+                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
+
+                spriteBatch.Draw(pxl,
+                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3*2 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
             }
         }
 
@@ -362,11 +403,12 @@ namespace neon
                 yOffset + chunkSize / 2),
                 world));
 
-            for (int i = 0; i < 100; i++)
-            {
-                world.Objects.Add(new Coin(contentManager, new Vector2(xOffset+(float)rnd.NextDouble() * chunkSize,
-                    yOffset+(float)rnd.NextDouble() * chunkSize), rnd.Next(0, 13), world));
-            }
+            int rockCount = rnd.Next(5, 16);
+
+            for (int i = 0; i < rockCount; i++)
+                world.Objects.Add(new Rock(contentManager,
+                    xOffset + (float)rnd.NextDouble() * chunkSize,
+                    yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 4))); 
         }
 
         public void SaveDelete(string path, int xRelative, int yRelative, World world)
@@ -374,31 +416,34 @@ namespace neon
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
+            string str = "";
+            var jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Objects
+            };
+
+            for (int i = 0; i < world.Objects.Count; i++)
+            {
+                if (world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
+                    world.Objects[i].Position.X < (xRelative + 1) * (float)World.WorldSize / 3 &&
+                    world.Objects[i].Position.Y >= yRelative * (float)World.WorldSize / 3 &&
+                    world.Objects[i].Position.Y < (yRelative + 1) * (float)World.WorldSize / 3)
+                {
+                    world.Objects[i].Position = new Vector2(
+                        world.Objects[i].Position.X - xRelative * World.WorldSize / 3,
+                        world.Objects[i].Position.Y - yRelative * World.WorldSize / 3);
+
+                    str+=JsonConvert.SerializeObject(world.Objects[i], jsonSerializerSettings) + "#";
+
+                    world.Objects.RemoveAt(i);
+                    i--;
+                }
+            }
+
             using (StreamWriter sw = new StreamWriter(path + (xRelative + world.CurrentChunkX).ToString()
                 + "_" + (yRelative + world.CurrentChunkY).ToString()))
             {
-                var jsonSerializerSettings = new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.Objects
-                };
-
-                for (int i = 0; i < world.Objects.Count; i++)
-                {
-                    if (world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
-                        world.Objects[i].Position.X < (xRelative + 1) * (float)World.WorldSize / 3 &&
-                        world.Objects[i].Position.Y >= yRelative * (float)World.WorldSize / 3 &&
-                        world.Objects[i].Position.Y < (yRelative + 1) * (float)World.WorldSize / 3)
-                    {
-                        world.Objects[i].Position = new Vector2(
-                            world.Objects[i].Position.X - xRelative * World.WorldSize / 3,
-                            world.Objects[i].Position.Y - yRelative * World.WorldSize / 3);
-
-                        sw.WriteLine(JsonConvert.SerializeObject(world.Objects[i], jsonSerializerSettings) + "#");
-
-                        world.Objects.RemoveAt(i);
-                        i--;
-                    }
-                }
+                sw.WriteLine(str);
             }
         }
     }

@@ -13,9 +13,11 @@ namespace neon
 {
     public class Tersol:Monster
     {
+        public Tersol() : base() { }
+
         public Tersol(ContentManager contentManager, Vector2 position, World world):
             base(contentManager, position, 5f, 10, 
-                new HitboxFabricator().CreateHitbox(@"hitboxes\terasol.png"),
+                @"hitboxes\terasol.png",
                 "tersol", 0.3f, world)
         { }
     }

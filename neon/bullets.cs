@@ -13,8 +13,10 @@ namespace neon
 {
     public class RevolverBullet:Bullet
     {
+        public RevolverBullet() : base() { }
+
         public RevolverBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 10000f, 35, new List<Tuple<int, int>> { new Tuple<int, int>(0, 0) },
+            base(contentManager, position, movement, 10000f, 35, @"hitboxes\onebyone",
                 "peacemaker", world, 1000)
         { }
 
@@ -26,8 +28,10 @@ namespace neon
     }
     public class SpearBullet : Bullet
     {
+        public SpearBullet() : base() { }
+
         public SpearBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 10000f, 20, new HitboxFabricator().CreateHitbox(@"hitboxes\spearhit.png"),
+            base(contentManager, position, movement, 10000f, 20, @"hitboxes\spearhit.png",
                 "spearhit", world, 9)
         { }
     }

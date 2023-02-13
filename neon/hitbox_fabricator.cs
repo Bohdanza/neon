@@ -14,11 +14,19 @@ namespace neon
 {
     public class HitboxFabricator
     {
+        private List<Tuple<string, List<Tuple<int, int>>>> lst=new List<Tuple<string, List<Tuple<int, int>>>>();
+
         public HitboxFabricator()
         { }
 
         public List<Tuple<int, int>> CreateHitbox(string path)
         {
+            for(int i=0; i<lst.Count; i++)
+            {
+                if (lst[i].Item1 == path)
+                    return lst[i].Item2;
+            }
+
             List<Tuple<int, int>> htb = new List<Tuple<int, int>>();
 
             Bitmap bitmap = new Bitmap(path);
@@ -44,6 +52,8 @@ namespace neon
 
             for (int i = 0; i < htb.Count; i++)
                 htb[i] = new Tuple<int, int>(htb[i].Item1 - centerX, htb[i].Item2 - centerY);
+
+            lst.Add(new Tuple<string, List<Tuple<int, int>>>(path, htb));
 
             return htb;
         }
