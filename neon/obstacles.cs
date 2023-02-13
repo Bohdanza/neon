@@ -25,7 +25,7 @@ namespace neon
         public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
         {
             Texture2D whatToDraw = Texture.GetCurrentFrame();
-
+                
             spriteBatch.Draw(whatToDraw, new Vector2(x - whatToDraw.Width / 2, y - whatToDraw.Height+27), null, color, 0f,
                 new Vector2(0, 0), 1f, SpriteEffects.None, depth);
         }
@@ -35,10 +35,11 @@ namespace neon
     {
         public Spike():base(){}
 
-        public Spike(ContentManager contentManager, float x, float y, World world):base(contentManager, new Vector2(x, y), 
+        public Spike(ContentManager contentManager, float x, float y, World world, int subtype)
+            :base(contentManager, new Vector2(x, y), 
             new Vector2(0f, 0f), 10000000f, 
-            null, 
-            "pike"+new Random().Next(0, 3).ToString()+"_", 0, world)
+            @"hitboxes\pike.png",
+            "pike"+subtype.ToString()+"_", 0, world)
         {}
     }
 

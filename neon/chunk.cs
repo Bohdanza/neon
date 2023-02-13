@@ -24,7 +24,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 13;
+        public const int UnitSize = 12;
 
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -397,18 +397,39 @@ namespace neon
             float xOffset = chunkSize * xRelative;
             float yOffset = chunkSize * yRelative;
 
-            //Biome = rnd.Next(0, 1);
+            int biome = rnd.Next(0, 2);
 
             world.Objects.Add(new Tersol(contentManager, new Vector2(xOffset + chunkSize / 2 + 10, 
                 yOffset + chunkSize / 2),
                 world));
 
-            int rockCount = rnd.Next(5, 16);
 
-            for (int i = 0; i < rockCount; i++)
-                world.Objects.Add(new Rock(contentManager,
-                    xOffset + (float)rnd.NextDouble() * chunkSize,
-                    yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 4))); 
+            if (biome == 0)
+            {
+                int rockCount = rnd.Next(5, 16);
+
+                for (int i = 0; i < rockCount; i++)
+                    world.Objects.Add(new Rock(contentManager,
+                        xOffset + (float)rnd.NextDouble() * chunkSize,
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 4)));
+            }
+            else
+            {
+                int rockCount = rnd.Next(1, 6);
+
+                for (int i = 0; i < rockCount; i++)
+                    world.Objects.Add(new Rock(contentManager,
+                        xOffset + (float)rnd.NextDouble() * chunkSize,
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 4)));
+
+                int pikeCount = rnd.Next(7, 20);
+
+
+                for (int i = 0; i < rockCount; i++)
+                    world.Objects.Add(new Spike(contentManager,
+                        xOffset + (float)rnd.NextDouble() * chunkSize,
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 0));
+            }
         }
 
         public void SaveDelete(string path, int xRelative, int yRelative, World world)
