@@ -22,7 +22,7 @@ namespace neon
         [JsonProperty]
         protected int CurrentPause { get; private set; }
 
-        public Gun():base() { }
+        public Gun():base() { Texture = null; }
 
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
             string hitboxPath, string textureName, World world, List<int> shootingPauses) :
@@ -51,16 +51,20 @@ namespace neon
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
         {
-            Texture2D whatToDraw = Texture.GetCurrentFrame();
+            if (Texture != null)
+            {
+                Texture2D whatToDraw = Texture.GetCurrentFrame();
 
-            if (Rotation >= Math.PI * 1.5 || Rotation < Math.PI / 2)
-                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2), null, color,
-                    Rotation,
-                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.None, depth);
-            else
-                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2), null, color,
-                    Rotation,
-                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.FlipVertically, depth);
+                if (Rotation >= Math.PI * 1.5 || Rotation < Math.PI / 2)
+                    spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2),
+                        null, color, Rotation,
+                        new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2),
+                        Game1.PixelScale, SpriteEffects.None, depth);
+                else
+                    spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2),
+                        null, color, Rotation,
+                        new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), Game1.PixelScale, SpriteEffects.FlipVertically, depth);
+            }
         }
     }
 }

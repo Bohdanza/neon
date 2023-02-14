@@ -29,7 +29,7 @@ namespace neon
 
         public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp,
             string hitboxPath, string textureName, World world):
-            base(contentManager, position, movement, weight, hitboxPath, textureName+"_id_0_", 0, world)
+            base(contentManager, position, movement, weight, hitboxPath, textureName+"_id_", 0, world)
         {
             Action = "id";
             HP = hp;
@@ -55,6 +55,14 @@ namespace neon
                 Direction = 0;
 
             base.Update(contentManager, world);
+        }
+
+        protected void AutoAction()
+        {
+            if (Game1.GetDistance(0, 0, Position.X, Position.Y) >= 0.00001f)
+                Action = "wa";
+            else
+                Action = "id";
         }
 
         public virtual void Damage(int damage)

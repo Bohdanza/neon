@@ -24,7 +24,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 12;
+        public const int UnitSize = 9;
 
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -249,12 +249,13 @@ namespace neon
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            int offX = -(Math.Abs(ScreenX) % sand.Width);
-            int offY = -(Math.Abs(ScreenY) % sand.Height);
+            int offX = -(Math.Abs(ScreenX) % (sand.Width*Game1.PixelScale));
+            int offY = -(Math.Abs(ScreenY) % (sand.Height * Game1.PixelScale));
 
-            for (int i = offX; i < 1920; i += sand.Width)
-                for (int j = offY; j < 1080; j += sand.Height)
-                    spriteBatch.Draw(sand, new Vector2(i, j), Microsoft.Xna.Framework.Color.White);
+            for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
+                for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
+                    spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
+                        0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
 
             float dpt = 0.1f;
             float dptStep = 0.5f / Objects.Count;
@@ -262,7 +263,7 @@ namespace neon
             for (int i = 0; i < Objects.Count; i++)
             {
                 Objects[i].Draw(spriteBatch, ScreenX + (int)(Objects[i].Position.X * UnitSize), ScreenY + (int)(Objects[i].Position.Y * UnitSize),
-                    Microsoft.Xna.Framework.Color.White, dpt);
+                    Color.White, dpt);
 
                 dpt += dptStep;
             }
@@ -411,7 +412,7 @@ namespace neon
                 for (int i = 0; i < rockCount; i++)
                     world.Objects.Add(new Rock(contentManager,
                         xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 4)));
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 2));
             }
             else
             {
@@ -420,12 +421,12 @@ namespace neon
                 for (int i = 0; i < rockCount; i++)
                     world.Objects.Add(new Rock(contentManager,
                         xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 4)));
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 2));
 
                 int pikeCount = rnd.Next(7, 20);
 
 
-                for (int i = 0; i < rockCount; i++)
+                for (int i = 0; i < pikeCount; i++)
                     world.Objects.Add(new Spike(contentManager,
                         xOffset + (float)rnd.NextDouble() * chunkSize,
                         yOffset + (float)rnd.NextDouble() * chunkSize, world, 0));

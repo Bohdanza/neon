@@ -29,7 +29,7 @@ namespace neon
         [JsonIgnore]
         protected List<Tuple<int, int>> Hitbox=null;
         [JsonProperty("pth")]
-        private string HitboxPath=null;
+        protected string HitboxPath=null;
 
         [JsonProperty("mix")]
         public int HitboxMinX { get; protected set; }

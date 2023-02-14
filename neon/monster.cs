@@ -15,6 +15,8 @@ namespace neon
     public abstract class Monster:Mob
     {
         [JsonProperty]
+        public Gun GunInHand { get; protected set; } = null;
+        [JsonProperty]
         protected int ComfortMin = 30;
         [JsonProperty]
         protected int ComfortMax = 60;
@@ -42,22 +44,51 @@ namespace neon
 
             //float dir1 = Game1.GetDirection(Movement, new Vector2(0, 0));
 
-            if (dir < 0)
+            if (Action != "die")
+            {
+                if (dir < 0)
+                    dir += (float)Math.PI;
+
+                if (dir > Math.PI)
+                    dir -= (float)Math.PI;
+
+                if (rnd.Next(0, 1000) < 10)
+                    dir = (float)(rnd.NextDouble() * Math.PI * 2);
+
                 dir += (float)Math.PI;
 
-            if (dir > Math.PI)
-                dir -= (float)Math.PI;
+                Vector2 vector = Game1.DirectionToVector(dir);
 
-            if (rnd.Next(0, 1000) < 10)
-                dir = (float)(rnd.NextDouble() * Math.PI * 2);
+                ChangeMovement(new Vector2(vector.X * Speed, vector.Y * Speed));
 
-            dir += (float)Math.PI;
+                if (GunInHand != null)
+                {
+                    GunInHand.UpdateInHand(contentManager);
 
-            Vector2 vector = Game1.DirectionToVector(dir);
+                    GunInHand.Rotation = (float)((Game1.GetDirection(Position, world.Hero.Position)+Math.PI)%Math.PI);
 
-            ChangeMovement(new Vector2(vector.X * Speed, vector.Y * Speed));
+                    GunInHand.Position = new Vector2(Position.X, Position.Y - 2);
+
+                    if (rnd.Next(0, 100)<3)
+                    {
+                        GunInHand.ShootInDirection(contentManager, GunInHand.Rotation, world, this);
+                    }
+                }
+
+                AutoAction();
+            }
 
             base.Update(contentManager, world);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
+        {
+            base.Draw(spriteBatch, x, y, color, depth);
+
+            if (GunInHand != null)
+            {
+                GunInHand.Draw(spriteBatch, x, y - 2 * World.UnitSize, color, depth + 0.000001f);
+            }
         }
     }
 }

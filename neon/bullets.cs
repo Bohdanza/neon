@@ -16,7 +16,7 @@ namespace neon
         public RevolverBullet() : base() { }
 
         public RevolverBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 10000f, 35, @"hitboxes\onebyone",
+            base(contentManager, position, movement, 10000f, 35, @"hitboxes\onebyone.png",
                 "peacemaker", world, 1000)
         { }
 

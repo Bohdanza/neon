@@ -31,6 +31,14 @@ namespace neon
 
         public override void Update(ContentManager contentManager, World world)
         {
+            if (Hitbox == null)
+            {
+                if (HitboxPath != null)
+                    Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
+                else
+                    Hitbox = new List<Tuple<int, int>>();
+            }
+
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
 
@@ -89,13 +97,13 @@ namespace neon
             float Rotation = Game1.GetDirection(Movement, new Vector2(0, 0));
 
             if (Rotation >= Math.PI * 1.5 || Rotation < Math.PI / 2)
-                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2), null, color,
+                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2 * Game1.PixelScale), null, color,
                     Rotation,
-                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.None, depth);
+                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), Game1.PixelScale, SpriteEffects.None, depth);
             else
-                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2), null, color,
+                spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2*Game1.PixelScale), null, color,
                     Rotation,
-                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), 1f, SpriteEffects.FlipVertically, depth);
+                    new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), Game1.PixelScale, SpriteEffects.FlipVertically, depth);
         }
 
         public virtual Bullet Copy(ContentManager contentManager, World world)

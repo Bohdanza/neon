@@ -19,6 +19,8 @@ namespace neon
             base(contentManager, position, 5f, 10, 
                 @"hitboxes\terasol.png",
                 "tersol", 0.3f, world)
-        { }
+        {
+            GunInHand = new Colt(contentManager, position, new Vector2(0, 0), world);
+        }
     }
 }

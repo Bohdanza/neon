@@ -27,7 +27,7 @@ namespace neon
 
             world.Objects.Add(new RevolverBullet(contentManager,
                 new Vector2(Position.X + (float)Math.Cos(Direction) * 5f, Position.Y + (float)Math.Sin(Direction) * 5f),
-                new Vector2((float)Math.Cos(Direction), (float)Math.Sin(Direction)), world));
+                new Vector2((float)Math.Cos(Direction)*1.5f, (float)Math.Sin(Direction))*1.5f, world));
 
             base.ShootInDirection(contentManager, Direction, world, owner);
         }
