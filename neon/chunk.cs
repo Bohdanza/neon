@@ -400,14 +400,16 @@ namespace neon
 
             int biome = rnd.Next(0, 2);
 
-            world.Objects.Add(new Tersol(contentManager, new Vector2(xOffset + chunkSize / 2 + 10, 
-                yOffset + chunkSize / 2),
-                world));
+            for(int i=0; i<rnd.Next(1, 3); i++)
+                world.Objects.Add(new Tersol(contentManager, 
+                    new Vector2(xOffset + (float)rnd.NextDouble()*chunkSize,
+                    yOffset + (float)rnd.NextDouble()*chunkSize),
+                    world));
 
 
             if (biome == 0)
             {
-                int rockCount = rnd.Next(5, 16);
+                int rockCount = rnd.Next(4, 10);
 
                 for (int i = 0; i < rockCount; i++)
                     world.Objects.Add(new Rock(contentManager,
@@ -423,8 +425,7 @@ namespace neon
                         xOffset + (float)rnd.NextDouble() * chunkSize,
                         yOffset + (float)rnd.NextDouble() * chunkSize, world, 2));
 
-                int pikeCount = rnd.Next(7, 20);
-
+                int pikeCount = rnd.Next(5, 13);
 
                 for (int i = 0; i < pikeCount; i++)
                     world.Objects.Add(new Spike(contentManager,

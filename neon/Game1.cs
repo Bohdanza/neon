@@ -18,7 +18,7 @@ namespace neon
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Texture2D texture;
+        private Texture2D cursor;
         private World world;
         private FrameCounter _frameCounter = new FrameCounter();
         private SpriteFont mainFont;
@@ -28,7 +28,7 @@ namespace neon
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            IsMouseVisible = true;
+            IsMouseVisible = false;
             _graphics.ApplyChanges();
 
             this.IsFixedTimeStep = true;
@@ -40,7 +40,7 @@ namespace neon
 
             _graphics.ApplyChanges();
 
-            _graphics.IsFullScreen = false;
+            _graphics.IsFullScreen = true;
 
             _graphics.ApplyChanges();
         }
@@ -59,7 +59,7 @@ namespace neon
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            texture = Content.Load<Texture2D>("pxl");
+            cursor = Content.Load<Texture2D>("curs");
             NoTexture = Content.Load<Texture2D>("no_texture");
             mainFont = Content.Load<SpriteFont>("File");
             // TODO: use this.Content to load your game content here
@@ -81,6 +81,7 @@ namespace neon
         protected override void Draw(GameTime gameTime)
         {
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var ms = Mouse.GetState();
 
             _frameCounter.Update(deltaTime);
 
@@ -94,6 +95,9 @@ namespace neon
 
             _spriteBatch.DrawString(mainFont, fps, new Vector2(1920 - mainFont.MeasureString(fps).X, 1), Color.White, 0f, 
                 new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
+
+            _spriteBatch.Draw(cursor, new Vector2(ms.X - cursor.Width / 2, ms.Y - cursor.Height / 2), null,
+                Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
 
             _spriteBatch.End();
             

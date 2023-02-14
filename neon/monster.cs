@@ -65,7 +65,9 @@ namespace neon
                 {
                     GunInHand.UpdateInHand(contentManager);
 
-                    GunInHand.Rotation = (float)((Game1.GetDirection(Position, world.Hero.Position)+Math.PI)%Math.PI);
+                    GunInHand.Rotation = 
+                        (float)(Game1.GetDirection(new Vector2(Position.X, Position.Y-2), 
+                        world.Hero.Position)+Math.PI);
 
                     GunInHand.Position = new Vector2(Position.X, Position.Y - 2);
 
