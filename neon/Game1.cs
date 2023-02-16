@@ -40,7 +40,7 @@ namespace neon
 
             _graphics.ApplyChanges();
 
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
 
             _graphics.ApplyChanges();
         }

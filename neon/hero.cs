@@ -20,21 +20,31 @@ namespace neon
         public float Speed { get; private set; } = 0.6f;
         [JsonProperty]
         public float GunRotationSpeed { get; protected set; } = 0.1f;
+        private Texture2D HpDisplay=null;
+        private int CurrentHPDraw = 0;
 
         public Hero() : base() { }
 
         public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            5f, 35,
+            5f, 80,
             @"hitboxes\hero.png",
             "hero", world)
         {
-            GunInHand = new Colt(contentManager, new Vector2(x, y-2), Movement, world);
+            GunInHand = new ShotGun(contentManager, new Vector2(x, y-2), Movement, world);
             Action = "wa";
         }
 
         public override void Update(ContentManager contentManager, World world)
         {
+            if(CurrentHPDraw!=HP)
+                CurrentHPDraw += (HP-CurrentHPDraw)/Math.Abs(HP-CurrentHPDraw)*
+                    Math.Min(1, Math.Abs(HP - CurrentHPDraw));
+
+            if(HpDisplay==null)
+            {
+                HpDisplay = contentManager.Load<Texture2D>("hpfield");
+            }
 
             if (Action != "die")
             {
@@ -109,6 +119,9 @@ namespace neon
             {
                 GunInHand.Draw(spriteBatch, x, y-2*World.UnitSize, color, depth+0.000001f);
             }
+
+            spriteBatch.Draw(HpDisplay, new Vector2(10, 10), null, color, 0f, new Vector2(0, 0),
+                new Vector2(CurrentHPDraw * 4, Game1.PixelScale*2), SpriteEffects.None, 1f);
         }
     }
 }

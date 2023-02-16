@@ -64,7 +64,7 @@ namespace neon
                     foreach(var co in obst)
                         if(co is Mob)
                         {
-                            ((Mob)co).Damage(Damage);
+                            ((Mob)co).Damage(Damage, world);
                         }
                 }
             }
@@ -82,7 +82,7 @@ namespace neon
                     foreach (var co in obst)
                         if (co is Mob)
                         {
-                            ((Mob)co).Damage(Damage);
+                            ((Mob)co).Damage(Damage, world);
                         }
                 }
             }

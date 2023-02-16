@@ -56,4 +56,32 @@ namespace neon
             base.ShootInDirection(contentManager, Direction, world, owner);
         }
     }
+
+    public class ShotGun:Gun
+    {
+        public ShotGun(ContentManager contentManager, Vector2 position, Vector2 movement, World world):
+            base(contentManager, position, movement, 10f, null, "shotgun", world,
+                new List<int> { 150 })
+        {
+
+        }
+
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        {
+            if (TimeTillShot > 0)
+                return;
+
+            var rnd = new Random();
+
+            for (int i = 0; i < rnd.Next(5, 7); i++)
+            {
+                world.Objects.Add(new RevolverBullet(contentManager,
+                    new Vector2(Position.X + (float)Math.Cos(Direction) * 5f, Position.Y + (float)Math.Sin(Direction) * 5f),
+                    new Vector2((float)Math.Cos(Direction+rnd.NextDouble()-0.5) * 1.5f,
+                    (float)Math.Sin(Direction+rnd.NextDouble()-0.5)) * 1.5f, world));
+            }
+
+            base.ShootInDirection(contentManager, Direction, world, owner);
+        }
+    }
 }

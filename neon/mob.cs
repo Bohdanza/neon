@@ -65,12 +65,15 @@ namespace neon
                 Action = "id";
         }
 
-        public virtual void Damage(int damage)
+        public virtual void Damage(int damage, World world)
         {
             HP -= damage;
 
             if (HP <= 0)
             {
+                if(Action!="die")
+                    world.KillCount++;
+
                 Action = "die";
                 return;
             }

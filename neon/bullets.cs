@@ -35,4 +35,20 @@ namespace neon
                 "spearhit", world, 9)
         { }
     }
+
+    public class ShotgunBullet : Bullet
+    {
+        public ShotgunBullet() : base() { }
+
+        public ShotgunBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
+            base(contentManager, position, movement, 10000f, 18, @"hitboxes\onebyone.png",
+                "shotbul", world, 1000)
+        { }
+
+        public override Bullet Copy(ContentManager contentManager, World world)
+        {
+            return new ShotgunBullet(contentManager, new Vector2(Position.X, Position.Y),
+                new Vector2(Movement.X, Movement.Y), world);
+        }
+    }
 }

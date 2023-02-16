@@ -17,6 +17,8 @@ namespace neon
     {
         public HitboxFabricator WorldHitboxFabricator;
         public const int WorldSize = 512;
+        public int KillCount = 0;
+        private SpriteFont mainFont;
 
         public int CurrentChunkX { get; private set; }
         public int CurrentChunkY { get; private set; }
@@ -47,6 +49,7 @@ namespace neon
 
             sand = contentManager.Load<Texture2D>("sand");
             pxl = contentManager.Load<Texture2D>("pxl");
+            mainFont = contentManager.Load<SpriteFont>("File");
 
             if (path[path.Length-1]!='\\')
                 path += "\\";
@@ -302,6 +305,14 @@ namespace neon
                     new Vector2(0 + ScreenX, WorldSize * UnitSize / 3*2 + ScreenY), null, Color.Blue, 0f,
                     new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
             }
+
+            spriteBatch.DrawString(mainFont, KillCount.ToString(),
+                new Vector2(3, 3), Color.Black, 0f,
+                new Vector2(0, 0), 1f, SpriteEffects.None, 0.999f);
+
+            spriteBatch.DrawString(mainFont, KillCount.ToString(), 
+                new Vector2(1, 1), Color.White, 0f,
+                new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
         }
 
         public Vector2 GetScreenPosition(MapObject mapObject)
@@ -397,15 +408,14 @@ namespace neon
             float chunkSize = World.WorldSize / 3;
             float xOffset = chunkSize * xRelative;
             float yOffset = chunkSize * yRelative;
-
+            
             int biome = rnd.Next(0, 2);
 
-            for(int i=0; i<rnd.Next(1, 3); i++)
+            /*for(int i=0; i<rnd.Next(1, 3); i++)
                 world.Objects.Add(new Tersol(contentManager, 
                     new Vector2(xOffset + (float)rnd.NextDouble()*chunkSize,
                     yOffset + (float)rnd.NextDouble()*chunkSize),
-                    world));
-
+                    world));*/
 
             if (biome == 0)
             {
@@ -447,7 +457,8 @@ namespace neon
 
             for (int i = 0; i < world.Objects.Count; i++)
             {
-                if (world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
+                if (!(world.Objects[i] is Bullet)&&
+                    world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
                     world.Objects[i].Position.X < (xRelative + 1) * (float)World.WorldSize / 3 &&
                     world.Objects[i].Position.Y >= yRelative * (float)World.WorldSize / 3 &&
                     world.Objects[i].Position.Y < (yRelative + 1) * (float)World.WorldSize / 3)
