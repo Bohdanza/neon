@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using System.Text;
+using System.Threading;
 
 namespace neon
 {
@@ -34,7 +35,7 @@ namespace neon
         private Texture2D pxl;
         private Texture2D sand;
         public MapObject Hero { get; protected set; }
-        private bool HitInspect = false, ChunkBorders=false;
+        private bool HitInspect = false, ChunkBorders=false, CurrentlyLoading=false;
 
         public string Path { get; private set; }
 
@@ -189,18 +190,22 @@ namespace neon
             if (Hero.Position.Y >= (float)WorldSize / 3 * 2)
                 ymov = 1;
 
-            if (xmov != 0 || ymov != 0)
+            if (!CurrentlyLoading&&xmov != 0 || ymov != 0)
             {
+                CurrentlyLoading = true;
+
                 int qx = ((int)(Hero.Position.X * UnitSize) + ScreenX - 960);
                 int qy = ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
 
                 SaveDelete(xmov, ymov, contentManager);
-
+              
                 int qn = ScreenX - ((int)(Hero.Position.X * UnitSize) + ScreenX - 960);
                 int qm = ScreenY - ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
 
                 ScreenX = qn+qx;
                 ScreenY = qm+qy;
+
+                CurrentlyLoading = false;
             }
 
             ScreenX -= ((int)(Hero.Position.X * UnitSize) + ScreenX - 960) / 16;
@@ -409,13 +414,8 @@ namespace neon
             float xOffset = chunkSize * xRelative;
             float yOffset = chunkSize * yRelative;
             
-            int biome = rnd.Next(0, 2);
-
-            /*for(int i=0; i<rnd.Next(1, 3); i++)
-                world.Objects.Add(new Tersol(contentManager, 
-                    new Vector2(xOffset + (float)rnd.NextDouble()*chunkSize,
-                    yOffset + (float)rnd.NextDouble()*chunkSize),
-                    world));*/
+            int biome = new BiomeReader().GetBiome(world.CurrentChunkX+xRelative, world.CurrentChunkY+yRelative,
+                world.Path+"biomes\\");
 
             if (biome == 0)
             {
@@ -426,7 +426,7 @@ namespace neon
                         xOffset + (float)rnd.NextDouble() * chunkSize,
                         yOffset + (float)rnd.NextDouble() * chunkSize, world, 2));
             }
-            else
+            else if(biome==1)
             {
                 int rockCount = rnd.Next(1, 6);
 
@@ -441,6 +441,24 @@ namespace neon
                     world.Objects.Add(new Spike(contentManager,
                         xOffset + (float)rnd.NextDouble() * chunkSize,
                         yOffset + (float)rnd.NextDouble() * chunkSize, world, 0));
+            }
+            else if (biome == 2)
+            {
+                int rockCount = rnd.Next(1, 16);
+
+                for (int i = 0; i < rockCount; i++)
+                    world.Objects.Add(new Rock(contentManager,
+                        xOffset + (float)rnd.NextDouble() * chunkSize,
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
+            }
+            else if (biome == 3)
+            {
+                int pikeCount = rnd.Next(5, 13);
+
+                for (int i = 0; i < pikeCount; i++)
+                    world.Objects.Add(new Spike(contentManager,
+                        xOffset + (float)rnd.NextDouble() * chunkSize,
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
             }
         }
 
