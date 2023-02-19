@@ -26,7 +26,7 @@ namespace neon
         public static List<Tuple<Rectangle, int>> BiomeSeparation = new List<Tuple<Rectangle, int>>
         {
             new Tuple<Rectangle, int>(new Rectangle(0, 0, 333, 1000), 0),
-            new Tuple<Rectangle, int>(new Rectangle(333, 0, 666, 333), 1),
+            new Tuple<Rectangle, int>(new Rectangle(333, 0, 667, 333), 1),
             new Tuple<Rectangle, int>(new Rectangle(333, 333, 333, 666), 2),
             new Tuple<Rectangle, int>(new Rectangle(666, 333, 334, 667), 3)
         };
@@ -42,7 +42,7 @@ namespace neon
             Tuple<int, int> cond = GetConditions(chunkX, chunkY, path);
 
             for (int i = 0; i < BiomeSeparation.Count; i++)
-                if (BiomeSeparation[i].Item1.Contains(cond.Item1, cond.Item1))
+                if (BiomeSeparation[i].Item1.Contains(cond.Item1, cond.Item2))
                     return BiomeSeparation[i].Item2;
 
             return -1; 

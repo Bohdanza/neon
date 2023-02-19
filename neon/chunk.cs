@@ -429,7 +429,7 @@ namespace neon
             else if(biome==1)
             {
                 int rockCount = rnd.Next(1, 6);
-
+                
                 for (int i = 0; i < rockCount; i++)
                     world.Objects.Add(new Rock(contentManager,
                         xOffset + (float)rnd.NextDouble() * chunkSize,
