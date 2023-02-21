@@ -22,6 +22,8 @@ namespace neon
         [JsonProperty]
         protected int CurrentPause { get; private set; }
 
+        private string Action = "", pact="";
+
         public Gun():base() { Texture = null; }
 
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
@@ -33,6 +35,7 @@ namespace neon
 
         public virtual void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
         {
+            Action = "_shot_";
             TimeTillShot = ShootingPauses[CurrentPause];
 
             CurrentPause++;
@@ -41,10 +44,15 @@ namespace neon
 
         public virtual void UpdateInHand(ContentManager contentManager)
         {
-            if (Texture == null)
-                Texture = new DynamicTexture(contentManager, TextureName);
+            if (Texture == null||pact!=Action)
+                Texture = new DynamicTexture(contentManager, TextureName+Action);
 
             Texture.Update(contentManager);
+
+            pact = Action;
+
+            if (Action == "_shot_" && Texture.CurrentTexture == Texture.Textures.Count - 1)
+                Action = "";
 
             TimeTillShot--;
         }
@@ -56,12 +64,12 @@ namespace neon
                 Texture2D whatToDraw = Texture.GetCurrentFrame();
 
                 if (Rotation >= Math.PI * 1.5 || Rotation < Math.PI / 2)
-                    spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2),
+                    spriteBatch.Draw(whatToDraw, new Vector2(x, y),
                         null, color, Rotation,
                         new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2),
                         Game1.PixelScale, SpriteEffects.None, depth);
                 else
-                    spriteBatch.Draw(whatToDraw, new Vector2(x, y - whatToDraw.Height / 2),
+                    spriteBatch.Draw(whatToDraw, new Vector2(x, y),
                         null, color, Rotation,
                         new Vector2(whatToDraw.Width / 2, whatToDraw.Height / 2), Game1.PixelScale, SpriteEffects.FlipVertically, depth);
             }

@@ -51,4 +51,20 @@ namespace neon
                 new Vector2(Movement.X, Movement.Y), world);
         }
     }
+
+    public class ArratBullet : Bullet
+    {
+        public ArratBullet() : base() { }
+
+        public ArratBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
+            base(contentManager, position, movement, 10000f, 75, @"hitboxes\arratbul.png",
+                "arratbul", world, 1000)
+        { }
+
+        public override Bullet Copy(ContentManager contentManager, World world)
+        {
+            return new ArratBullet(contentManager, new Vector2(Position.X, Position.Y),
+                new Vector2(Movement.X, Movement.Y), world);
+        }
+    }
 }

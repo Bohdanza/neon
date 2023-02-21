@@ -27,7 +27,7 @@ namespace neon
 
             world.Objects.Add(new RevolverBullet(contentManager,
                 new Vector2(Position.X + (float)Math.Cos(Direction) * 5f, Position.Y + (float)Math.Sin(Direction) * 5f),
-                new Vector2((float)Math.Cos(Direction)*1.5f, (float)Math.Sin(Direction))*1.5f, world));
+                new Vector2((float)Math.Cos(Direction)*1.5f, (float)Math.Sin(Direction)*1.5f), world));
 
             base.ShootInDirection(contentManager, Direction, world, owner);
         }
@@ -75,11 +75,35 @@ namespace neon
 
             for (int i = 0; i < rnd.Next(5, 7); i++)
             {
-                world.Objects.Add(new RevolverBullet(contentManager,
+                double ang = Direction + rnd.NextDouble() - 0.5;
+
+                world.Objects.Add(new ShotgunBullet(contentManager,
                     new Vector2(Position.X + (float)Math.Cos(Direction) * 5f, Position.Y + (float)Math.Sin(Direction) * 5f),
-                    new Vector2((float)Math.Cos(Direction+rnd.NextDouble()-0.5) * 1.5f,
-                    (float)Math.Sin(Direction+rnd.NextDouble()-0.5)) * 1.5f, world));
+                    new Vector2((float)Math.Cos(ang) * 3f,
+                    (float)Math.Sin(ang) * 3f), world));
             }
+
+            base.ShootInDirection(contentManager, Direction, world, owner);
+        }
+    }
+
+    public class Arrat : Gun
+    {
+        public Arrat() : base() { }
+
+        public Arrat(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
+            base(contentManager, position, movement, 5f, null, "arrat", world,
+                new List<int> { 55, 55, 100 })
+        { }
+
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        {
+            if (TimeTillShot > 0)
+                return;
+
+            world.Objects.Add(new ArratBullet(contentManager,
+                new Vector2(Position.X + (float)Math.Cos(Direction) * 7f, Position.Y + (float)Math.Sin(Direction) * 7f),
+                new Vector2((float)Math.Cos(Direction) * 2.8f, (float)Math.Sin(Direction) * 2.8f), world));
 
             base.ShootInDirection(contentManager, Direction, world, owner);
         }

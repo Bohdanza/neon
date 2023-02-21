@@ -31,7 +31,7 @@ namespace neon
             @"hitboxes\hero.png",
             "hero", world)
         {
-            GunInHand = new ShotGun(contentManager, new Vector2(x, y-2), Movement, world);
+            GunInHand = new Arrat(contentManager, new Vector2(x, y-2), Movement, world);
             Action = "wa";
         }
 
@@ -78,10 +78,10 @@ namespace neon
 
                 if (GunInHand != null)
                 {
-                    Vector2 screen = world.GetScreenPosition(this);
+                    Vector2 screen = world.GetScreenPosition(GunInHand);
 
                     float dir = Game1.GetDirection(new Vector2(ms.X, ms.Y),
-                        new Vector2(screen.X, screen.Y + Position.Y - GunInHand.Position.Y));
+                        new Vector2(screen.X, screen.Y));
                     dir += (float)Math.PI * 2;
                     dir %= (float)(Math.PI * 2);
 

@@ -427,12 +427,7 @@ namespace neon
             }
             else if(biome==1)
             {
-                int BoabCount = rnd.Next(0, 2);
-
-                if (BoabCount == 1)
-                    BoabCount = rnd.Next(4, 7);
-                else
-                    BoabCount = 0;
+                int BoabCount = rnd.Next(3, 10);
 
                 for(int i=0; i<BoabCount; i++)
                 {
@@ -453,14 +448,16 @@ namespace neon
                     int q = rnd.Next(5, 10);
                     float centX = xOffset + (float)rnd.NextDouble() * chunkSize;
                     float centY = yOffset + (float)rnd.NextDouble() * chunkSize;
+                    double xrad = 0;
 
                     for (int j=0; j<q; j++)
                     {
+                        xrad += rnd.NextDouble()*5 + 1;
                         double rot = rnd.Next(0, 24) * Math.PI / 12;
 
                         MapObject grASS = new ThornGrass(contentManager,
-                            centX + (float)(Math.Cos(rot) * (rnd.NextDouble() - 0.5) * 40),
-                            centY + (float)(Math.Sin(rot) * (rnd.NextDouble() - 0.5) * 40),
+                            centX + (float)(Math.Cos(rot) * xrad),
+                            centY + (float)(Math.Sin(rot) * xrad),
                             world, rnd.Next(0, 2));
 
                         if (world.HitMap.GetValue((int)grASS.Position.X, (int)grASS.Position.Y).Count<1)
