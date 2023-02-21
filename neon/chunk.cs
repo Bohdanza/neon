@@ -441,6 +441,16 @@ namespace neon
                         world.Objects.Add(boab);
                 }
 
+                if (rnd.Next(0, 3)==0)
+                {
+                    MapObject bigboab = new Boab(contentManager,
+                        xOffset + (float)rnd.NextDouble() * chunkSize,
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 6);
+
+                    if (bigboab.HitboxClear(world))
+                        world.Objects.Add(bigboab);
+                }
+
                 int thorns = rnd.Next(2, 6);
 
                 for(int i=0; i<thorns; i++)
