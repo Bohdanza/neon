@@ -13,7 +13,7 @@ namespace neon
 {
     public class Game1 : Game
     {
-        public const int PixelScale = 6;
+        public const int PixelScale = 1;
         public static Texture2D NoTexture;
 
         private GraphicsDeviceManager _graphics;
@@ -27,7 +27,7 @@ namespace neon
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
+            
             IsMouseVisible = false;
             _graphics.ApplyChanges();
 

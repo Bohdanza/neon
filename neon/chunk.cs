@@ -208,8 +208,8 @@ namespace neon
                 CurrentlyLoading = false;
             }
 
-            ScreenX -= ((int)(Hero.Position.X * UnitSize) + ScreenX - 960) / 16;
-            ScreenY -= ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540) / 16;
+            ScreenX -= (int)((Hero.Position.X * UnitSize) + ScreenX - 960 + Hero.Movement.X * 600) / 12;
+            ScreenY -= (int)((Hero.Position.Y * UnitSize) + ScreenY - 540 + Hero.Movement.Y * 337) / 12;
 
             int l = 1;
 
@@ -232,7 +232,7 @@ namespace neon
 
             timeSincef7++;
 
-            if (ks.IsKeyDown(Keys.F7)&&timeSincef7>=5)
+            if (ks.IsKeyDown(Keys.F7)&&timeSincef7>=15)
             {
                 timeSincef7 = 0;
 
@@ -283,8 +283,7 @@ namespace neon
                     {
                         var vl = HitMap.GetValue(i, j);
 
-                        if (vl.Count > 0)
-                        {
+                        if (vl.Count > 0)                        {
                             spriteBatch.Draw(pxl, new Vector2(ScreenX + i * UnitSize, ScreenY + j * UnitSize),
                                 null, Microsoft.Xna.Framework.Color.Tan, 0f, new Vector2(0, 0),
                                 UnitSize, SpriteEffects.None, 0f);
@@ -428,19 +427,46 @@ namespace neon
             }
             else if(biome==1)
             {
-                int rockCount = rnd.Next(1, 6);
-                
-                for (int i = 0; i < rockCount; i++)
-                    world.Objects.Add(new Rock(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 2));
+                int BoabCount = rnd.Next(0, 2);
 
-                int pikeCount = rnd.Next(5, 13);
+                if (BoabCount == 1)
+                    BoabCount = rnd.Next(4, 7);
+                else
+                    BoabCount = 0;
 
-                for (int i = 0; i < pikeCount; i++)
-                    world.Objects.Add(new Spike(contentManager,
+                for(int i=0; i<BoabCount; i++)
+                {
+                    int vl = rnd.Next(0, 4);
+
+                    MapObject boab = new Boab(contentManager, 
                         xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 0));
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, vl);
+
+                    if (boab.HitboxClear(world))
+                        world.Objects.Add(boab);
+                }
+
+                int thorns = rnd.Next(2, 6);
+
+                for(int i=0; i<thorns; i++)
+                {
+                    int q = rnd.Next(5, 10);
+                    float centX = xOffset + (float)rnd.NextDouble() * chunkSize;
+                    float centY = yOffset + (float)rnd.NextDouble() * chunkSize;
+
+                    for (int j=0; j<q; j++)
+                    {
+                        double rot = rnd.Next(0, 24) * Math.PI / 12;
+
+                        MapObject grASS = new ThornGrass(contentManager,
+                            centX + (float)(Math.Cos(rot) * (rnd.NextDouble() - 0.5) * 40),
+                            centY + (float)(Math.Sin(rot) * (rnd.NextDouble() - 0.5) * 40),
+                            world, rnd.Next(0, 2));
+
+                        if (world.HitMap.GetValue((int)grASS.Position.X, (int)grASS.Position.Y).Count<1)
+                            world.Objects.Add(grASS);
+                    }
+                }
             }
             else if (biome == 2)
             {

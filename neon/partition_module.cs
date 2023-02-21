@@ -26,6 +26,7 @@ namespace neon
         public List<MapObject> Value { get; protected set; }
         
         public List<LovelyChunk> children { get; protected set; } = null;
+        
         public int Size { get; private set; }
 
         /// <summary>

@@ -55,4 +55,30 @@ namespace neon
             
         }
     }
+
+    public class Boab : MapObject
+    {
+        public Boab() : base() { }
+
+        public Boab(ContentManager contentManager, float x, float y, World world, int subtype) :
+            base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f,
+                @"hitboxes\boab" + subtype.ToString() + ".png", "boab" + subtype.ToString() + "_",
+                0, world)
+        {
+
+        }
+    }
+
+    public class ThornGrass : MapObject
+    {
+        public ThornGrass() : base() { }
+
+        public ThornGrass(ContentManager contentManager, float x, float y, World world, int subtype) :
+            base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f,
+                null, "thorn" + subtype.ToString() + "_",
+                0, world)
+        {
+
+        }
+    }
 }

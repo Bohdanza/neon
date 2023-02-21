@@ -155,7 +155,7 @@ namespace neon
 
         //Fellow adventurer, from here on lies the realm of hitboxes
         //In which nothing should be changed
-        protected bool HitboxClear(World world)
+        public bool HitboxClear(World world)
         {
             LovelyChunk chunk = world.HitMap;
             int x1 = (int)Position.X, y1 = (int)Position.Y;
