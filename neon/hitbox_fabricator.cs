@@ -40,12 +40,20 @@ namespace neon
 
                     if (pxl != System.Drawing.Color.FromArgb(255, 255, 255))
                     {
-                        htb.Add(new Tuple<int, int>(i, j));
-
-                        if (pxl == System.Drawing.Color.FromArgb(255, 0, 0))
+                        if (pxl == System.Drawing.Color.FromArgb(0, 255, 0))
                         {
                             centerX = i;
                             centerY = j;
+                        }
+                        else
+                        {
+                            htb.Add(new Tuple<int, int>(i, j));
+
+                            if (pxl == System.Drawing.Color.FromArgb(255, 0, 0))
+                            {
+                                centerX = i;
+                                centerY = j;
+                            }
                         }
                     }
                 }

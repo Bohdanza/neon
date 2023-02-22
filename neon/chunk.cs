@@ -190,7 +190,7 @@ namespace neon
             if (Hero.Position.Y >= (float)WorldSize / 3 * 2)
                 ymov = 1;
 
-            if (!CurrentlyLoading&&xmov != 0 || ymov != 0)
+            if (!CurrentlyLoading && xmov != 0 || ymov != 0)
             {
                 CurrentlyLoading = true;
 
@@ -316,6 +316,10 @@ namespace neon
 
             spriteBatch.DrawString(mainFont, KillCount.ToString(), 
                 new Vector2(1, 1), Color.White, 0f,
+                new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
+
+            spriteBatch.DrawString(mainFont, Objects.Count.ToString(),
+                new Vector2(1920-mainFont.MeasureString(Objects.Count.ToString()).X, 30), Color.White, 0f,
                 new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
         }
 
@@ -449,6 +453,31 @@ namespace neon
 
                     if (bigboab.HitboxClear(world))
                         world.Objects.Add(bigboab);
+                }
+
+
+                int groups = rnd.Next(1, 4);
+
+                for (int i = 0; i < groups; i++)
+                {
+                    int q = rnd.Next(5, 7);
+                    float centX = xOffset + (float)rnd.NextDouble() * chunkSize;
+                    float centY = yOffset + (float)rnd.NextDouble() * chunkSize;
+                    double xrad = 0;
+
+                    for (int j = 0; j < q; j++)
+                    {
+                        xrad += rnd.NextDouble() * 5 + 3;
+                        double rot = rnd.Next(0, 24) * Math.PI / 12;
+
+                        MapObject boab = new Boab(contentManager,
+                            centX + (float)(Math.Cos(rot) * xrad),
+                            centY + (float)(Math.Sin(rot) * xrad),
+                            world, rnd.Next(0, 2));
+
+                        if (boab.HitboxClear(world))
+                            world.Objects.Add(boab);
+                    }
                 }
 
                 int thorns = rnd.Next(2, 6);
