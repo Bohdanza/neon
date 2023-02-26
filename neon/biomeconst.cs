@@ -16,19 +16,19 @@ namespace neon
 {
     public class BiomeReader
     {
-        public const int InterpolationScale = 3;
+        public SortedDictionary<Tuple<int, int>, Tuple<int, int>> Values 
+            = new SortedDictionary<Tuple<int, int>, Tuple<int, int>>();
+        public const int InterpolationScale = 256;
 
-        /*0 - trashbin
-         *1 - desert
+        /*0 - corridor
+         *1 - shroomgrove
          *2 - bush
          *3 - fire forest
          */
         public static List<Tuple<Rectangle, int>> BiomeSeparation = new List<Tuple<Rectangle, int>>
         {
-            new Tuple<Rectangle, int>(new Rectangle(0, 0, 333, 1000), 1),
-            new Tuple<Rectangle, int>(new Rectangle(333, 0, 667, 333), 1),
-            new Tuple<Rectangle, int>(new Rectangle(333, 333, 333, 666), 1),
-            new Tuple<Rectangle, int>(new Rectangle(666, 333, 334, 667), 1)
+            new Tuple<Rectangle, int>(new Rectangle(0, 0, 500, 1000), 0),
+            new Tuple<Rectangle, int>(new Rectangle(500, 0, 500, 1000), 1)
         };
 
         public BiomeReader()
@@ -36,9 +36,6 @@ namespace neon
 
         public int GetBiome(int chunkX, int chunkY, string path)
         {
-            if (path[path.Length - 1] != '\\')
-                path += "\\";
-
             Tuple<int, int> cond = GetConditions(chunkX, chunkY, path);
 
             for (int i = 0; i < BiomeSeparation.Count; i++)
@@ -50,14 +47,14 @@ namespace neon
 
         private Tuple<int, int> GetConditions(int x, int y, string path)
         {
-            x = Math.Max(0, x);
-            y = Math.Max(0, y);
+            //x = Math.Max(0, x);
+            //y = Math.Max(0, y);
 
             double xq = (double)x / InterpolationScale;
             double yq = (double)y / InterpolationScale;
 
-            int x1 = (int)Math.Floor((double)(x / InterpolationScale));
-            int y1 = (int)Math.Floor((double)(y / InterpolationScale));
+            int x1 = (int)Math.Floor((double)x / InterpolationScale);
+            int y1 = (int)Math.Floor((double)y / InterpolationScale);
 
             int x2 = x1 + 1;
             int y2 = y1 + 1;
@@ -91,6 +88,14 @@ namespace neon
         //first temperature, then humidity
         private Tuple<int, int> GetStats(int x, int y, string path)
         {
+            if(Values.ContainsKey(new Tuple<int, int>(x, y)))
+            {
+                return Values[new Tuple<int, int>(x, y)];
+            }
+
+            if (path[path.Length - 1] != '\\')
+                path += "\\";
+
             if (File.Exists(path + x.ToString() + "_" + y.ToString()))
             {
                 List<string> cr = new List<string>();
@@ -100,7 +105,11 @@ namespace neon
                     cr = sr.ReadToEnd().Split('\n').ToList();
                 }
 
-                return new Tuple<int, int>(Int32.Parse(cr[0]), Int32.Parse(cr[1]));
+                var ac = new Tuple<int, int>(Int32.Parse(cr[0]), Int32.Parse(cr[1]));
+
+                Values.Add(new Tuple<int, int>(x, y), ac);
+
+                return ac;
             }
 
             var rnd = new Random();
@@ -119,6 +128,8 @@ namespace neon
             {
                 sw.WriteLine(toWrite);
             }
+
+            Values.Add(new Tuple<int, int>(x, y), new Tuple<int, int>(temperature, humidity));
 
             return new Tuple<int, int>(temperature, humidity);
         }

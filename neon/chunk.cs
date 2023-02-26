@@ -16,8 +16,9 @@ namespace neon
 {
     public class World
     {
+        public BiomeReader BiomeReader;
         public HitboxFabricator WorldHitboxFabricator;
-        public const int WorldSize = 512;
+        public const int WorldSize = 256;
         public int KillCount = 0;
         private SpriteFont mainFont;
 
@@ -27,7 +28,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 9;
+        public const int UnitSize = 22;
 
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
@@ -43,6 +44,7 @@ namespace neon
 
         public World(ContentManager contentManager, string path)
         {
+            BiomeReader = new BiomeReader();
             WorldHitboxFabricator = new HitboxFabricator();
 
             CurrentChunkX = -1;
@@ -260,10 +262,10 @@ namespace neon
             int offX = -(Math.Abs(ScreenX) % (sand.Width*Game1.PixelScale));
             int offY = -(Math.Abs(ScreenY) % (sand.Height * Game1.PixelScale));
 
-            for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
-                for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
-                    spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
-                        0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
+            //for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
+            //    for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
+            //        spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
+            //            0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
 
             float dpt = 0.1f;
             float dptStep = 0.5f / Objects.Count;
@@ -360,205 +362,6 @@ namespace neon
             }
 
             return true;
-        }
-    }
-
-    public class LoaderChunk
-    {
-        public LoaderChunk()
-        { }
-
-        public void FillChunk(int xRelative, int yRelative, World world, ContentManager contentManager)
-        {
-            if(File.Exists(world.Path+(world.CurrentChunkX+xRelative).ToString()+
-                "_"+(world.CurrentChunkY+yRelative).ToString()))
-            {
-                Load(contentManager, world.Path + (world.CurrentChunkX + xRelative).ToString() +
-                "_" + (world.CurrentChunkY + yRelative).ToString(), world, xRelative, yRelative);
-            }
-            else
-            {
-                Generate(contentManager, xRelative, yRelative, world);
-            }
-        }
-
-        private void Load(ContentManager contentManager, string path, World world, int xRelative, int yRelative)
-        {
-            List<string> data = new List<string>();
-
-            using (StreamReader sr = new StreamReader(path))
-            {
-                data = sr.ReadToEnd().Split('#').ToList();
-            }
-
-            //Biome = Int32.Parse(data[0]);
-
-            JsonSerializerSettings jss = new JsonSerializerSettings();
-            jss.TypeNameHandling = TypeNameHandling.Objects;
-
-            for (int i = 0; i < data.Count - 1; i++)
-            {
-                MapObject mapObject = JsonConvert.DeserializeObject<MapObject>(data[i], jss);
-
-                mapObject.Position = new Vector2(mapObject.Position.X+ xRelative* (float)World.WorldSize/3, 
-                    mapObject.Position.Y + yRelative * (float)World.WorldSize / 3);
-
-                world.Objects.Add(mapObject);
-
-                world.SetHero(mapObject);
-            }
-        }
-
-        private void Generate(ContentManager contentManager, int xRelative, int yRelative, World world)
-        {
-            var rnd = new Random();
-
-            float chunkSize = World.WorldSize / 3;
-            float xOffset = chunkSize * xRelative;
-            float yOffset = chunkSize * yRelative;
-            
-            int biome = new BiomeReader().GetBiome(world.CurrentChunkX+xRelative, world.CurrentChunkY+yRelative,
-                world.Path+"biomes\\");
-
-            if (biome == 0)
-            {
-                int rockCount = rnd.Next(4, 10);
-
-                for (int i = 0; i < rockCount; i++)
-                    world.Objects.Add(new Rock(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 2));
-            }
-            else if(biome==1)
-            {
-                int BoabCount = rnd.Next(3, 10);
-
-                for(int i=0; i<BoabCount; i++)
-                {
-                    int vl = rnd.Next(0, 4);
-
-                    MapObject boab = new Boab(contentManager, 
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, vl);
-
-                    if (boab.HitboxClear(world))
-                        world.Objects.Add(boab);
-                }
-
-                if (rnd.Next(0, 3)==0)
-                {
-                    MapObject bigboab = new Boab(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 6);
-
-                    if (bigboab.HitboxClear(world))
-                        world.Objects.Add(bigboab);
-                }
-
-
-                int groups = rnd.Next(1, 4);
-
-                for (int i = 0; i < groups; i++)
-                {
-                    int q = rnd.Next(5, 7);
-                    float centX = xOffset + (float)rnd.NextDouble() * chunkSize;
-                    float centY = yOffset + (float)rnd.NextDouble() * chunkSize;
-                    double xrad = 0;
-
-                    for (int j = 0; j < q; j++)
-                    {
-                        xrad += rnd.NextDouble() * 5 + 3;
-                        double rot = rnd.Next(0, 24) * Math.PI / 12;
-
-                        MapObject boab = new Boab(contentManager,
-                            centX + (float)(Math.Cos(rot) * xrad),
-                            centY + (float)(Math.Sin(rot) * xrad),
-                            world, rnd.Next(0, 2));
-
-                        if (boab.HitboxClear(world))
-                            world.Objects.Add(boab);
-                    }
-                }
-
-                int thorns = rnd.Next(2, 6);
-
-                for(int i=0; i<thorns; i++)
-                {
-                    int q = rnd.Next(5, 10);
-                    float centX = xOffset + (float)rnd.NextDouble() * chunkSize;
-                    float centY = yOffset + (float)rnd.NextDouble() * chunkSize;
-                    double xrad = 0;
-
-                    for (int j=0; j<q; j++)
-                    {
-                        xrad += rnd.NextDouble()*5 + 1;
-                        double rot = rnd.Next(0, 24) * Math.PI / 12;
-
-                        MapObject grASS = new ThornGrass(contentManager,
-                            centX + (float)(Math.Cos(rot) * xrad),
-                            centY + (float)(Math.Sin(rot) * xrad),
-                            world, rnd.Next(0, 2));
-
-                        if (world.HitMap.GetValue((int)grASS.Position.X, (int)grASS.Position.Y).Count<1)
-                            world.Objects.Add(grASS);
-                    }
-                }
-            }
-            else if (biome == 2)
-            {
-                int rockCount = rnd.Next(1, 16);
-
-                for (int i = 0; i < rockCount; i++)
-                    world.Objects.Add(new Rock(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
-            }
-            else if (biome == 3)
-            {
-                int pikeCount = rnd.Next(5, 13);
-
-                for (int i = 0; i < pikeCount; i++)
-                    world.Objects.Add(new Spike(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
-            }
-        }
-
-        public void SaveDelete(string path, int xRelative, int yRelative, World world)
-        {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            string str = "";
-            var jsonSerializerSettings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.Objects
-            };
-
-            for (int i = 0; i < world.Objects.Count; i++)
-            {
-                if (!(world.Objects[i] is Bullet)&&
-                    world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
-                    world.Objects[i].Position.X < (xRelative + 1) * (float)World.WorldSize / 3 &&
-                    world.Objects[i].Position.Y >= yRelative * (float)World.WorldSize / 3 &&
-                    world.Objects[i].Position.Y < (yRelative + 1) * (float)World.WorldSize / 3)
-                {
-                    world.Objects[i].Position = new Vector2(
-                        world.Objects[i].Position.X - xRelative * World.WorldSize / 3,
-                        world.Objects[i].Position.Y - yRelative * World.WorldSize / 3);
-
-                    str+=JsonConvert.SerializeObject(world.Objects[i], jsonSerializerSettings) + "#";
-
-                    world.Objects.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            using (StreamWriter sw = new StreamWriter(path + (xRelative + world.CurrentChunkX).ToString()
-                + "_" + (yRelative + world.CurrentChunkY).ToString()))
-            {
-                sw.WriteLine(str);
-            }
         }
     }
 }
