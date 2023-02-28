@@ -33,9 +33,9 @@ namespace neon
         public LovelyChunk HitMap { get; protected set; }
 
         private Texture2D pxl;
-        private Texture2D sand;
+        private Texture2D sand, dark;
         public MapObject Hero { get; protected set; }
-        private bool HitInspect = false, ChunkBorders=false, CurrentlyLoading=false;
+        private bool HitInspect = false, ChunkBorders = false, CurrentlyLoading = false;
 
         public string Path { get; private set; }
 
@@ -50,14 +50,15 @@ namespace neon
 
             sand = contentManager.Load<Texture2D>("sand");
             pxl = contentManager.Load<Texture2D>("pxl");
+            dark = contentManager.Load<Texture2D>("vnt");
             mainFont = contentManager.Load<SpriteFont>("File");
 
-            if (path[path.Length-1]!='\\')
+            if (path[path.Length - 1] != '\\')
                 path += "\\";
 
             Path = path;
 
-            if(File.Exists(Path+"coords"))
+            if (File.Exists(Path + "coords"))
             {
                 using (StreamReader sr = new StreamReader(Path + "coords"))
                 {
@@ -72,13 +73,13 @@ namespace neon
             HitMap = new LovelyChunk(WorldSize);
             LoaderChunk loaderChunk = new LoaderChunk();
 
-            for(int i=0; i<3; i++)
-                for(int j=0; j<3; j++)
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
                 {
                     loaderChunk.FillChunk(i, j, this, contentManager);
                 }
 
-            if(Hero==null)
+            if (Hero == null)
             {
                 Objects.Add(new Hero(contentManager, WorldSize / 2, WorldSize / 2, this));
 
@@ -95,18 +96,18 @@ namespace neon
         /// <summary>
         /// Saves desired chunks and deletes them, then generates/loads new
         /// </summary>
-        private void SaveDelete(int xmovage, int ymovage, ContentManager contentManager) 
+        private void SaveDelete(int xmovage, int ymovage, ContentManager contentManager)
         {
             LoaderChunk loaderChunk = new LoaderChunk();
             HitMap = new LovelyChunk(WorldSize);
 
             Objects.Remove(Hero);
 
-            if(xmovage!=0)
+            if (xmovage != 0)
             {
-                for(int i=0; i<3; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    loaderChunk.SaveDelete(Path, 1-xmovage, i, this);
+                    loaderChunk.SaveDelete(Path, 1 - xmovage, i, this);
                 }
             }
 
@@ -134,13 +135,13 @@ namespace neon
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    loaderChunk.FillChunk(1+xmovage, i, this, contentManager);
+                    loaderChunk.FillChunk(1 + xmovage, i, this, contentManager);
                 }
             }
 
             if (ymovage != 0)
             {
-                for (int i = 0-Math.Min(0, xmovage); i < 3-Math.Max(0, xmovage); i++)
+                for (int i = 0 - Math.Min(0, xmovage); i < 3 - Math.Max(0, xmovage); i++)
                 {
                     loaderChunk.FillChunk(i, 1 + ymovage, this, contentManager);
                 }
@@ -150,7 +151,7 @@ namespace neon
 
             Hero.Position = new Vector2(
                     Hero.Position.X - xmovage * (float)WorldSize / 3,
-                    Hero.Position.Y - ymovage * (float)WorldSize / 3);      
+                    Hero.Position.Y - ymovage * (float)WorldSize / 3);
         }
 
         public void Save()
@@ -198,12 +199,12 @@ namespace neon
                 int qy = ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
 
                 SaveDelete(xmov, ymov, contentManager);
-              
+
                 int qn = ScreenX - ((int)(Hero.Position.X * UnitSize) + ScreenX - 960);
                 int qm = ScreenY - ((int)(Hero.Position.Y * UnitSize) + ScreenY - 540);
 
-                ScreenX = qn+qx;
-                ScreenY = qm+qy;
+                ScreenX = qn + qx;
+                ScreenY = qm + qy;
 
                 CurrentlyLoading = false;
             }
@@ -232,7 +233,7 @@ namespace neon
 
             timeSincef7++;
 
-            if (ks.IsKeyDown(Keys.F7)&&timeSincef7>=15)
+            if (ks.IsKeyDown(Keys.F7) && timeSincef7 >= 15)
             {
                 timeSincef7 = 0;
 
@@ -257,13 +258,32 @@ namespace neon
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            int offX = -(Math.Abs(ScreenX) % (sand.Width*Game1.PixelScale));
+            int offX = -(Math.Abs(ScreenX) % (sand.Width * Game1.PixelScale));
             int offY = -(Math.Abs(ScreenY) % (sand.Height * Game1.PixelScale));
 
-            for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
-                for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
-                    spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
-                        0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
+            // for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
+            //     for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
+            //         spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
+            //             0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
+
+            int darkX = (int)(Hero.Position.X * UnitSize + ScreenX)-dark.Width/2;
+            int darkY = (int)(Hero.Position.Y * UnitSize + ScreenY)-dark.Height/2;
+
+            spriteBatch.Draw(dark, new Vector2(darkX, darkY), null, Color.White, 0f, 
+                new Vector2(0,0), 1f, SpriteEffects.None, 0.95f);
+
+            spriteBatch.Draw(pxl, new Vector2(0, 0), null, Color.Black, 0f, new Vector2(0, 0),
+                new Vector2(darkX, 1080), SpriteEffects.None, 0.95f);
+
+            spriteBatch.Draw(pxl, new Vector2(darkX+dark.Width, 0), null, Color.Black, 0f, new Vector2(0, 0),
+                new Vector2(Math.Max(0, 1920-darkX-dark.Width), 1080), SpriteEffects.None, 0.95f);
+
+
+            spriteBatch.Draw(pxl, new Vector2(darkX, 0), null, Color.Black, 0f, new Vector2(0, 0),
+                new Vector2(dark.Width, Math.Max(0, darkY)), SpriteEffects.None, 0.95f);
+
+            spriteBatch.Draw(pxl, new Vector2(darkX, darkY+dark.Height), null, Color.Black, 0f, new Vector2(0, 0),
+                new Vector2(dark.Width, Math.Max(0, 1080-darkY-dark.Height)), SpriteEffects.None, 0.95f);
 
             float dpt = 0.1f;
             float dptStep = 0.5f / Objects.Count;
@@ -283,7 +303,8 @@ namespace neon
                     {
                         var vl = HitMap.GetValue(i, j);
 
-                        if (vl.Count > 0)                        {
+                        if (vl.Count > 0)
+                        {
                             spriteBatch.Draw(pxl, new Vector2(ScreenX + i * UnitSize, ScreenY + j * UnitSize),
                                 null, Microsoft.Xna.Framework.Color.Tan, 0f, new Vector2(0, 0),
                                 UnitSize, SpriteEffects.None, 0f);
@@ -291,14 +312,14 @@ namespace neon
                     }
             }
 
-            if(ChunkBorders)
+            if (ChunkBorders)
             {
                 spriteBatch.Draw(pxl,
-                    new Vector2(WorldSize * UnitSize / 3 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f, 
-                    new Vector2(0, 0), new Vector2(2, WorldSize*UnitSize), SpriteEffects.None, 1f);
+                    new Vector2(WorldSize * UnitSize / 3 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0, 0), new Vector2(2, WorldSize * UnitSize), SpriteEffects.None, 1f);
 
                 spriteBatch.Draw(pxl,
-                    new Vector2(WorldSize * UnitSize / 3*2 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(WorldSize * UnitSize / 3 * 2 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f,
                     new Vector2(0, 0), new Vector2(2, WorldSize * UnitSize), SpriteEffects.None, 1f);
 
                 spriteBatch.Draw(pxl,
@@ -306,7 +327,7 @@ namespace neon
                     new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
 
                 spriteBatch.Draw(pxl,
-                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3*2 + ScreenY), null, Color.Blue, 0f,
+                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3 * 2 + ScreenY), null, Color.Blue, 0f,
                     new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
             }
 
@@ -314,12 +335,12 @@ namespace neon
                 new Vector2(3, 3), Color.Black, 0f,
                 new Vector2(0, 0), 1f, SpriteEffects.None, 0.999f);
 
-            spriteBatch.DrawString(mainFont, KillCount.ToString(), 
+            spriteBatch.DrawString(mainFont, KillCount.ToString(),
                 new Vector2(1, 1), Color.White, 0f,
                 new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
 
             spriteBatch.DrawString(mainFont, Objects.Count.ToString(),
-                new Vector2(1920-mainFont.MeasureString(Objects.Count.ToString()).X, 30), Color.White, 0f,
+                new Vector2(1920 - mainFont.MeasureString(Objects.Count.ToString()).X, 30), Color.White, 0f,
                 new Vector2(0, 0), 1f, SpriteEffects.None, 1f);
         }
 
@@ -327,13 +348,13 @@ namespace neon
         {
             return new Vector2(mapObject.Position.X * UnitSize + ScreenX, mapObject.Position.Y * UnitSize + ScreenY);
         }
-      
+
         public bool LineClear(int x1, int y1, int x2, int y2, int obstacleLevel)
         {
             float xc = x1, yc = y1;
             float stepx = x2 - x1, stepy = y2 - y1;
-        
-            if(stepx>stepy)
+
+            if (stepx > stepy)
             {
                 stepy = (float)(1 / stepx * stepy);
                 stepx = 1;
@@ -345,11 +366,11 @@ namespace neon
                 stepy = 1;
             }
 
-            while((int)xc!=x2||(int)yc!=y2)
+            while ((int)xc != x2 || (int)yc != y2)
             {
                 var q = HitMap.GetValue((int)xc, (int)yc);
 
-                foreach(MapObject mapObject in q)
+                foreach (MapObject mapObject in q)
                 {
                     if (mapObject.CollsionLevel == obstacleLevel)
                         return false;
@@ -360,205 +381,6 @@ namespace neon
             }
 
             return true;
-        }
-    }
-
-    public class LoaderChunk
-    {
-        public LoaderChunk()
-        { }
-
-        public void FillChunk(int xRelative, int yRelative, World world, ContentManager contentManager)
-        {
-            if(File.Exists(world.Path+(world.CurrentChunkX+xRelative).ToString()+
-                "_"+(world.CurrentChunkY+yRelative).ToString()))
-            {
-                Load(contentManager, world.Path + (world.CurrentChunkX + xRelative).ToString() +
-                "_" + (world.CurrentChunkY + yRelative).ToString(), world, xRelative, yRelative);
-            }
-            else
-            {
-                Generate(contentManager, xRelative, yRelative, world);
-            }
-        }
-
-        private void Load(ContentManager contentManager, string path, World world, int xRelative, int yRelative)
-        {
-            List<string> data = new List<string>();
-
-            using (StreamReader sr = new StreamReader(path))
-            {
-                data = sr.ReadToEnd().Split('#').ToList();
-            }
-
-            //Biome = Int32.Parse(data[0]);
-
-            JsonSerializerSettings jss = new JsonSerializerSettings();
-            jss.TypeNameHandling = TypeNameHandling.Objects;
-
-            for (int i = 0; i < data.Count - 1; i++)
-            {
-                MapObject mapObject = JsonConvert.DeserializeObject<MapObject>(data[i], jss);
-
-                mapObject.Position = new Vector2(mapObject.Position.X+ xRelative* (float)World.WorldSize/3, 
-                    mapObject.Position.Y + yRelative * (float)World.WorldSize / 3);
-
-                world.Objects.Add(mapObject);
-
-                world.SetHero(mapObject);
-            }
-        }
-
-        private void Generate(ContentManager contentManager, int xRelative, int yRelative, World world)
-        {
-            var rnd = new Random();
-
-            float chunkSize = World.WorldSize / 3;
-            float xOffset = chunkSize * xRelative;
-            float yOffset = chunkSize * yRelative;
-            
-            int biome = new BiomeReader().GetBiome(world.CurrentChunkX+xRelative, world.CurrentChunkY+yRelative,
-                world.Path+"biomes\\");
-
-            if (biome == 0)
-            {
-                int rockCount = rnd.Next(4, 10);
-
-                for (int i = 0; i < rockCount; i++)
-                    world.Objects.Add(new Rock(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 2));
-            }
-            else if(biome==1)
-            {
-                int BoabCount = rnd.Next(3, 10);
-
-                for(int i=0; i<BoabCount; i++)
-                {
-                    int vl = rnd.Next(0, 4);
-
-                    MapObject boab = new Boab(contentManager, 
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, vl);
-
-                    if (boab.HitboxClear(world))
-                        world.Objects.Add(boab);
-                }
-
-                if (rnd.Next(0, 3)==0)
-                {
-                    MapObject bigboab = new Boab(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 6);
-
-                    if (bigboab.HitboxClear(world))
-                        world.Objects.Add(bigboab);
-                }
-
-
-                int groups = rnd.Next(1, 4);
-
-                for (int i = 0; i < groups; i++)
-                {
-                    int q = rnd.Next(5, 7);
-                    float centX = xOffset + (float)rnd.NextDouble() * chunkSize;
-                    float centY = yOffset + (float)rnd.NextDouble() * chunkSize;
-                    double xrad = 0;
-
-                    for (int j = 0; j < q; j++)
-                    {
-                        xrad += rnd.NextDouble() * 5 + 3;
-                        double rot = rnd.Next(0, 24) * Math.PI / 12;
-
-                        MapObject boab = new Boab(contentManager,
-                            centX + (float)(Math.Cos(rot) * xrad),
-                            centY + (float)(Math.Sin(rot) * xrad),
-                            world, rnd.Next(0, 2));
-
-                        if (boab.HitboxClear(world))
-                            world.Objects.Add(boab);
-                    }
-                }
-
-                int thorns = rnd.Next(2, 6);
-
-                for(int i=0; i<thorns; i++)
-                {
-                    int q = rnd.Next(5, 10);
-                    float centX = xOffset + (float)rnd.NextDouble() * chunkSize;
-                    float centY = yOffset + (float)rnd.NextDouble() * chunkSize;
-                    double xrad = 0;
-
-                    for (int j=0; j<q; j++)
-                    {
-                        xrad += rnd.NextDouble()*5 + 1;
-                        double rot = rnd.Next(0, 24) * Math.PI / 12;
-
-                        MapObject grASS = new ThornGrass(contentManager,
-                            centX + (float)(Math.Cos(rot) * xrad),
-                            centY + (float)(Math.Sin(rot) * xrad),
-                            world, rnd.Next(0, 2));
-
-                        if (world.HitMap.GetValue((int)grASS.Position.X, (int)grASS.Position.Y).Count<1)
-                            world.Objects.Add(grASS);
-                    }
-                }
-            }
-            else if (biome == 2)
-            {
-                int rockCount = rnd.Next(1, 16);
-
-                for (int i = 0; i < rockCount; i++)
-                    world.Objects.Add(new Rock(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
-            }
-            else if (biome == 3)
-            {
-                int pikeCount = rnd.Next(5, 13);
-
-                for (int i = 0; i < pikeCount; i++)
-                    world.Objects.Add(new Spike(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
-            }
-        }
-
-        public void SaveDelete(string path, int xRelative, int yRelative, World world)
-        {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            string str = "";
-            var jsonSerializerSettings = new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.Objects
-            };
-
-            for (int i = 0; i < world.Objects.Count; i++)
-            {
-                if (!(world.Objects[i] is Bullet)&&
-                    world.Objects[i].Position.X >= xRelative * (float)World.WorldSize / 3 &&
-                    world.Objects[i].Position.X < (xRelative + 1) * (float)World.WorldSize / 3 &&
-                    world.Objects[i].Position.Y >= yRelative * (float)World.WorldSize / 3 &&
-                    world.Objects[i].Position.Y < (yRelative + 1) * (float)World.WorldSize / 3)
-                {
-                    world.Objects[i].Position = new Vector2(
-                        world.Objects[i].Position.X - xRelative * World.WorldSize / 3,
-                        world.Objects[i].Position.Y - yRelative * World.WorldSize / 3);
-
-                    str+=JsonConvert.SerializeObject(world.Objects[i], jsonSerializerSettings) + "#";
-
-                    world.Objects.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            using (StreamWriter sw = new StreamWriter(path + (xRelative + world.CurrentChunkX).ToString()
-                + "_" + (yRelative + world.CurrentChunkY).ToString()))
-            {
-                sw.WriteLine(str);
-            }
         }
     }
 }

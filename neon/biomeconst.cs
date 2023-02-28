@@ -18,17 +18,17 @@ namespace neon
     {
         public const int InterpolationScale = 3;
 
-        /*0 - trashbin
-         *1 - desert
-         *2 - bush
+        /*0 - wall
+         *1 - shroomgroves
+         *2 - stranger land
          *3 - fire forest
          */
         public static List<Tuple<Rectangle, int>> BiomeSeparation = new List<Tuple<Rectangle, int>>
         {
-            new Tuple<Rectangle, int>(new Rectangle(0, 0, 333, 1000), 1),
+            new Tuple<Rectangle, int>(new Rectangle(0, 0, 333, 1000), 0),
             new Tuple<Rectangle, int>(new Rectangle(333, 0, 667, 333), 1),
-            new Tuple<Rectangle, int>(new Rectangle(333, 333, 333, 666), 1),
-            new Tuple<Rectangle, int>(new Rectangle(666, 333, 334, 667), 1)
+            new Tuple<Rectangle, int>(new Rectangle(333, 333, 333, 666), 2),
+            new Tuple<Rectangle, int>(new Rectangle(666, 333, 334, 667), 3)
         };
 
         public BiomeReader()
@@ -50,9 +50,6 @@ namespace neon
 
         private Tuple<int, int> GetConditions(int x, int y, string path)
         {
-            x = Math.Max(0, x);
-            y = Math.Max(0, y);
-
             double xq = (double)x / InterpolationScale;
             double yq = (double)y / InterpolationScale;
 
