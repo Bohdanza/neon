@@ -75,11 +75,11 @@ namespace neon
 
             for (int i = 0; i < rockCount; i++)
             {
-                double x = rnd.Next(0, (int)(chunkSize / 15)) * 15 + xOffset;
-                double y = rnd.Next(0, (int)(chunkSize / 15)) * 15 + yOffset;
-                 
-                x += rnd.NextDouble() * 5-2.5;
-                y += rnd.NextDouble() * 7;
+                double x = rnd.Next(0, (int)(chunkSize / 7.6)) * 7.6 + xOffset;
+                double y = rnd.Next(0, (int)(chunkSize / 7.6)) * 7.6 + yOffset;
+
+                x += rnd.NextDouble() * 2.5 - 1.25;
+                y += rnd.NextDouble() * 3;
 
                 MapObject rock = new Rock(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
 
