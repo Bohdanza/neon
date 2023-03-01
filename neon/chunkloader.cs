@@ -91,7 +91,23 @@ namespace neon
 
             if (biome == 0)
             {
+                int grassCount = rnd.Next(25, 50);
 
+                for (int i = 0; i < grassCount; i++)
+                {
+                    double x = rnd.Next(0, (int)(chunkSize)) + xOffset;
+                    double y = rnd.Next(0, (int)(chunkSize)) + yOffset;
+
+                    x += rnd.NextDouble();
+                    y += rnd.NextDouble();
+
+                    MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
+
+                    if (world.HitMap.GetValue((int)x, (int)y).Count < 1)
+                    {
+                        world.Objects.Add(grass);
+                    }
+                }
             }
             else if (biome == 1)
             {
@@ -122,6 +138,23 @@ namespace neon
                     }
                 }
 
+                int grassCount = rnd.Next(10, 30);
+
+                for (int i = 0; i < grassCount; i++)
+                {
+                    double x = rnd.Next(0, (int)(chunkSize / 3)) * 3 + xOffset;
+                    double y = rnd.Next(0, (int)(chunkSize / 3)) * 3 + yOffset;
+
+                    x += rnd.NextDouble();
+                    y += rnd.NextDouble();
+
+                    MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(4, 7));
+
+                    if (world.HitMap.GetValue((int)x, (int)y).Count<1)
+                    {
+                        world.Objects.Add(grass);
+                    }
+                }
             }
             else if (biome == 2)
             {
@@ -134,6 +167,24 @@ namespace neon
                     world.Objects.Add(new Spike(contentManager,
                         xOffset + (float)rnd.NextDouble() * chunkSize,
                         yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
+                
+                int grassCount = rnd.Next(15, 30);
+
+                for (int i = 0; i < grassCount; i++)
+                {
+                    double x = rnd.Next(0, (int)(chunkSize)) + xOffset;
+                    double y = rnd.Next(0, (int)(chunkSize)) + yOffset;
+
+                    x += rnd.NextDouble();
+                    y += rnd.NextDouble();
+
+                    MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
+
+                    if (world.HitMap.GetValue((int)x, (int)y).Count < 1)
+                    {
+                        world.Objects.Add(grass);
+                    }
+                }
             }
         }
 
