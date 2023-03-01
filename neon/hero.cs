@@ -24,14 +24,14 @@ namespace neon
         private int CurrentHPDraw = 0;
 
         public Hero() : base() { }
-
+         
         public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
             5f, 80,
             @"hitboxes\hero.png",
             "hero", world)
         {
-            GunInHand = new Arrat(contentManager, new Vector2(x, y-2), Movement, world);
+            GunInHand = new Colt(contentManager, new Vector2(x, y-2), new Vector2(0,0), world);
             Action = "wa";
         }
 

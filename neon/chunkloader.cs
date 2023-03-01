@@ -155,6 +155,22 @@ namespace neon
                         world.Objects.Add(grass);
                     }
                 }
+
+                if (Game1.GetDistance(new Vector2(xOffset + world.CurrentChunkX, yOffset + world.CurrentChunkY),
+                    new Vector2(0, 0)) > Math.Sqrt(2))
+                {
+                    grassCount = rnd.Next(4, 8);
+
+                    for (int i = 0; i < grassCount; i++)
+                    {
+                        MapObject greenMan = new ScaryLilGreenman(contentManager,
+                            new Vector2((float)rnd.NextDouble() * chunkSize + xOffset,
+                            (float)rnd.NextDouble() * chunkSize + yOffset), world);
+
+                        if (greenMan.HitboxClear(world))
+                            world.Objects.Add(greenMan);
+                    }
+                }
             }
             else if (biome == 2)
             {
@@ -166,7 +182,7 @@ namespace neon
                 for (int i = 0; i < pikeCount; i++)
                     world.Objects.Add(new Spike(contentManager,
                         xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, 1));
+                        yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 3)));
                 
                 int grassCount = rnd.Next(15, 30);
 
@@ -184,6 +200,18 @@ namespace neon
                     {
                         world.Objects.Add(grass);
                     }
+                }
+
+                grassCount = rnd.Next(3, 6);
+
+                for(int i=0; i<grassCount; i++)
+                {
+                    MapObject greenMan = new ScaryLilGreenman(contentManager,
+                        new Vector2((float)rnd.NextDouble() * chunkSize + xOffset,
+                        (float)rnd.NextDouble() * chunkSize + yOffset), world);
+
+                    if (greenMan.HitboxClear(world))
+                        world.Objects.Add(greenMan);
                 }
             }
         }

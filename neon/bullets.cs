@@ -67,4 +67,19 @@ namespace neon
                 new Vector2(Movement.X, Movement.Y), world);
         }
     }
+
+    public class Biospike:Bullet
+    {
+        public Biospike() : base() { }
+
+        public Biospike(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
+            base(contentManager, position, movement, 50f, 25, @"hitboxes\onebyone.png",
+                "biospike", world, 500)
+        { }
+
+        public override Bullet Copy(ContentManager contentManager, World world)
+        {
+            return new Biospike(contentManager, new Vector2(0,0), new Vector2(0,0), world);
+        }
+    }
 }

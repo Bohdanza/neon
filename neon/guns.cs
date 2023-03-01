@@ -108,4 +108,42 @@ namespace neon
             base.ShootInDirection(contentManager, Direction, world, owner);
         }
     }
+
+    public class Biowand : Gun
+    {
+        public Biowand() : base() { }
+
+        public Biowand(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
+            base(contentManager, position, movement, 5f, null, "biowand", world,
+                new List<int> { 60, 45, 30, 15, 120 })
+        { }
+
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        {
+            if (TimeTillShot > 0)
+                return;
+
+            var rnd = new Random();
+
+            int blc = rnd.Next(10, 15);
+
+            world.Objects.Add(new Biospike(contentManager,
+            new Vector2(Position.X + (float)Math.Cos(Direction) * 2.5f,
+            Position.Y + (float)Math.Sin(Direction) * 2.5f),
+            new Vector2((float)Math.Cos(Direction) * 3.2f, (float)Math.Sin(Direction) * 3.2f), world));
+
+            for (int i=0; i<blc; i++)
+            {
+                double rot = Direction + (rnd.NextDouble() - 0.5) * 0.25;
+                float spd = 3f + (float)rnd.NextDouble() * 0.4f;
+
+                world.Objects.Add(new Biospike(contentManager,
+                new Vector2(Position.X + (float)Math.Cos(rot) * 2.5f,
+                Position.Y + (float)Math.Sin(rot) * 2.5f),
+                new Vector2((float)Math.Cos(rot) * spd, (float)Math.Sin(rot) * spd), world));
+            }
+
+            base.ShootInDirection(contentManager, Direction, world, owner);
+        }
+    }
 }
