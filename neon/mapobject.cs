@@ -109,18 +109,23 @@ namespace neon
 
             Vector2 ppos = new Vector2(Position.X, Position.Y);
 
+            //Position = new Vector2((float)Math.Round(Position.X, 7), (float)Math.Round(Position.Y, 7));
+            //Movement = new Vector2((float)Math.Round(Movement.X, 7), (float)Math.Round(Movement.Y, 7));
+
             Position = new Vector2(Position.X + Movement.X, Position.Y);
 
-            if (Math.Abs(ppos.X - Position.X) >= World.MinimalCollisionDistance && !HitboxClear(world))
+            if (ppos.X != Position.X && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X - Movement.X, Position.Y);
+                Movement = new Vector2(0, Movement.Y);
             }
 
             Position = new Vector2(Position.X, Position.Y + Movement.Y);
 
-            if (Math.Abs(ppos.Y - Position.Y)>=World.MinimalCollisionDistance && !HitboxClear(world))
+            if (ppos.Y != Position.Y && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X, Position.Y - Movement.Y);
+                Movement = new Vector2(Movement.X, 0);
             }
 
             ChangeMovement(-Movement.X, -Movement.Y);

@@ -17,8 +17,8 @@ namespace neon
     public class World
     {
         public HitboxFabricator WorldHitboxFabricator;
-        public const int WorldSize = 256;
-        public const float MinimalCollisionDistance = 0.0001f;
+        public const int WorldSize = 288;
+        public const float MinimalCollisionDistance = 0.00000001f;
         public int KillCount = 0;
         private SpriteFont mainFont;
 
@@ -28,7 +28,7 @@ namespace neon
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
 
-        public const int UnitSize = 16;
+        public const int UnitSize = 20;
             
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
