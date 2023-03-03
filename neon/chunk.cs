@@ -18,6 +18,7 @@ namespace neon
     {
         public HitboxFabricator WorldHitboxFabricator;
         public const int WorldSize = 256;
+        public const float MinimalCollisionDistance = 0.0001f;
         public int KillCount = 0;
         private SpriteFont mainFont;
 
@@ -32,7 +33,7 @@ namespace neon
         public List<MapObject> Objects { get; set; }
         public LovelyChunk HitMap { get; protected set; }
 
-        private Texture2D pxl;
+        public Texture2D pxl { get; private set; }
         private Texture2D sand, dark;
         public MapObject Hero { get; protected set; }
         private bool HitInspect = false, ChunkBorders = false, CurrentlyLoading = false;
@@ -293,23 +294,12 @@ namespace neon
                 Objects[i].Draw(spriteBatch, ScreenX + (int)(Objects[i].Position.X * UnitSize), ScreenY + (int)(Objects[i].Position.Y * UnitSize),
                     Color.White, dpt);
 
+                if (HitInspect)
+                    Objects[i].DrawHitbox(spriteBatch,
+                        ScreenX + (int)(Objects[i].Position.X * UnitSize), ScreenY + (int)(Objects[i].Position.Y * UnitSize),
+                        Color.Green, 1f, this);
+
                 dpt += dptStep;
-            }
-
-            if (HitInspect)
-            {
-                for (int i = 0; i < HitMap.Size * 2; i++)
-                    for (int j = 0; j < HitMap.Size * 2; j++)
-                    {
-                        var vl = HitMap.GetValue(i, j);
-
-                        if (vl.Count > 0)
-                        {
-                            spriteBatch.Draw(pxl, new Vector2(ScreenX + i * UnitSize, ScreenY + j * UnitSize),
-                                null, Microsoft.Xna.Framework.Color.Tan, 0f, new Vector2(0, 0),
-                                UnitSize, SpriteEffects.None, 0f);
-                        }
-                    }
             }
 
             if (ChunkBorders)

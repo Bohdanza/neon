@@ -74,10 +74,6 @@ namespace neon
             else
                 Hitbox = new List<Vector2>();
 
-            for (int i = 0; i < Hitbox.Count; i++)
-                Hitbox[i] = new Vector2(Hitbox[i].X + Position.X,
-                    Hitbox[i].Y + Position.Y);
-
             HitboxMaxX = -100000;
             HitboxMaxY = -100000;
             HitboxMinY = 100000;
@@ -104,8 +100,6 @@ namespace neon
                     Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
                 else
                     Hitbox = new List<Vector2>();
-
-                HitboxPut = false;
             }
 
             if (Texture == null)
@@ -117,28 +111,16 @@ namespace neon
 
             Position = new Vector2(Position.X + Movement.X, Position.Y);
 
-            if ((int)ppos.X != (int)Position.X && !HitboxClear(world))
+            if (Math.Abs(ppos.X - Position.X) >= World.MinimalCollisionDistance && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X - Movement.X, Position.Y);
             }
 
             Position = new Vector2(Position.X, Position.Y + Movement.Y);
 
-            if ((int)ppos.Y != (int)Position.Y && !HitboxClear(world))
+            if (Math.Abs(ppos.Y - Position.Y)>=World.MinimalCollisionDistance && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X, Position.Y - Movement.Y);
-            }
-
-            if (ppos != Position)
-                HitboxPut = false;
-
-            if (!HitboxPut)
-            {
-                for (int i = 0; i < Hitbox.Count; i++)
-                    Hitbox[i] = new Vector2(Hitbox[i].X + (Position.X - ppos.X),
-                        Hitbox[i].Y + (Position.Y - ppos.Y));
-
-                HitboxPut = true;
             }
 
             ChangeMovement(-Movement.X, -Movement.Y);
@@ -154,6 +136,21 @@ namespace neon
                 new Vector2(0, 0), Game1.PixelScale, SpriteEffects.None, depth);
         }
 
+        public virtual void DrawHitbox(SpriteBatch spriteBatch, int x, int y, Color color, float depth, World world)
+        {
+            for (int i = 0; i < Hitbox.Count; i++)
+            {
+                Vector2 v1 = Hitbox[i];
+                Vector2 v2 = Hitbox[(i+1)%Hitbox.Count];
+
+                float rot = Game1.GetDirection(v1, v2)+(float)Math.PI;
+                float scale = Game1.GetDistance(v1, v2)*World.UnitSize;
+
+                spriteBatch.Draw(world.pxl, new Vector2(x + Hitbox[i].X * World.UnitSize, y + Hitbox[i].Y * World.UnitSize),
+                    null, color, rot, new Vector2(0, 0), new Vector2(scale, 1), SpriteEffects.None, depth);
+            }
+        }
+
         //Fellow adventurer, from here on lies the realm of hitboxes
         //Once upon a time, it was a great kingdom of big yet elegant solutions 
         //The kingdom was prosperous, but from the beginning it had one great foe. Chunk transition.
@@ -165,7 +162,7 @@ namespace neon
             var collisionChecker = new CollisionDetector();
 
             foreach (var curentObject in world.Objects)
-                if (curentObject.CollsionLevel==CollsionLevel && curentObject != this&&
+                if (curentObject.CollsionLevel == CollsionLevel && curentObject != this &&
                     collisionChecker.ObjectsCollide(this, curentObject))
                     return false;
 
