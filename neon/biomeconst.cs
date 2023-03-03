@@ -25,10 +25,10 @@ namespace neon
          */
         public static List<Tuple<Rectangle, int>> BiomeSeparation = new List<Tuple<Rectangle, int>>
         {
-            new Tuple<Rectangle, int>(new Rectangle(0, 0, 333, 1000), 0),
-            new Tuple<Rectangle, int>(new Rectangle(333, 0, 667, 333), 1),
+            new Tuple<Rectangle, int>(new Rectangle(0, 0, 333, 1000), 2),
+            new Tuple<Rectangle, int>(new Rectangle(333, 0, 667, 333), 2),
             new Tuple<Rectangle, int>(new Rectangle(333, 333, 333, 666), 2),
-            new Tuple<Rectangle, int>(new Rectangle(666, 333, 334, 667), 3)
+            new Tuple<Rectangle, int>(new Rectangle(666, 333, 334, 667), 2)
         };
 
         public BiomeReader()
