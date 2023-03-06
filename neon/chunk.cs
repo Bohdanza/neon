@@ -48,7 +48,7 @@ namespace neon
             CurrentChunkX = -1;
             CurrentChunkY = -1;
 
-            sand = contentManager.Load<Texture2D>("sand") ;
+            sand = contentManager.Load<Texture2D>("sand");
             pxl = contentManager.Load<Texture2D>("pxl");
             dark = contentManager.Load<Texture2D>("vnt");
             mainFont = contentManager.Load<SpriteFont>("File");
