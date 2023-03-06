@@ -164,20 +164,7 @@ namespace neon
             }
             else if (biome == 2)
             {
-                int grassCount = rnd.Next(25, 50);
-
-                for (int i = 0; i < grassCount; i++)
-                {
-                    double x = rnd.Next(0, (int)(chunkSize)) + xOffset;
-                    double y = rnd.Next(0, (int)(chunkSize)) + yOffset;
-
-                    x += rnd.NextDouble();
-                    y += rnd.NextDouble();
-
-                    MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
-
-                    world.Objects.Add(grass);
-                }
+            
             }
             else if (biome == 3)
             {

@@ -152,7 +152,7 @@ namespace neon
                 float scale = Game1.GetDistance(v1, v2)*World.UnitSize;
 
                 spriteBatch.Draw(world.pxl, new Vector2(x + Hitbox[i].X * World.UnitSize, y + Hitbox[i].Y * World.UnitSize),
-                    null, color, rot, new Vector2(0, 0), new Vector2(scale, 1), SpriteEffects.None, depth);
+                    null, color, rot, new Vector2(0, 0), new Vector2(scale, 2), SpriteEffects.None, depth);
             }
         }
 

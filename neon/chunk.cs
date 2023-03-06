@@ -295,7 +295,7 @@ namespace neon
                 if (HitInspect)
                     Objects[i].DrawHitbox(spriteBatch,
                         ScreenX + (int)(Objects[i].Position.X * UnitSize), ScreenY + (int)(Objects[i].Position.Y * UnitSize),
-                        Color.Green, 1f, this);
+                        Color.Lime, 1f, this);
 
                 dpt += dptStep;
             }
