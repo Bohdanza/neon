@@ -68,8 +68,8 @@ namespace neon
             float xOffset = chunkSize * xRelative;
             float yOffset = chunkSize * yRelative;
 
-            int biome = new BiomeReader().GetBiome(world.CurrentChunkX + xRelative, world.CurrentChunkY + yRelative,
-                world.Path + "biomes\\");
+            int biome = new BiomeReader().GetBiome(world.CurrentChunkX+xRelative, world.CurrentChunkY+yRelative, 
+                world.Path+"chunks\\");
 
             int rockCount = rnd.Next(3, 7);
 
@@ -102,11 +102,6 @@ namespace neon
                     y += rnd.NextDouble();
 
                     MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
-
-                    if (world.HitMap.GetValue((int)x, (int)y).Count < 1)
-                    {
-                        world.Objects.Add(grass);
-                    }
                 }
             }
             else if (biome == 1)
@@ -149,14 +144,9 @@ namespace neon
                     y += rnd.NextDouble();
 
                     MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(4, 7));
-
-                    if (world.HitMap.GetValue((int)x, (int)y).Count<1)
-                    {
-                        world.Objects.Add(grass);
-                    }
                 }
 
-                if (Game1.GetDistance(new Vector2(xOffset + world.CurrentChunkX, yOffset + world.CurrentChunkY),
+/*                if (Game1.GetDistance(new Vector2(xOffset + world.CurrentChunkX, yOffset + world.CurrentChunkY),
                     new Vector2(0, 0)) > Math.Sqrt(2))
                 {
                     grassCount = rnd.Next(4, 8);
@@ -170,10 +160,24 @@ namespace neon
                         if (greenMan.HitboxClear(world))
                             world.Objects.Add(greenMan);
                     }
-                }
+                }*/
             }
             else if (biome == 2)
             {
+                int grassCount = rnd.Next(25, 50);
+
+                for (int i = 0; i < grassCount; i++)
+                {
+                    double x = rnd.Next(0, (int)(chunkSize)) + xOffset;
+                    double y = rnd.Next(0, (int)(chunkSize)) + yOffset;
+
+                    x += rnd.NextDouble();
+                    y += rnd.NextDouble();
+
+                    MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
+
+                    world.Objects.Add(grass);
+                }
             }
             else if (biome == 3)
             {
@@ -195,11 +199,6 @@ namespace neon
                     y += rnd.NextDouble();
 
                     MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
-
-                    if (world.HitMap.GetValue((int)x, (int)y).Count < 1)
-                    {
-                        world.Objects.Add(grass);
-                    }
                 }
 
                 grassCount = rnd.Next(3, 6);

@@ -38,7 +38,7 @@ namespace neon
         public Spike(ContentManager contentManager, float x, float y, World world, int subtype)
             :base(contentManager, new Vector2(x, y), 
             new Vector2(0f, 0f), 10000000f, 
-            @"hitboxes\pike.png",
+            null,
             "pike"+subtype.ToString()+"_", 0, world)
         {}
     }
