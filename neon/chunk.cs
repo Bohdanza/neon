@@ -262,10 +262,10 @@ namespace neon
             int offX = -(Math.Abs(ScreenX) % (sand.Width * Game1.PixelScale));
             int offY = -(Math.Abs(ScreenY) % (sand.Height * Game1.PixelScale));
 
-            // for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
-            //     for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
-            //         spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
-            //             0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
+            for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
+                 for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
+                     spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
+                         0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
 
             int darkX = (int)(Hero.Position.X * UnitSize + ScreenX)-dark.Width/2;
             int darkY = (int)(Hero.Position.Y * UnitSize + ScreenY)-dark.Height/2;
