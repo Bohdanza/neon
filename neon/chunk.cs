@@ -29,8 +29,10 @@ namespace neon
         public int ScreenY { get; set; } = 0;
 
         public const int UnitSize = 16;
-            
-        public List<MapObject> Objects { get; set; }
+        public const int GridUnitSize = 16;
+
+        public List<MapObject> Objects { get; private set; }
+        public List<MapObject>[,] objectGrid { get; private set; }
 
         public Texture2D pxl { get; private set; }
         private Texture2D sand, dark;
@@ -44,8 +46,13 @@ namespace neon
         public World(ContentManager contentManager, string path)
         {
             WorldHitboxFabricator = new HitboxFabricator();
+            objectGrid = new List<MapObject>[WorldSize / GridUnitSize+1, WorldSize / GridUnitSize+1];
 
-            CurrentChunkX = -1;
+            for (int i = 0; i <= WorldSize / GridUnitSize; i++)
+                for (int j = 0; j <= WorldSize / GridUnitSize; j++)
+                    objectGrid[i, j] = new List<MapObject>();
+
+                    CurrentChunkX = -1;
             CurrentChunkY = -1;
 
             sand = contentManager.Load<Texture2D>("sand");
@@ -78,12 +85,50 @@ namespace neon
                     loaderChunk.FillChunk(i, j, this, contentManager);
                 }
 
+            foreach (var co in Objects)
+                AddToGrid(co);
+
             if (Hero == null)
             {
                 Objects.Add(new Hero(contentManager, WorldSize / 2, WorldSize / 2, this));
 
                 SetHero(Objects[Objects.Count - 1]);
             }
+        }
+
+        public void AddObject(MapObject mapObject)
+        {
+            Objects.Add(mapObject);
+
+            AddToGrid(mapObject);
+        }
+
+        public void DeleteFromGrid(MapObject mapObject)
+        {
+            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX);
+                i < Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX+GridUnitSize);
+                i += GridUnitSize)
+                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY);
+                    j < Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY+GridUnitSize);
+                    j += GridUnitSize)
+                    if(objectGrid[(int)Math.Floor(i / GridUnitSize), 
+                        (int)Math.Floor(j / GridUnitSize)].Contains(mapObject))
+                        objectGrid[(int)Math.Floor(i / GridUnitSize), 
+                            (int)Math.Floor(j / GridUnitSize)].Remove(mapObject);
+        }
+
+        public void AddToGrid(MapObject mapObject)
+        {
+            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX);
+                i < Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX+GridUnitSize);
+                i += GridUnitSize)
+                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY);
+                    j < Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY+GridUnitSize);
+                    j += GridUnitSize)
+                    if (!objectGrid[(int)Math.Floor(i / GridUnitSize), 
+                        (int)Math.Floor(j / GridUnitSize)].Contains(mapObject))
+                        objectGrid[(int)Math.Floor(i / GridUnitSize), 
+                            (int)Math.Floor(j / GridUnitSize)].Add(mapObject);
         }
 
         public void SetHero(MapObject hero)
@@ -119,11 +164,13 @@ namespace neon
 
             foreach (var currentObject in Objects)
             {
+                DeleteFromGrid(currentObject);
+
                 currentObject.Position = new Vector2(
                     currentObject.Position.X - xmovage * (float)WorldSize / 3,
                     currentObject.Position.Y - ymovage * (float)WorldSize / 3);
 
-                currentObject.HitboxPut = false;
+                AddToGrid(currentObject);
             }
 
             CurrentChunkX += xmovage;
@@ -145,11 +192,11 @@ namespace neon
                 }
             }
 
-            Objects.Add(Hero);
-
             Hero.Position = new Vector2(
                     Hero.Position.X - xmovage * (float)WorldSize / 3,
                     Hero.Position.Y - ymovage * (float)WorldSize / 3);
+
+            AddObject(Hero);
         }
 
         public void Save()
@@ -302,21 +349,21 @@ namespace neon
 
             if (ChunkBorders)
             {
-                spriteBatch.Draw(pxl,
-                    new Vector2(WorldSize * UnitSize / 3 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f,
-                    new Vector2(0, 0), new Vector2(2, WorldSize * UnitSize), SpriteEffects.None, 1f);
+                for(int i=0; i<=WorldSize/GridUnitSize; i++)
+                {
+                    Color clr = Color.Yellow;
 
-                spriteBatch.Draw(pxl,
-                    new Vector2(WorldSize * UnitSize / 3 * 2 + ScreenX, 0 + ScreenY), null, Color.Blue, 0f,
-                    new Vector2(0, 0), new Vector2(2, WorldSize * UnitSize), SpriteEffects.None, 1f);
+                    if (i == (int)WorldSize / 3 / GridUnitSize|| i == (int)WorldSize / 3*2 / GridUnitSize)
+                        clr = Color.Blue;
 
-                spriteBatch.Draw(pxl,
-                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3 + ScreenY), null, Color.Blue, 0f,
-                    new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
+                    spriteBatch.Draw(pxl,
+                        new Vector2(0, i * UnitSize * GridUnitSize + ScreenY), null, clr, 0f,
+                        new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
 
-                spriteBatch.Draw(pxl,
-                    new Vector2(0 + ScreenX, WorldSize * UnitSize / 3 * 2 + ScreenY), null, Color.Blue, 0f,
-                    new Vector2(0, 0), new Vector2(WorldSize * UnitSize, 2), SpriteEffects.None, 1f);
+                    spriteBatch.Draw(pxl,
+                        new Vector2(i*UnitSize*GridUnitSize + ScreenX, 0), null, clr, 0f,
+                        new Vector2(0, 0), new Vector2(2, WorldSize * UnitSize), SpriteEffects.None, 1f);
+                }
             }
 
             spriteBatch.DrawString(mainFont, KillCount.ToString(),
