@@ -29,9 +29,9 @@ namespace neon
         public ScaryLilGreenman() : base() { }
 
         public ScaryLilGreenman(ContentManager contentManager, Vector2 position, World world) :
-            base(contentManager, position, 5f, 10,
-                @"hitboxes\greenman.png",
-                "lilgreenman", 0.2f, world)
+            base(contentManager, position, 4f, 10,
+                @"hitboxes\greenman",
+                "lilgreenman", 0.3f, world)
         {
             GunInHand = new Biowand(contentManager, position, new Vector2(0, 0), world);
         }

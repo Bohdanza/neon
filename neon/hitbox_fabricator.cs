@@ -14,12 +14,12 @@ namespace neon
 {
     public class HitboxFabricator
     {
-        private List<Tuple<string, List<Tuple<int, int>>>> lst=new List<Tuple<string, List<Tuple<int, int>>>>();
+        private List<Tuple<string, List<Vector2>>> lst=new List<Tuple<string, List<Vector2>>>();
 
         public HitboxFabricator()
         { }
 
-        public List<Tuple<int, int>> CreateHitbox(string path)
+        public List<Vector2> CreateHitbox(string path)
         {
             for(int i=0; i<lst.Count; i++)
             {
@@ -27,41 +27,18 @@ namespace neon
                     return lst[i].Item2;
             }
 
-            List<Tuple<int, int>> htb = new List<Tuple<int, int>>();
+            List<Vector2> htb = new List<Vector2>();
+            List<string> lst1 = new List<string>();
 
-            Bitmap bitmap = new Bitmap(path);
+            using(StreamReader sr=new StreamReader(path))
+            {
+                lst1 = sr.ReadToEnd().Split('|').ToList();
+            }
 
-            int centerX = 0, centerY = 0;
-
-            for (int i = 0; i < bitmap.Width; i++)
-                for (int j = 0; j < bitmap.Height; j++)
-                {
-                    System.Drawing.Color pxl = bitmap.GetPixel(i, j);
-
-                    if (pxl != System.Drawing.Color.FromArgb(255, 255, 255))
-                    {
-                        if (pxl == System.Drawing.Color.FromArgb(0, 255, 0))
-                        {
-                            centerX = i;
-                            centerY = j;
-                        }
-                        else
-                        {
-                            htb.Add(new Tuple<int, int>(i, j));
-
-                            if (pxl == System.Drawing.Color.FromArgb(255, 0, 0))
-                            {
-                                centerX = i;
-                                centerY = j;
-                            }
-                        }
-                    }
-                }
-
-            for (int i = 0; i < htb.Count; i++)
-                htb[i] = new Tuple<int, int>(htb[i].Item1 - centerX, htb[i].Item2 - centerY);
-
-            lst.Add(new Tuple<string, List<Tuple<int, int>>>(path, htb));
+            for(int i=0; i<lst1.Count; i+=2)
+            {
+                htb.Add(new Vector2(float.Parse(lst1[i]), float.Parse(lst1[i + 1])));
+            }
 
             return htb;
         }

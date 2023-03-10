@@ -36,7 +36,7 @@ namespace neon
                 if (HitboxPath != null)
                     Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
                 else
-                    Hitbox = new List<Tuple<int, int>>();
+                    Hitbox = new List<Vector2>();
             }
 
             if (Texture == null)

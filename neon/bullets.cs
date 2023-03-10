@@ -16,7 +16,7 @@ namespace neon
         public RevolverBullet() : base() { }
 
         public RevolverBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 10000f, 35, @"hitboxes\onebyone.png",
+            base(contentManager, position, movement, 10000f, 35, @"hitboxes\onebyone",
                 "peacemaker", world, 1000)
         { }
 
@@ -41,7 +41,7 @@ namespace neon
         public ShotgunBullet() : base() { }
 
         public ShotgunBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 10000f, 18, @"hitboxes\onebyone.png",
+            base(contentManager, position, movement, 10000f, 18, @"hitboxes\onebyone",
                 "shotbul", world, 1000)
         { }
 
@@ -57,7 +57,7 @@ namespace neon
         public ArratBullet() : base() { }
 
         public ArratBullet(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 10000f, 75, @"hitboxes\arratbul.png",
+            base(contentManager, position, movement, 10000f, 75, @"hitboxes\arratbul",
                 "arratbul", world, 1000)
         { }
 
@@ -73,7 +73,7 @@ namespace neon
         public Biospike() : base() { }
 
         public Biospike(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 50f, 25, @"hitboxes\onebyone.png",
+            base(contentManager, position, movement, 50f, 25, @"hitboxes\onebyone",
                 "biospike", world, 500)
         { }
 

@@ -9,6 +9,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
+/// <summary>
+/// power types: 
+/// 0 - willpower
+/// 1-mindpower
+/// 2-perception power
+/// </summary>
+
 namespace neon
 {
     public class Colt:Gun
@@ -17,10 +24,10 @@ namespace neon
 
         public Colt(ContentManager contentManager, Vector2 position, Vector2 movement, World world):
             base(contentManager, position, movement, 5f, null, "colt", world, 
-                new List<int> { 15, 15, 15, 15, 15, 300})
+                new List<int> { 15, 15, 15, 15, 15, 300}, 0)
         { }
 
-        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
         {
             if (TimeTillShot > 0)
                 return;
@@ -39,10 +46,10 @@ namespace neon
    
         public Spear(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
             base(contentManager, position, movement, 10f, null, "spear", world,
-                new List<int> { 40 })
+                new List<int> { 40 },1)
         { }
         
-        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
         {
             if (TimeTillShot > 0)
                 return;
@@ -61,12 +68,12 @@ namespace neon
     {
         public ShotGun(ContentManager contentManager, Vector2 position, Vector2 movement, World world):
             base(contentManager, position, movement, 10f, null, "shotgun", world,
-                new List<int> { 150 })
+                new List<int> { 150 }, 0)
         {
 
         }
 
-        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
         {
             if (TimeTillShot > 0)
                 return;
@@ -93,10 +100,10 @@ namespace neon
 
         public Arrat(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
             base(contentManager, position, movement, 5f, null, "arrat", world,
-                new List<int> { 55, 55, 100 })
+                new List<int> { 55, 55, 100 },0)
         { }
 
-        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
         {
             if (TimeTillShot > 0)
                 return;
@@ -115,17 +122,17 @@ namespace neon
 
         public Biowand(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
             base(contentManager, position, movement, 5f, null, "biowand", world,
-                new List<int> { 60, 45, 30, 15, 120 })
+                new List<int> { 60, 45, 30, 15, 120 },0)
         { }
 
-        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        public override void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
         {
             if (TimeTillShot > 0)
                 return;
 
             var rnd = new Random();
 
-            int blc = rnd.Next(10, 15);
+            int blc = rnd.Next(1, 3);
 
             world.Objects.Add(new Biospike(contentManager,
             new Vector2(Position.X + (float)Math.Cos(Direction) * 2.5f,

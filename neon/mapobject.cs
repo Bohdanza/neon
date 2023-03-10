@@ -27,18 +27,18 @@ namespace neon
         [JsonProperty("coll")]
         public int CollsionLevel { get; private set; }
         [JsonIgnore]
-        protected List<Tuple<int, int>> Hitbox=null;
+        public List<Vector2> Hitbox { get; protected set; } = null;
         [JsonProperty("pth")]
         protected string HitboxPath=null;
 
         [JsonProperty("mix")]
-        public int HitboxMinX { get; protected set; }
+        public float HitboxMinX { get; protected set; }
         [JsonProperty("max")]
-        public int HitboxMaxX { get; protected set; }
+        public float HitboxMaxX { get; protected set; }
         [JsonProperty("miy")]
-        public int HitboxMinY { get; protected set; }
+        public float HitboxMinY { get; protected set; }
         [JsonProperty("may")]
-        public int HitboxMaxY { get; protected set; }
+        public float HitboxMaxY { get; protected set; }
 
         [JsonProperty("wgh")]
         public float Weight { get; protected set; }
@@ -72,7 +72,7 @@ namespace neon
             if (HitboxPath != null)
                 Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
             else
-                Hitbox = new List<Tuple<int, int>>();
+                Hitbox = new List<Vector2>();
 
             HitboxMaxX = -100000;
             HitboxMaxY = -100000;
@@ -81,10 +81,10 @@ namespace neon
 
             for (int i=0; i<Hitbox.Count; i++)
             {
-                HitboxMaxX = Math.Max(HitboxMaxX, Hitbox[i].Item1);
-                HitboxMaxY = Math.Max(HitboxMaxY, Hitbox[i].Item2);
-                HitboxMinX = Math.Min(HitboxMinX, Hitbox[i].Item1);
-                HitboxMinY = Math.Min(HitboxMinY, Hitbox[i].Item2);
+                HitboxMaxX = Math.Max(HitboxMaxX, Hitbox[i].X);
+                HitboxMaxY = Math.Max(HitboxMaxY, Hitbox[i].Y);
+                HitboxMinX = Math.Min(HitboxMinX, Hitbox[i].X);
+                HitboxMinY = Math.Min(HitboxMinY, Hitbox[i].Y);
             }
 
             Weight = weight;
@@ -99,45 +99,43 @@ namespace neon
                 if (HitboxPath != null)
                     Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
                 else
-                    Hitbox = new List<Tuple<int, int>>();
+                    Hitbox = new List<Vector2>();
             }
 
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
 
-            if (!HitboxPut)
-            {
-                PutHitbox(world);
-                HitboxPut = true;
-            }
-
             Texture.Update(contentManager);
 
             Vector2 ppos = new Vector2(Position.X, Position.Y);
 
+            //Position = new Vector2((float)Math.Round(Position.X, 7), (float)Math.Round(Position.Y, 7));
+            //Movement = new Vector2((float)Math.Round(Movement.X, 7), (float)Math.Round(Movement.Y, 7));
+
             Position = new Vector2(Position.X + Movement.X, Position.Y);
 
-            if ((int)ppos.X != (int)Position.X && !HitboxClear(world))
+            if (ppos.X != Position.X && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X - Movement.X, Position.Y);
+                Movement = new Vector2(0, Movement.Y);
             }
 
             Position = new Vector2(Position.X, Position.Y + Movement.Y);
 
-            if ((int)ppos.Y != (int)Position.Y && !HitboxClear(world))
+            if (ppos.Y != Position.Y && !HitboxClear(world))
             {
                 Position = new Vector2(Position.X, Position.Y - Movement.Y);
+                Movement = new Vector2(Movement.X, 0);
             }
 
-            if ((int)ppos.X != (int)Position.X || (int)ppos.Y != (int)Position.Y)
+            if ((int)Math.Floor(Position.X/World.GridUnitSize)!= (int)Math.Floor(ppos.X / World.GridUnitSize) ||
+                (int)Math.Floor(Position.Y / World.GridUnitSize) != (int)Math.Floor(ppos.Y / World.GridUnitSize))
             {
-                Vector2 npos = new Vector2(Position.X, Position.Y);
-
-                Position = new Vector2(ppos.X, ppos.Y);
-                EraseHitbox(world);
-
-                Position = new Vector2(npos.X, npos.Y);
-                PutHitbox(world);
+                Vector2 p2 = Position;
+                Position = ppos;
+                world.DeleteFromGrid(this);
+                Position = p2;
+                world.AddToGrid(this);
             }
 
             ChangeMovement(-Movement.X, -Movement.Y);
@@ -153,27 +151,51 @@ namespace neon
                 new Vector2(0, 0), Game1.PixelScale, SpriteEffects.None, depth);
         }
 
+        public virtual void DrawHitbox(SpriteBatch spriteBatch, int x, int y, Color color, float depth, World world)
+        {
+            for (int i = 0; i < Hitbox.Count; i++)
+            {
+                Vector2 v1 = Hitbox[i];
+                Vector2 v2 = Hitbox[(i+1)%Hitbox.Count];
+
+                float rot = Game1.GetDirection(v1, v2)+(float)Math.PI;
+                float scale = Game1.GetDistance(v1, v2)*World.UnitSize;
+
+                spriteBatch.Draw(world.pxl, new Vector2(x + Hitbox[i].X * World.UnitSize, y + Hitbox[i].Y * World.UnitSize),
+                    null, color, rot, new Vector2(0, 0), new Vector2(scale, 2), SpriteEffects.None, depth);
+            }
+        }
+
         //Fellow adventurer, from here on lies the realm of hitboxes
-        //In which nothing should be changed
+        //Once upon a time, it was a great kingdom of big yet elegant solutions 
+        //The kingdom was prosperous, but from the beginning it had one great foe. Chunk transition.
+        //So it fell.
+        //It fell for the new kingdom to arise on it's ruins.
+        //The kingdom you see here.
         public bool HitboxClear(World world)
         {
-            LovelyChunk chunk = world.HitMap;
-            int x1 = (int)Position.X, y1 = (int)Position.Y;
+            var collisionChecker = new CollisionDetector();
 
-            foreach (var currentHitPoint in Hitbox)
-            {
-                int x2 = x1 + currentHitPoint.Item1;
-                int y2 = y1 + currentHitPoint.Item2;
+            HashSet<MapObject> mo = new HashSet<MapObject>();
 
-                if (x2 < 0 || y2 < 0 || x2 >= chunk.Size || y2 >= chunk.Size)
+            for (float i = Math.Max(0, Position.X + HitboxMinX - World.GridUnitSize);
+                i < Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
+                i += World.GridUnitSize)
+                for (float j = Math.Max(0, Position.Y + HitboxMinY - World.GridUnitSize);
+                    j < Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
+                    j += World.GridUnitSize)
+                {
+                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize), 
+                        tmpy = (int)Math.Floor((float)j / World.GridUnitSize);
+
+                    for (int k=0; k< world.objectGrid[tmpx, tmpy].Count; k++)
+                        mo.Add(world.objectGrid[tmpx, tmpy][k]);
+                }
+
+            foreach (var curentObject in mo)
+                if (curentObject.CollsionLevel == CollsionLevel && curentObject != this &&
+                    collisionChecker.ObjectsCollide(this, curentObject))
                     return false;
-
-                List<MapObject> mpo = chunk.GetValue(x2, y2);
-
-                for (int i = 0; i < mpo.Count; i++)
-                    if (mpo[i] != this && mpo[i].CollsionLevel == CollsionLevel)
-                        return false;
-            }
 
             return true;
         }
@@ -182,58 +204,30 @@ namespace neon
         {
             HashSet<MapObject> ans = new HashSet<MapObject>();
 
-            LovelyChunk chunk = world.HitMap;
-            int x1 = (int)Position.X, y1 = (int)Position.Y;
+            var collisionChecker = new CollisionDetector();
 
-            foreach (var currentHitPoint in Hitbox)
-            {
-                int x2 = x1 + currentHitPoint.Item1;
-                int y2 = y1 + currentHitPoint.Item2;
+            HashSet<MapObject> mo = new HashSet<MapObject>();
 
-                //if (x2 < 0 || y2 < 0 || x2 >= chunk.Size || y2 >= chunk.Size) 
+            for (float i = Math.Max(0, Position.X + HitboxMinX- World.GridUnitSize);
+                i < Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
+                i += World.GridUnitSize)
+                for (float j = Math.Max(0, Position.Y + HitboxMinY- World.GridUnitSize);
+                    j < Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
+                    j += World.GridUnitSize)
+                {
+                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize),
+                        tmpy = (int)Math.Floor((float)j / World.GridUnitSize);
 
-                List<MapObject> mpo = chunk.GetValue(x2, y2);
+                    for (int k = 0; k < world.objectGrid[tmpx, tmpy].Count; k++)
+                        mo.Add(world.objectGrid[tmpx, tmpy][k]);
+                }
 
-                for (int i = 0; i < mpo.Count; i++)
-                    if (mpo[i] != this && mpo[i].CollsionLevel == CollsionLevel)
-                        ans.Add(mpo[i]);
-            }
+            foreach (var curentObject in mo)
+                if (curentObject.CollsionLevel == CollsionLevel && curentObject != this &&
+                    collisionChecker.ObjectsCollide(this, curentObject))
+                    ans.Add(curentObject);
 
             return ans;
-        }
-
-        public void EraseHitbox(World world)
-        {
-            LovelyChunk chunk = world.HitMap;
-            int x1 = (int)Position.X, y1 = (int)Position.Y;
-
-            foreach (var currentHitPoint in Hitbox)
-            {
-                int x2 = x1 + currentHitPoint.Item1;
-                int y2 = y1 + currentHitPoint.Item2;
-
-                if (x2 >= 0 && y2 >= 0 && x2 < chunk.Size && y2 < chunk.Size)
-                {
-                    chunk.RemoveObjectValue(x2, y2, this);
-                }
-            }
-        }
-
-        protected void PutHitbox(World world)
-        {
-            LovelyChunk chunk = world.HitMap;
-            int x1 = (int)Position.X, y1 = (int)Position.Y;
-
-            foreach (var currentHitPoint in Hitbox)
-            {
-                int x2 = x1 + currentHitPoint.Item1;
-                int y2 = y1 + currentHitPoint.Item2;
-
-                if (x2 >= 0 && y2 >= 0 && x2 < chunk.Size && y2 < chunk.Size)
-                {
-                    chunk.AddObjectValue(x2, y2, this);
-                }
-            }
         }
 
         //And here we have movement
@@ -279,10 +273,13 @@ namespace neon
 
         public int ComparePositionTo(MapObject mapObject)
         {
-            if (Position.Y == mapObject.Position.Y)
+            float htbm1 = HitboxMinY + Position.Y;
+            float htbm2 = mapObject.HitboxMinY + mapObject.Position.Y;
+
+            if (htbm1 == htbm2)
                 return Position.X.CompareTo(mapObject.Position.X);
 
-            return Position.Y.CompareTo(mapObject.Position.Y);
+            return htbm1.CompareTo(htbm2);
         }
     }
 }

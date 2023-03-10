@@ -38,7 +38,7 @@ namespace neon
         public Spike(ContentManager contentManager, float x, float y, World world, int subtype)
             :base(contentManager, new Vector2(x, y), 
             new Vector2(0f, 0f), 10000000f, 
-            @"hitboxes\pike.png",
+            null,
             "pike"+subtype.ToString()+"_", 0, world)
         {}
     }
@@ -49,7 +49,7 @@ namespace neon
 
         public Rock(ContentManager contentManager, float x, float y, World world, int subtype):
             base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f, 
-                @"hitboxes\rock"+subtype.ToString()+".png", "rock"+subtype.ToString()+"_",
+                @"hitboxes\rock"+subtype.ToString(), "rock"+subtype.ToString()+"_",
                 0, world)
         {
             
@@ -62,7 +62,7 @@ namespace neon
 
         public Boab(ContentManager contentManager, float x, float y, World world, int subtype) :
             base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f,
-                @"hitboxes\boab" + subtype.ToString() + ".png", "boab" + subtype.ToString() + "_",
+                @"hitboxes\boab" + subtype.ToString(), "boab" + subtype.ToString() + "_",
                 0, world)
         {
 
@@ -76,7 +76,7 @@ namespace neon
         public ThornGrass(ContentManager contentManager, float x, float y, World world, int subtype) :
             base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f,
                 null, "thorn" + subtype.ToString() + "_",
-                0, world)
+                1, world)
         {
 
         }
