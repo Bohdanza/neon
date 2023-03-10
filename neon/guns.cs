@@ -132,7 +132,7 @@ namespace neon
 
             var rnd = new Random();
 
-            int blc = rnd.Next(10, 15);
+            int blc = rnd.Next(1, 3);
 
             world.Objects.Add(new Biospike(contentManager,
             new Vector2(Position.X + (float)Math.Cos(Direction) * 2.5f,

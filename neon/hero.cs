@@ -17,7 +17,7 @@ namespace neon
         [JsonProperty]
         public Gun GunInHand { get; protected set; } = null;
         [JsonProperty]
-        public float Speed { get; private set; } = 1f;
+        public float Speed { get; private set; } = 1.2f;
         [JsonProperty]
         public float GunRotationSpeed { get; protected set; } = 0.1f;
         private Texture2D HpDisplay=null;
@@ -27,13 +27,13 @@ namespace neon
          
         public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            1f, 80,
+            3f, 80,
             @"hitboxes\hero",
             "hero", world)
         {
             GunInHand = new Colt(contentManager, new Vector2(x, y-2), new Vector2(0,0), world);
             Action = "wa";
-        }
+        }   
 
         public override void Update(ContentManager contentManager, World world)
         {
@@ -48,39 +48,26 @@ namespace neon
 
             if (Action != "die")
             {
-                var ks = Keyboard.GetState();
-
-                if (ks.IsKeyDown(Keys.W))
-                {
-                    // world.ScreenY--;
-                    ChangeMovement(0, -Speed);
-                }
-
-                if (ks.IsKeyDown(Keys.S))
-                {
-                    // world.ScreenY++;
-                    ChangeMovement(0, Speed);
-                }
-
-                if (ks.IsKeyDown(Keys.A))
-                {
-                    //world.ScreenX--;
-                    ChangeMovement(-Speed, 0);
-                }
-
-                if (ks.IsKeyDown(Keys.D))
-                {
-                    //world.ScreenX++;
-                    ChangeMovement(Speed, 0);
-                }
-
                 var ms = Mouse.GetState();
+
+                float dir = Game1.GetDirection(world.GetScreenPosition(this),
+                    new Vector2(ms.X, ms.Y)) + (float)Math.PI;
+
+                Vector2 vct = Game1.DirectionToVector(dir);
+
+                if (Math.Abs(Movement.X) < 0.00001f)
+                    SetMovement(vct.X * 0.00001f, Movement.Y);
+
+                if (ms.RightButton==ButtonState.Pressed)
+                {
+                    ChangeMovement(vct.X * Speed, vct.Y * Speed);
+                }
 
                 if (GunInHand != null)
                 {
                     Vector2 screen = world.GetScreenPosition(GunInHand);
 
-                    float dir = Game1.GetDirection(new Vector2(ms.X, ms.Y),
+                    dir = Game1.GetDirection(new Vector2(ms.X, ms.Y),
                         new Vector2(screen.X, screen.Y));
                     dir += (float)Math.PI * 2;
                     dir %= (float)(Math.PI * 2);

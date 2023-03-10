@@ -102,7 +102,7 @@ namespace neon
 
             AddToGrid(mapObject);
         }
-
+ 
         public void DeleteFromGrid(MapObject mapObject)
         {
             for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX - GridUnitSize);
@@ -318,18 +318,15 @@ namespace neon
             spriteBatch.Draw(dark, new Vector2(darkX, darkY), null, Color.White, 0f, 
                 new Vector2(0,0), 1f, SpriteEffects.None, 0.95f);
 
-            spriteBatch.Draw(pxl, new Vector2(0, 0), null, Color.Black, 0f, new Vector2(0, 0),
-                new Vector2(darkX, 1080), SpriteEffects.None, 0.95f);
+            spriteBatch.Draw(dark, new Vector2(darkX, 0), new Rectangle(0, 0, dark.Width, 1), 
+                Color.White, 0f, new Vector2(0, 0),
+                new Vector2(1, darkY), SpriteEffects.None, 0.95f);
 
-            spriteBatch.Draw(pxl, new Vector2(darkX+dark.Width, 0), null, Color.Black, 0f, new Vector2(0, 0),
-                new Vector2(Math.Max(0, 1920-darkX-dark.Width), 1080), SpriteEffects.None, 0.95f);
+            spriteBatch.Draw(dark, new Vector2(darkX, darkY+dark.Height),
+                new Rectangle(0, dark.Height-1, dark.Width, 1),
+                Color.White, 0f, new Vector2(0, 0),
+                new Vector2(1, darkY), SpriteEffects.None, 0.95f);
 
-
-            spriteBatch.Draw(pxl, new Vector2(darkX, 0), null, Color.Black, 0f, new Vector2(0, 0),
-                new Vector2(dark.Width, Math.Max(0, darkY)), SpriteEffects.None, 0.95f);
-
-            spriteBatch.Draw(pxl, new Vector2(darkX, darkY+dark.Height), null, Color.Black, 0f, new Vector2(0, 0),
-                new Vector2(dark.Width, Math.Max(0, 1080-darkY-dark.Height)), SpriteEffects.None, 0.95f);
 
             float dpt = 0.1f;
             float dptStep = 0.5f / Objects.Count;
