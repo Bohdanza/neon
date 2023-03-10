@@ -46,7 +46,7 @@ namespace neon
 
         private Vector2 MinMaxPos(float direction, MapObject mapObject)
         {
-            float maxdist = -1000000f, mindist = 100000f;
+            float maxdist = -1e7f, mindist = 1e7f;
              
             for (int i = 0; i < mapObject.Hitbox.Count; i++)
             {

@@ -15,6 +15,9 @@ namespace neon
     public abstract class Gun : MapObject
     {
         public float Rotation { get; set; }
+
+        [JsonProperty]
+        public int PowerType { get; private set; }
         [JsonProperty]
         public int TimeTillShot { get; protected set; }
         [JsonProperty]
@@ -27,13 +30,14 @@ namespace neon
         public Gun():base() { Texture = null; }
 
         public Gun(ContentManager contentManager, Vector2 position, Vector2 movement, float weight,
-            string hitboxPath, string textureName, World world, List<int> shootingPauses) :
+            string hitboxPath, string textureName, World world, List<int> shootingPauses, int powerType) :
             base(contentManager, position, movement, weight, hitboxPath, textureName, 0, world)
         {
+            PowerType = powerType;
             ShootingPauses = shootingPauses;
         }
 
-        public virtual void ShootInDirection(ContentManager contentManager, float Direction, World world, MapObject owner)
+        public virtual void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
         {
             Action = "_shot_";
             TimeTillShot = ShootingPauses[CurrentPause];

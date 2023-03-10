@@ -29,7 +29,7 @@ namespace neon
         public int ScreenY { get; set; } = 0;
 
         public const int UnitSize = 16;
-        public const int GridUnitSize = 16;
+        public const int GridUnitSize = 6;
 
         public List<MapObject> Objects { get; private set; }
         public List<MapObject>[,] objectGrid { get; private set; }
@@ -105,30 +105,30 @@ namespace neon
 
         public void DeleteFromGrid(MapObject mapObject)
         {
-            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX);
+            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX - GridUnitSize);
                 i < Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX+GridUnitSize);
                 i += GridUnitSize)
-                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY);
+                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY - GridUnitSize);
                     j < Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY+GridUnitSize);
                     j += GridUnitSize)
-                    if(objectGrid[(int)Math.Floor(i / GridUnitSize), 
-                        (int)Math.Floor(j / GridUnitSize)].Contains(mapObject))
-                        objectGrid[(int)Math.Floor(i / GridUnitSize), 
-                            (int)Math.Floor(j / GridUnitSize)].Remove(mapObject);
+                    if(objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+                        (int)Math.Floor((float)j / GridUnitSize)].Contains(mapObject))
+                        objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+                            (int)Math.Floor((float)j / GridUnitSize)].Remove(mapObject);
         }
 
         public void AddToGrid(MapObject mapObject)
         {
-            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX);
+            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX-GridUnitSize);
                 i < Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX+GridUnitSize);
                 i += GridUnitSize)
-                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY);
+                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY - GridUnitSize);
                     j < Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY+GridUnitSize);
                     j += GridUnitSize)
-                    if (!objectGrid[(int)Math.Floor(i / GridUnitSize), 
-                        (int)Math.Floor(j / GridUnitSize)].Contains(mapObject))
-                        objectGrid[(int)Math.Floor(i / GridUnitSize), 
-                            (int)Math.Floor(j / GridUnitSize)].Add(mapObject);
+                    if (!objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+                        (int)Math.Floor((float)j / GridUnitSize)].Contains(mapObject))
+                        objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+                            (int)Math.Floor((float)j / GridUnitSize)].Add(mapObject);
         }
 
         public void SetHero(MapObject hero)

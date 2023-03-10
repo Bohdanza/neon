@@ -128,7 +128,8 @@ namespace neon
                 Movement = new Vector2(Movement.X, 0);
             }
 
-            if (ppos.X != Position.X || ppos.Y != Position.Y)
+            if ((int)Math.Floor(Position.X/World.GridUnitSize)!= (int)Math.Floor(ppos.X / World.GridUnitSize) ||
+                (int)Math.Floor(Position.Y / World.GridUnitSize) != (int)Math.Floor(ppos.Y / World.GridUnitSize))
             {
                 Vector2 p2 = Position;
                 Position = ppos;
@@ -177,15 +178,15 @@ namespace neon
 
             HashSet<MapObject> mo = new HashSet<MapObject>();
 
-            for (float i = Math.Max(0, Position.X + HitboxMinX);
-                i < Math.Min(World.WorldSize, Position.X + HitboxMaxX+ World.GridUnitSize); 
+            for (float i = Math.Max(0, Position.X + HitboxMinX - World.GridUnitSize);
+                i < Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
                 i += World.GridUnitSize)
-                for (float j = Math.Max(0, Position.Y + HitboxMinY);
-                    j < Math.Min(World.WorldSize, Position.Y + HitboxMaxY+ World.GridUnitSize);
+                for (float j = Math.Max(0, Position.Y + HitboxMinY - World.GridUnitSize);
+                    j < Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
                     j += World.GridUnitSize)
                 {
-                    int tmpx = (int)Math.Floor(i / World.GridUnitSize), 
-                        tmpy = (int)Math.Floor(j / World.GridUnitSize);
+                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize), 
+                        tmpy = (int)Math.Floor((float)j / World.GridUnitSize);
 
                     for (int k=0; k< world.objectGrid[tmpx, tmpy].Count; k++)
                         mo.Add(world.objectGrid[tmpx, tmpy][k]);
@@ -205,8 +206,24 @@ namespace neon
 
             var collisionChecker = new CollisionDetector();
 
-            foreach (var curentObject in world.Objects)
-                if (curentObject.CollsionLevel == CollsionLevel &&
+            HashSet<MapObject> mo = new HashSet<MapObject>();
+
+            for (float i = Math.Max(0, Position.X + HitboxMinX- World.GridUnitSize);
+                i < Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
+                i += World.GridUnitSize)
+                for (float j = Math.Max(0, Position.Y + HitboxMinY- World.GridUnitSize);
+                    j < Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
+                    j += World.GridUnitSize)
+                {
+                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize),
+                        tmpy = (int)Math.Floor((float)j / World.GridUnitSize);
+
+                    for (int k = 0; k < world.objectGrid[tmpx, tmpy].Count; k++)
+                        mo.Add(world.objectGrid[tmpx, tmpy][k]);
+                }
+
+            foreach (var curentObject in mo)
+                if (curentObject.CollsionLevel == CollsionLevel && curentObject != this &&
                     collisionChecker.ObjectsCollide(this, curentObject))
                     ans.Add(curentObject);
 
@@ -256,10 +273,13 @@ namespace neon
 
         public int ComparePositionTo(MapObject mapObject)
         {
-            if (Position.Y == mapObject.Position.Y)
+            float htbm1 = HitboxMinY + Position.Y;
+            float htbm2 = mapObject.HitboxMinY + mapObject.Position.Y;
+
+            if (htbm1 == htbm2)
                 return Position.X.CompareTo(mapObject.Position.X);
 
-            return Position.Y.CompareTo(mapObject.Position.Y);
+            return htbm1.CompareTo(htbm2);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace neon
         [JsonProperty]
         public Gun GunInHand { get; protected set; } = null;
         [JsonProperty]
-        public float Speed { get; private set; } = 1.5f;
+        public float Speed { get; private set; } = 1f;
         [JsonProperty]
         public float GunRotationSpeed { get; protected set; } = 0.1f;
         private Texture2D HpDisplay=null;
@@ -27,7 +27,7 @@ namespace neon
          
         public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            5f, 80,
+            1f, 80,
             @"hitboxes\hero",
             "hero", world)
         {
