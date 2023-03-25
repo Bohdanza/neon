@@ -112,7 +112,7 @@ namespace neon
                 {
                     int cx = rnd.Next((int)xOffset, (int)(xOffset + chunkSize));
                     int cy = rnd.Next((int)yOffset, (int)(yOffset + chunkSize));
-                    int shroomCount = rnd.Next(10, 30);
+                    int shroomCount = rnd.Next(7, 21);
                     double rad = 0;
 
                     for (int j = 0; j < shroomCount; j++)

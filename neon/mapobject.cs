@@ -109,24 +109,7 @@ namespace neon
 
             Vector2 ppos = new Vector2(Position.X, Position.Y);
 
-            //Position = new Vector2((float)Math.Round(Position.X, 7), (float)Math.Round(Position.Y, 7));
-            //Movement = new Vector2((float)Math.Round(Movement.X, 7), (float)Math.Round(Movement.Y, 7));
-
-            Position = new Vector2(Position.X + Movement.X, Position.Y);
-
-            if (ppos.X != Position.X && !HitboxClear(world))
-            {
-                Position = new Vector2(Position.X - Movement.X, Position.Y);
-                Movement = new Vector2(0, Movement.Y);
-            }
-
-            Position = new Vector2(Position.X, Position.Y + Movement.Y);
-
-            if (ppos.Y != Position.Y && !HitboxClear(world))
-            {
-                Position = new Vector2(Position.X, Position.Y - Movement.Y);
-                Movement = new Vector2(Movement.X, 0);
-            }
+            Move(0, world); Move(1, world);
 
             if ((int)Math.Floor(Position.X/World.GridUnitSize)!= (int)Math.Floor(ppos.X / World.GridUnitSize) ||
                 (int)Math.Floor(Position.Y / World.GridUnitSize) != (int)Math.Floor(ppos.Y / World.GridUnitSize))
@@ -172,6 +155,42 @@ namespace neon
         //So it fell.
         //It fell for the new kingdom to arise on it's ruins.
         //The kingdom you see here.
+        protected void Move(byte axis, World world)
+        {
+            Vector2 ppos = new Vector2(Position.X, Position.Y);
+
+            if (axis == 0)
+            {
+                if (Math.Abs(Movement.X) < World.MinimalCollisionDistance)
+                    return;
+
+                Position = new Vector2(Position.X + Movement.X, Position.Y);
+
+                if (!HitboxClear(world))
+                {
+                    Position = new Vector2(Position.X - Movement.X, Position.Y);
+                    Movement = new Vector2(Movement.X/2, Movement.Y);
+
+                    Move(0, world);
+                }
+            }
+            else
+            {
+                if (Math.Abs(Movement.Y) < World.MinimalCollisionDistance)
+                    return;
+
+                Position = new Vector2(Position.X, Position.Y + Movement.Y);
+
+                if (!HitboxClear(world))
+                {
+                    Position = new Vector2(Position.X, Position.Y - Movement.Y);
+                    Movement = new Vector2(Movement.X, Movement.Y/2);
+
+                    Move(1, world);
+                }
+            }
+        }
+
         public bool HitboxClear(World world)
         {
             var collisionChecker = new CollisionDetector();
@@ -273,8 +292,8 @@ namespace neon
 
         public int ComparePositionTo(MapObject mapObject)
         {
-            float htbm1 = HitboxMinY + Position.Y;
-            float htbm2 = mapObject.HitboxMinY + mapObject.Position.Y;
+            float htbm1 = HitboxMaxY + Position.Y;
+            float htbm2 = mapObject.HitboxMaxY + mapObject.Position.Y;
 
             if (htbm1 == htbm2)
                 return Position.X.CompareTo(mapObject.Position.X);
