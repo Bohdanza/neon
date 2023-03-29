@@ -56,6 +56,19 @@ namespace neon
         }
     }
 
+    public class Cheerock : MapObject
+    {
+        public Cheerock() : base() { }
+
+        public Cheerock(ContentManager contentManager, float x, float y, World world, int subtype) :
+            base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f,
+                @"hitboxes\cheerock" + subtype.ToString(), "cheerock" + subtype.ToString() + "_",
+                0, world)
+        {
+
+        }
+    }
+
     public class Boab : MapObject
     {
         public Boab() : base() { }

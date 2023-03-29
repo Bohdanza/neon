@@ -130,7 +130,7 @@ namespace neon
                         objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
                             (int)Math.Floor((float)j / GridUnitSize)].Add(mapObject);
         }
-
+          
         public void SetHero(MapObject hero)
         {
             if (Hero == null && hero is Hero)

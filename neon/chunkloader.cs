@@ -71,8 +71,6 @@ namespace neon
             int biome = new BiomeReader().GetBiome(world.CurrentChunkX+xRelative, world.CurrentChunkY+yRelative, 
                 world.Path+"chunks\\");
 
-            int rockCount = rnd.Next(3, 7);
-
             if (biome == 0)
             {
                 int grassCount = rnd.Next(25, 50);
@@ -90,62 +88,44 @@ namespace neon
             }
             else if (biome == 1)
             {
-                for (int i = 0; i < rockCount; i++)
-                {
-                    double x = rnd.Next(0, (int)(chunkSize / 7.6)) * 7.6 + xOffset;
-                    double y = rnd.Next(0, (int)(chunkSize / 7.6)) * 7.6 + yOffset;
+                int rockGroups = rnd.Next(2, 5);
 
-                    x += rnd.NextDouble() * 2.5 - 1.25;
-                    y += rnd.NextDouble() * 3;
-
-                    MapObject rock = new Rock(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
-
-                    if (rock.HitboxClear(world))
-                    {
-                        world.AddObject(rock);
-                    }
-                }
-
-                int GroveCount = rnd.Next(1, 3);
-
-                for(int i=0; i<GroveCount; i++)
+                for (int i = 0; i < rockGroups; i++)
                 {
                     int cx = rnd.Next((int)xOffset, (int)(xOffset + chunkSize));
                     int cy = rnd.Next((int)yOffset, (int)(yOffset + chunkSize));
-                    int shroomCount = rnd.Next(7, 21);
+                    int ringCount = rnd.Next(4, 8);
                     double rad = 0;
-
-                    for (int j = 0; j < shroomCount; j++)
+                    
+                    for (int j = 0; j < ringCount; j++)
                     {
-                        rad += rnd.NextDouble() * 3+3;
-                        double rot = rnd.NextDouble() * Math.PI * 2;
-                        int type = rnd.Next(0, 7);
+                        int rockCount = j * 3 + 1;
+                        double crot = rnd.NextDouble() * (Math.PI * 2 / rockCount);
 
-                        MapObject shroom = new Boab(contentManager, (float)(Math.Cos(rot) * rad + cx), 
-                            (float)(Math.Sin(rot) * rad + cy),
-                            world, type);
+                        for (int k=0; k<rockCount; k++)
+                        {                            
+                            int tp = 0;
 
-                        if (shroom.HitboxClear(world))
-                            world.AddObject(shroom);
+                            if (j == 0)
+                                tp = 2;
+                            else if (j < ringCount/1.5)
+                                tp = 1;
+
+                            double nrad = rad+rnd.NextDouble()*10;
+
+                            MapObject cher = new Cheerock(contentManager, 
+                                (float)(cx + Math.Cos(crot) * nrad), (float)(cy + Math.Sin(crot) * nrad), 
+                                world, tp);
+
+                            if (cher.HitboxClear(world))
+                                world.AddObject(cher);
+
+                            crot += rnd.NextDouble()*0.5+(Math.PI * 2 / rockCount)-0.25;
+                        }
+
+                        rad += 3.45;
                     }
                 }
-
-                /*if (Game1.GetDistance(new Vector2(xRelative + world.CurrentChunkX, 
-                    yRelative + world.CurrentChunkY),
-                    new Vector2(0, 0)) > Math.Sqrt(2))
-                {
-                    int grassCount = rnd.Next(4, 8);
-
-                    for (int i = 0; i < grassCount; i++)
-                    {
-                        MapObject greenMan = new ScaryLilGreenman(contentManager,
-                            new Vector2((float)rnd.NextDouble() * chunkSize + xOffset,
-                            (float)rnd.NextDouble() * chunkSize + yOffset), world);
-
-                        if (greenMan.HitboxClear(world))
-                            world.Objects.Add(greenMan);
-                    }
-                }*/
             }
             else if (biome == 2)
             {
