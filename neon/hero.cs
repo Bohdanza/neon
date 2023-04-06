@@ -17,7 +17,7 @@ namespace neon
         [JsonProperty]
         public Gun GunInHand { get; protected set; } = null;
         [JsonProperty]
-        public float Speed { get; private set; } = 1.2f;
+        public float Speed { get; private set; } = 0.65f;
         [JsonProperty]
         public float GunRotationSpeed { get; protected set; } = 0.1f;
         private Texture2D HpDisplay=null;

@@ -23,7 +23,7 @@ namespace neon
 
         [JsonIgnore]
         public MapObject Target = null;
-        protected float Speed = 1;
+        protected float Speed = 0;
 
         private float dir = 0f; 
 

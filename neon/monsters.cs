@@ -33,7 +33,7 @@ namespace neon
                 @"hitboxes\greenman",
                 "lilgreenman", 0.3f, world)
         {
-            GunInHand = new Biowand(contentManager, position, new Vector2(0, 0), world);
+            GunInHand = new Arrat(contentManager, position, new Vector2(0, 0), world);
         }
     }
 }

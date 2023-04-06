@@ -102,35 +102,37 @@ namespace neon
 
             AddToGrid(mapObject);
         }
- 
+
         public void DeleteFromGrid(MapObject mapObject)
         {
-            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX - GridUnitSize);
-                i < Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX+GridUnitSize);
-                i += GridUnitSize)
-                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY - GridUnitSize);
-                    j < Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY+GridUnitSize);
-                    j += GridUnitSize)
-                    if(objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+            float bgi = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX - GridUnitSize);
+            float eni = Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX + GridUnitSize);
+            float bgj = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY - GridUnitSize);
+            float enj = Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY + GridUnitSize);
+
+            for (float i = bgi; i < eni; i += GridUnitSize)
+                for (float j = bgj; j < enj; j += GridUnitSize)
+                    if (objectGrid[(int)Math.Floor((float)i / GridUnitSize),
                         (int)Math.Floor((float)j / GridUnitSize)].Contains(mapObject))
-                        objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+                        objectGrid[(int)Math.Floor((float)i / GridUnitSize),
                             (int)Math.Floor((float)j / GridUnitSize)].Remove(mapObject);
         }
 
         public void AddToGrid(MapObject mapObject)
         {
-            for (float i = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX-GridUnitSize);
-                i < Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX+GridUnitSize);
-                i += GridUnitSize)
-                for (float j = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY - GridUnitSize);
-                    j < Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY+GridUnitSize);
-                    j += GridUnitSize)
-                    if (!objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+            float bgi = Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX - GridUnitSize);
+            float eni = Math.Min(World.WorldSize, mapObject.Position.X + mapObject.HitboxMaxX + GridUnitSize);
+            float bgj = Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY - GridUnitSize);
+            float enj = Math.Min(World.WorldSize, mapObject.Position.Y + mapObject.HitboxMaxY + GridUnitSize);
+
+            for (float i = bgi; i < eni; i += GridUnitSize)
+                for (float j = bgj; j < enj; j += GridUnitSize)
+                    if (!objectGrid[(int)Math.Floor((float)i / GridUnitSize),
                         (int)Math.Floor((float)j / GridUnitSize)].Contains(mapObject))
-                        objectGrid[(int)Math.Floor((float)i / GridUnitSize), 
+                        objectGrid[(int)Math.Floor((float)i / GridUnitSize),
                             (int)Math.Floor((float)j / GridUnitSize)].Add(mapObject);
         }
-          
+
         public void SetHero(MapObject hero)
         {
             if (Hero == null && hero is Hero)
@@ -304,14 +306,14 @@ namespace neon
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            /*int offX = -(Math.Abs(ScreenX) % (sand.Width * Game1.PixelScale));
+            int offX = -(Math.Abs(ScreenX) % (sand.Width * Game1.PixelScale));
             int offY = -(Math.Abs(ScreenY) % (sand.Height * Game1.PixelScale));
 
             for (int i = offX; i < 1920; i += Game1.PixelScale * sand.Width)
                  for (int j = offY; j < 1080; j += Game1.PixelScale * sand.Height)
                      spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
                          0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
-            */
+            
 
             int darkX = (int)(Hero.Position.X * UnitSize + ScreenX)-dark.Width/2;
             int darkY = (int)(Hero.Position.Y * UnitSize + ScreenY)-dark.Height/2;

@@ -1,16 +1,10 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Newtonsoft.Json;
-using System.Text;
-using System.Threading;
 
 namespace neon
 {
@@ -58,7 +52,7 @@ namespace neon
 
                 world.SetHero(mapObject);
             }
-        }
+        } 
 
         private void Generate(ContentManager contentManager, int xRelative, int yRelative, World world)
         {
@@ -73,113 +67,66 @@ namespace neon
 
             if (biome == 0)
             {
-                int grassCount = rnd.Next(25, 50);
-
-                for (int i = 0; i < grassCount; i++)
-                {
-                    double x = rnd.Next(0, (int)(chunkSize)) + xOffset;
-                    double y = rnd.Next(0, (int)(chunkSize)) + yOffset;
-
-                    x += rnd.NextDouble();
-                    y += rnd.NextDouble();
-
-                    MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
-                }
             }
             else if (biome == 1)
             {
-                int rockGroups = rnd.Next(2, 5);
+                CherockRing(rnd.Next(3, 6), xOffset + chunkSize / 4, yOffset + chunkSize / 4, world, contentManager);
 
-                for (int i = 0; i < rockGroups; i++)
+                /*int greenmancount = rnd.Next(3, 7);
+
+                for(int i=0; i<greenmancount; i++)
                 {
-                    int cx = rnd.Next((int)xOffset, (int)(xOffset + chunkSize));
-                    int cy = rnd.Next((int)yOffset, (int)(yOffset + chunkSize));
-                    int ringCount = rnd.Next(4, 8);
-                    double rad = 0;
-                    
-                    for (int j = 0; j < ringCount; j++)
-                    {
-                        int rockCount = j * 3 + 1;
-                        double crot = rnd.NextDouble() * (Math.PI * 2 / rockCount);
+                    double tmpx = xOffset + rnd.NextDouble() * chunkSize;
+                    double tmpy = yOffset + rnd.NextDouble() * chunkSize;
 
-                        for (int k=0; k<rockCount; k++)
-                        {                            
-                            int tp = 0;
+                    MapObject man = new ScaryLilGreenman(contentManager, new Vector2((float)tmpx, (float)tmpy), world);
 
-                            if (j == 0)
-                                tp = 2;
-                            else if (j < ringCount/1.5)
-                                tp = 1;
-
-                            double nrad = rad+rnd.NextDouble()*10;
-
-                            MapObject cher = new Cheerock(contentManager, 
-                                (float)(cx + Math.Cos(crot) * nrad), (float)(cy + Math.Sin(crot) * nrad), 
-                                world, tp);
-
-                            if (cher.HitboxClear(world))
-                                world.AddObject(cher);
-
-                            crot += rnd.NextDouble()*0.5+(Math.PI * 2 / rockCount)-0.25;
-                        }
-
-                        rad += 3.45;
-                    }
-                }
+                    if (man.HitboxClear(world))
+                        world.AddObject(man);
+                }*/
             }
             else if (biome == 2)
-            {
-
-               /* if (Game1.GetDistance(new Vector2(xRelative + world.CurrentChunkX, yRelative + world.CurrentChunkY),
-                    new Vector2(0, 0)) > 2)
-                {
-                    int grassCount = rnd.Next(3, 6);    
-
-                    for (int i = 0; i < grassCount; i++)
-                    {   
-                        MapObject greenMan = new ScaryLilGreenman(contentManager,
-                            new Vector2((float)rnd.NextDouble() * chunkSize + xOffset,
-                            (float)rnd.NextDouble() * chunkSize + yOffset), world);
-
-                        if (greenMan.HitboxClear(world))
-                            world.Objects.Add(greenMan);
-                    }
-                }*/ 
-
+            { 
             }
             else if (biome == 3)
             {
-                int pikeCount = rnd.Next(5, 13);
+            }
+        }
 
-                for (int i = 0; i < pikeCount; i++)
-                    world.Objects.Add(new Spike(contentManager,
-                        xOffset + (float)rnd.NextDouble() * chunkSize,
-                        yOffset + (float)rnd.NextDouble() * chunkSize, world, rnd.Next(0, 3)));
-                
-                int grassCount = rnd.Next(15, 30);
+        private void CherockRing(int ringCount, double cx, double cy, World world, ContentManager contentManager)
+        {
+            var rnd = new Random();
+            double rad = 0;
 
-                for (int i = 0; i < grassCount; i++)
+            for (int j = 0; j < ringCount; j++)
+            {
+                int rockCount = j * 3 + 1;
+                double crot = rnd.NextDouble() * (Math.PI * 2 / rockCount);
+
+                for (int k = 0; k < rockCount; k++)
                 {
-                    double x = rnd.Next(0, (int)(chunkSize)) + xOffset;
-                    double y = rnd.Next(0, (int)(chunkSize)) + yOffset;
+                    int tp = 2;
 
-                    x += rnd.NextDouble();
-                    y += rnd.NextDouble();
+                    if (j == 0)
+                        tp = 1;
+                    if (j == 1)
+                        tp = rnd.Next(0, 2);
+                    else if (j < ringCount / 2)
+                        tp = 0;
 
-                    MapObject grass = new ThornGrass(contentManager, (float)x, (float)y, world, rnd.Next(0, 4));
+                    double nrad = rad + rnd.NextDouble() * 10;
+
+                    MapObject cher = new Cheerock(contentManager,
+                        (float)(cx + Math.Cos(crot) * nrad), (float)(cy + Math.Sin(crot) * nrad),
+                        world, tp);
+
+                    if (cher.HitboxClear(world))
+                        world.AddObject(cher);
+
+                    crot += rnd.NextDouble() * 0.5 + (Math.PI * 2 / rockCount) - 0.25;
                 }
 
-                grassCount = rnd.Next(3, 6);
-
-                for(int i=0; i<grassCount; i++)
-                {
-                    MapObject greenMan = new ScaryLilGreenman(contentManager,
-                        new Vector2((float)rnd.NextDouble() * chunkSize + xOffset,
-                        (float)rnd.NextDouble() * chunkSize + yOffset), world);
-
-                    if (greenMan.HitboxClear(world))
-                        world.Objects.Add(greenMan);
-                }
+                rad += 2.5;
             }
         }
 

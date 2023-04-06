@@ -100,7 +100,7 @@ namespace neon
 
         public Arrat(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
             base(contentManager, position, movement, 5f, null, "arrat", world,
-                new List<int> { 55, 55, 100 },0)
+                new List<int> { 100, 100, 300 },0)
         { }
 
         public override void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
@@ -110,7 +110,7 @@ namespace neon
 
             world.Objects.Add(new ArratBullet(contentManager,
                 new Vector2(Position.X + (float)Math.Cos(Direction) * 7f, Position.Y + (float)Math.Sin(Direction) * 7f),
-                new Vector2((float)Math.Cos(Direction) * 2.8f, (float)Math.Sin(Direction) * 2.8f), world));
+                new Vector2((float)Math.Cos(Direction) * 1.5f, (float)Math.Sin(Direction) * 1.5f), world));
 
             base.ShootInDirection(contentManager, Direction, world, owner);
         }
@@ -151,6 +151,6 @@ namespace neon
             }
 
             base.ShootInDirection(contentManager, Direction, world, owner);
-        }
+        } 
     }
 }

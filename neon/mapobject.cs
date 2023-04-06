@@ -29,7 +29,7 @@ namespace neon
         [JsonIgnore]
         public List<Vector2> Hitbox { get; protected set; } = null;
         [JsonProperty("pth")]
-        protected string HitboxPath=null;
+        protected string HitboxPath = null;
 
         [JsonProperty("mix")]
         public float HitboxMinX { get; protected set; }
@@ -45,7 +45,7 @@ namespace neon
 
         [JsonProperty("pos")]
         public Vector2 Position { get; set; }
-        
+
         [JsonProperty("mov")]
         public Vector2 Movement { get; protected set; }
 
@@ -56,7 +56,7 @@ namespace neon
 
         [JsonConstructor]
         public MapObject()
-        {}
+        { }
 
         public MapObject(ContentManager contentManager,
             Vector2 position, Vector2 movement, float weight, string hitboxPath,
@@ -79,7 +79,7 @@ namespace neon
             HitboxMinY = 100000;
             HitboxMinX = 100000;
 
-            for (int i=0; i<Hitbox.Count; i++)
+            for (int i = 0; i < Hitbox.Count; i++)
             {
                 HitboxMaxX = Math.Max(HitboxMaxX, Hitbox[i].X);
                 HitboxMaxY = Math.Max(HitboxMaxY, Hitbox[i].Y);
@@ -101,7 +101,7 @@ namespace neon
                 else
                     Hitbox = new List<Vector2>();
             }
-
+                
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
 
@@ -111,7 +111,7 @@ namespace neon
 
             Move(0, world); Move(1, world);
 
-            if ((int)Math.Floor(Position.X/World.GridUnitSize)!= (int)Math.Floor(ppos.X / World.GridUnitSize) ||
+            if ((int)Math.Floor(Position.X / World.GridUnitSize) != (int)Math.Floor(ppos.X / World.GridUnitSize) ||
                 (int)Math.Floor(Position.Y / World.GridUnitSize) != (int)Math.Floor(ppos.Y / World.GridUnitSize))
             {
                 Vector2 p2 = Position;
@@ -128,7 +128,7 @@ namespace neon
         {
             Texture2D whatToDraw = Texture.GetCurrentFrame();
 
-            spriteBatch.Draw(whatToDraw, 
+            spriteBatch.Draw(whatToDraw,
                 new Vector2(x - whatToDraw.Width * Game1.PixelScale / 2, y - whatToDraw.Height * Game1.PixelScale),
                 null, color, 0f,
                 new Vector2(0, 0), Game1.PixelScale, SpriteEffects.None, depth);
@@ -139,10 +139,10 @@ namespace neon
             for (int i = 0; i < Hitbox.Count; i++)
             {
                 Vector2 v1 = Hitbox[i];
-                Vector2 v2 = Hitbox[(i+1)%Hitbox.Count];
+                Vector2 v2 = Hitbox[(i + 1) % Hitbox.Count];
 
-                float rot = Game1.GetDirection(v1, v2)+(float)Math.PI;
-                float scale = Game1.GetDistance(v1, v2)*World.UnitSize;
+                float rot = Game1.GetDirection(v1, v2) + (float)Math.PI;
+                float scale = Game1.GetDistance(v1, v2) * World.UnitSize;
 
                 spriteBatch.Draw(world.pxl, new Vector2(x + Hitbox[i].X * World.UnitSize, y + Hitbox[i].Y * World.UnitSize),
                     null, color, rot, new Vector2(0, 0), new Vector2(scale, 2), SpriteEffects.None, depth);
@@ -169,7 +169,7 @@ namespace neon
                 if (!HitboxClear(world))
                 {
                     Position = new Vector2(Position.X - Movement.X, Position.Y);
-                    Movement = new Vector2(Movement.X/2, Movement.Y);
+                    Movement = new Vector2(Movement.X / 2, Movement.Y);
 
                     Move(0, world);
                 }
@@ -184,7 +184,7 @@ namespace neon
                 if (!HitboxClear(world))
                 {
                     Position = new Vector2(Position.X, Position.Y - Movement.Y);
-                    Movement = new Vector2(Movement.X, Movement.Y/2);
+                    Movement = new Vector2(Movement.X, Movement.Y / 2);
 
                     Move(1, world);
                 }
@@ -197,17 +197,18 @@ namespace neon
 
             HashSet<MapObject> mo = new HashSet<MapObject>();
 
-            for (float i = Math.Max(0, Position.X + HitboxMinX - World.GridUnitSize);
-                i < Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
-                i += World.GridUnitSize)
-                for (float j = Math.Max(0, Position.Y + HitboxMinY - World.GridUnitSize);
-                    j < Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
-                    j += World.GridUnitSize)
+            float bgi = Math.Max(0, Position.X + HitboxMinX - World.GridUnitSize);
+            float eni = Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
+            float bgj = Math.Max(0, Position.Y + HitboxMinY - World.GridUnitSize);
+            float enj = Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
+
+            for (float i = bgi; i < eni; i += World.GridUnitSize)
+                for (float j = bgj; j < enj; j += World.GridUnitSize)
                 {
-                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize), 
+                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize),
                         tmpy = (int)Math.Floor((float)j / World.GridUnitSize);
 
-                    for (int k=0; k< world.objectGrid[tmpx, tmpy].Count; k++)
+                    for (int k = 0; k < world.objectGrid[tmpx, tmpy].Count; k++)
                         mo.Add(world.objectGrid[tmpx, tmpy][k]);
                 }
 
@@ -227,12 +228,14 @@ namespace neon
 
             HashSet<MapObject> mo = new HashSet<MapObject>();
 
-            for (float i = Math.Max(0, Position.X + HitboxMinX- World.GridUnitSize);
-                i < Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
-                i += World.GridUnitSize)
-                for (float j = Math.Max(0, Position.Y + HitboxMinY- World.GridUnitSize);
-                    j < Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
-                    j += World.GridUnitSize)
+
+            float bgi = Math.Max(0, Position.X + HitboxMinX - World.GridUnitSize);
+            float eni = Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
+            float bgj = Math.Max(0, Position.Y + HitboxMinY - World.GridUnitSize);
+            float enj = Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
+
+            for (float i = bgi; i < eni; i += World.GridUnitSize)
+                for (float j = bgj; j < enj; j += World.GridUnitSize)
                 {
                     int tmpx = (int)Math.Floor((float)i / World.GridUnitSize),
                         tmpy = (int)Math.Floor((float)j / World.GridUnitSize);

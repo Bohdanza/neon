@@ -13,7 +13,7 @@ namespace neon
 {
     public class Game1 : Game
     {
-        public const int PixelScale = 1;
+        public const int PixelScale = 5;
         public static Texture2D NoTexture;
 
         private GraphicsDeviceManager _graphics;
