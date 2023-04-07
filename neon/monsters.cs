@@ -36,4 +36,17 @@ namespace neon
             GunInHand = new Arrat(contentManager, position, new Vector2(0, 0), world);
         }
     }
+
+    public class MossCrab : Monster
+    {
+        public MossCrab() : base() { }
+
+        public MossCrab(ContentManager contentManager, Vector2 position, World world) :
+            base(contentManager, position, 4f, 300,
+                @"hitboxes\mosscrab",
+                "mosscrab", 0.1f, world)
+        {
+            GunInHand = null;
+        }
+    }
 }

@@ -72,18 +72,30 @@ namespace neon
             {
                 CherockRing(rnd.Next(3, 6), xOffset + chunkSize / 4, yOffset + chunkSize / 4, world, contentManager);
 
-                /*int greenmancount = rnd.Next(3, 7);
+                int greenmancount = rnd.Next(3, 7);
 
                 for(int i=0; i<greenmancount; i++)
                 {
                     double tmpx = xOffset + rnd.NextDouble() * chunkSize;
                     double tmpy = yOffset + rnd.NextDouble() * chunkSize;
 
-                    MapObject man = new ScaryLilGreenman(contentManager, new Vector2((float)tmpx, (float)tmpy), world);
+                    MapObject man = new MossCrab(contentManager, new Vector2((float)tmpx, (float)tmpy), world);
 
                     if (man.HitboxClear(world))
                         world.AddObject(man);
-                }*/
+                }
+
+                int pathcount = rnd.Next(1, 3);
+
+                for(int i=0; i<pathcount; i++)
+                {
+                    double tmpx = xOffset + rnd.NextDouble() * chunkSize;
+                    double tmpy = yOffset + rnd.NextDouble() * chunkSize;
+
+                    MapObject path = new GroundPath(contentManager, (float)tmpx, (float)tmpy, world, 0);
+
+                    world.AddObject(path);
+                }
             }
             else if (biome == 2)
             { 
