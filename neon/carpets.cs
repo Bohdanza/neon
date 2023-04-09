@@ -24,7 +24,8 @@ namespace neon
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
         {
-            base.Draw(spriteBatch, x, y, color, depth-0.099999f);
+            Texture2D cf = Texture.GetCurrentFrame();
+            base.Draw(spriteBatch, x+cf.Width*Game1.PixelScale/2, y+cf.Height*Game1.PixelScale, color, depth-0.099999f);
         }
     }
 }

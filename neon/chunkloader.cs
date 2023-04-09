@@ -85,14 +85,16 @@ namespace neon
                         world.AddObject(man);
                 }
 
-                int pathcount = rnd.Next(1, 3);
+                int pathcount = rnd.Next(5, 15);
 
                 for(int i=0; i<pathcount; i++)
                 {
-                    double tmpx = xOffset + rnd.NextDouble() * chunkSize;
-                    double tmpy = yOffset + rnd.NextDouble() * chunkSize;
+                    double tmpx = xOffset + rnd.Next(0, (int)Math.Floor(chunkSize/Game1.PixelScale))
+                        *Game1.PixelScale;
+                    double tmpy = yOffset + rnd.Next(0, (int)Math.Floor(chunkSize / Game1.PixelScale))
+                        * Game1.PixelScale;
 
-                    MapObject path = new GroundPath(contentManager, (float)tmpx, (float)tmpy, world, 0);
+                    MapObject path = new GroundPath(contentManager, (float)tmpx, (float)tmpy, world, rnd.Next(0, 2));
 
                     world.AddObject(path);
                 }
