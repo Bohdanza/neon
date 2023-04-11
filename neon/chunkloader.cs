@@ -85,7 +85,7 @@ namespace neon
                         world.AddObject(man);
                 }
 
-                int pathcount = rnd.Next(5, 15);
+                int pathcount = rnd.Next(10, 21);
 
                 for(int i=0; i<pathcount; i++)
                 {
