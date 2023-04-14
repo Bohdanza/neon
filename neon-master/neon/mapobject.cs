@@ -258,6 +258,11 @@ namespace neon
             Movement = new Vector2(x, y);
         }
 
+        public void SetMovement(Vector2 mv)
+        {
+            Movement = new Vector2(mv.X, mv.Y);
+        }
+
         /// <summary>
         /// Adds x to Movement.X and y to Movement.Y counting the weight
         /// </summary>
@@ -299,7 +304,11 @@ namespace neon
             float htbm2 = mapObject.Position.Y;
 
             if (htbm1 == htbm2)
-                return 1;
+            {
+                if (Position.X != mapObject.Position.X)
+                    return Position.X.CompareTo(mapObject.Position.X);
+                return Texture.BaseName.CompareTo(mapObject.Texture.BaseName);
+            }
 
             return htbm1.CompareTo(htbm2);
         }

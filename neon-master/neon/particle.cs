@@ -106,4 +106,35 @@ namespace neon
             base.Draw(spriteBatch, x, y, BloodColor, depth);
         }
     }
+
+    public class Fire : Particle
+    {
+        [JsonProperty]
+        public Color FireColor { get; protected set; }
+        [JsonProperty]
+        public int ZeroGround { get; protected set; }
+
+        public Fire() : base()
+        { }
+
+        public Fire(ContentManager contentManager, Vector2 position, Vector2 offsetMovement,
+            int offsetX, int offsetY, int lifeTime, Color fireColor, int zeroGround, int textureType, World world) :
+            base(contentManager, position, offsetMovement, offsetX, offsetY, lifeTime,
+                "blooddrop" + textureType.ToString() + "_", world)
+        {
+            FireColor = fireColor;
+            ZeroGround = zeroGround;
+        }
+
+        public override void Update(ContentManager contentManager, World world)
+        {
+            base.Update(contentManager, world);
+        }
+
+
+        public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
+        {
+            base.Draw(spriteBatch, x, y, FireColor, depth);
+        }
+    }
 }

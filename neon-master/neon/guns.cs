@@ -82,7 +82,7 @@ namespace neon
 
             for (int i = 0; i < rnd.Next(5, 7); i++)
             {
-                double ang = Direction + rnd.NextDouble()*0.42 - 0.21;
+                double ang = Direction + rnd.NextDouble() * 0.42 - 0.21;
 
                 world.Objects.Add(new ShotgunBullet(contentManager,
                     new Vector2(Position.X + (float)Math.Cos(Direction) * 3.2f, Position.Y + (float)Math.Sin(Direction) * 3.2f),
@@ -122,7 +122,7 @@ namespace neon
 
         public Biowand(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
             base(contentManager, position, movement, 5f, null, "biowand", world,
-                new List<int> { 60, 45, 30, 15, 120 },0)
+                new List<int> { 60 }, 0)
         { }
 
         public override void ShootInDirection(ContentManager contentManager, float Direction, World world, Mob owner)
@@ -132,23 +132,13 @@ namespace neon
 
             var rnd = new Random();
 
-            int blc = rnd.Next(1, 3);
+            double rot = Direction;
+            float spd = 1;
 
             world.Objects.Add(new Biospike(contentManager,
-            new Vector2(Position.X + (float)Math.Cos(Direction) * 2.5f,
-            Position.Y + (float)Math.Sin(Direction) * 2.5f),
-            new Vector2((float)Math.Cos(Direction) * 3.2f, (float)Math.Sin(Direction) * 3.2f), world));
-
-            for (int i=0; i<blc; i++)
-            {
-                double rot = Direction + (rnd.NextDouble() - 0.5) * 0.25;
-                float spd = 3f + (float)rnd.NextDouble() * 0.4f;
-
-                world.Objects.Add(new Biospike(contentManager,
-                new Vector2(Position.X + (float)Math.Cos(rot) * 2.5f,
-                Position.Y + (float)Math.Sin(rot) * 2.5f),
-                new Vector2((float)Math.Cos(rot) * spd, (float)Math.Sin(rot) * spd), world));
-            }
+            new Vector2(Position.X + (float)Math.Cos(rot) * 3.75f,
+            Position.Y + (float)Math.Sin(rot) * 3.75f),
+            new Vector2((float)Math.Cos(rot) * spd, (float)Math.Sin(rot) * spd), world));
 
             base.ShootInDirection(contentManager, Direction, world, owner);
         } 

@@ -73,9 +73,38 @@ namespace neon
         public Biospike() : base() { }
 
         public Biospike(ContentManager contentManager, Vector2 position, Vector2 movement, World world) :
-            base(contentManager, position, movement, 50f, 25, @"hitboxes\onebyone",
+            base(contentManager, position, movement, 10000f, 300, @"hitboxes\onebyone",
                 "biospike", world, 500)
         { }
+
+        public override void Update(ContentManager contentManager, World world)
+        {
+            var rnd = new Random();
+            int fireCount = rnd.Next(6, 11);
+
+            float spd = Game1.GetDistance(new Vector2(0, 0), Movement);
+            float dir = Game1.GetDirection(Movement, new Vector2(0, 0));
+            dir %=(float)Math.PI * 2;
+
+            spd += 0.1f;
+
+            SetMovement(Game1.DirectionToVector(dir) * spd);
+
+            for (int i = 0; i < fireCount; i++)
+            {
+                double dir1 = dir +rnd.NextDouble()-0.5;
+                Vector2 vv = Game1.DirectionToVector((float)dir1);
+                vv = new Vector2(vv.X * (7 + rnd.Next(0, 5)), vv.Y * (7 + rnd.Next(0, 5)));
+
+                world.AddObject(new Fire(contentManager, new Vector2(Position.X, Position.Y),
+                    vv,
+                    0, 0,
+                    5 + rnd.Next(0, 15),
+                    new Color(158+rnd.Next(-10, 20), 255, 250 + rnd.Next(-10, 20), 225), -10000, 0, world));
+            }
+
+            base.Update(contentManager, world);
+        }
 
         public override Bullet Copy(ContentManager contentManager, World world)
         {

@@ -53,11 +53,13 @@ namespace neon
         {
             base.Damage(damage, direction, world, contentManager);
 
-            if (Action != "die")
+            if (Action != "die"||Texture.CurrentTexture!=Texture.Textures.Count-1||!Texture.BaseName.EndsWith("die_"))
             {
                 var rnd = new Random();
                 AddBlood(new Color(232 + rnd.Next(-50, 20), 11, 0),
-                    rnd.Next(damage / 2, damage), new Vector2(direction.X*10, direction.Y*10), world, contentManager, rnd);
+                    Math.Min(100, rnd.Next(damage / 4, (int)(damage/1.5))), 
+                    new Vector2(direction.X * 7, direction.Y*7),
+                    world, contentManager, rnd);
             }
         }
     }

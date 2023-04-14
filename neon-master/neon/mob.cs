@@ -105,9 +105,9 @@ namespace neon
 
             for(int i=0; i<count; i++)
             {
-                int r = Math.Min(255, Math.Max(0, color.R + rnd.Next(-20, 20)));
-                int g = Math.Min(255, Math.Max(0, color.G + rnd.Next(-20, 20)));
-                int b = Math.Min(255, Math.Max(0, color.B + rnd.Next(-20, 20)));
+                int r = Math.Min(255, Math.Max(0, color.R + rnd.Next(-50, 20)));
+                int g = Math.Min(255, Math.Max(0, color.G + rnd.Next(-50, 20)));
+                int b = Math.Min(255, Math.Max(0, color.B + rnd.Next(-50, 20)));
 
                 world.AddObject(new Blood(contentManager, 
                     new Vector2(Position.X, Position.Y+(float)rnd.NextDouble()*0.3f-0.15f),

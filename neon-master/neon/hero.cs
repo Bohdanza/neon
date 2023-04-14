@@ -14,6 +14,8 @@ namespace neon
 {
     public class Hero:Mob
     {
+        private const float GunOffsetY = 1f;
+
         [JsonProperty]
         public Gun GunInHand { get; protected set; } = null;
         [JsonProperty]
@@ -31,7 +33,7 @@ namespace neon
             @"hitboxes\hero",
             "hero", world)
         {
-            GunInHand = new ShotGun(contentManager, new Vector2(x, y-2), new Vector2(0,0), world);
+            GunInHand = new Biowand(contentManager, new Vector2(x, y-GunOffsetY), new Vector2(0,0), world);
             Action = "wa";
         }   
 
@@ -65,12 +67,11 @@ namespace neon
 
                 if (GunInHand != null)
                 {
+                    GunInHand.Position = new Vector2(Position.X, Position.Y - GunOffsetY);
                     Vector2 screen = world.GetScreenPosition(GunInHand);
 
                     dir = Game1.GetDirection(new Vector2(ms.X, ms.Y),
                         new Vector2(screen.X, screen.Y));
-                    dir += (float)Math.PI * 2;
-                    dir %= (float)(Math.PI * 2);
 
                     GunInHand.UpdateInHand(contentManager);
 
@@ -80,8 +81,6 @@ namespace neon
                         GunInHand.Rotation += (float)Math.PI * 2;
                     else
                         GunInHand.Rotation %= (float)Math.PI * 2;
-
-                    GunInHand.Position = new Vector2(Position.X, Position.Y - 2);
 
                     if (ms.LeftButton == ButtonState.Pressed)
                     {
@@ -104,11 +103,24 @@ namespace neon
 
             if (GunInHand != null)
             {
-                GunInHand.Draw(spriteBatch, x, y-2*World.UnitSize, color, depth+0.000001f);
+                GunInHand.Draw(spriteBatch, x, (int)(y-GunOffsetY*World.UnitSize), color, depth+0.000001f);
             }
 
             spriteBatch.Draw(HpDisplay, new Vector2(10, 10), null, color, 0f, new Vector2(0, 0),
                 new Vector2(CurrentHPDraw * 4, Game1.PixelScale*2), SpriteEffects.None, 1f);
+        }
+        
+        public override void Damage(int damage, Vector2 direction, World world, ContentManager contentManager)
+        {
+            base.Damage(damage, direction, world, contentManager);
+
+            if (Action != "die" || Texture.CurrentTexture != Texture.Textures.Count - 1 || !Texture.BaseName.EndsWith("die_"))
+            {
+                var rnd = new Random();
+                AddBlood(new Color(232 + rnd.Next(-50, 20), 11, 0),
+                     Math.Min(50, rnd.Next(damage / 4, (int)(damage / 1.5))),
+                    new Vector2(direction.X * 10, direction.Y * 10), world, contentManager, rnd);
+            }
         }
     }
 }
