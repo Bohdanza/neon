@@ -29,7 +29,7 @@ namespace neon
     
         public Hero(ContentManager contentManager, float x, float y, World world) 
             : base(contentManager, new Vector2(x, y), new Vector2(0f, 0f),
-            3f, 80,
+            3f, 600, 100,
             @"hitboxes\hero",
             "hero", world)
         {
@@ -39,9 +39,9 @@ namespace neon
 
         public override void Update(ContentManager contentManager, World world)
         {
-            if(CurrentHPDraw!=HP)
-                CurrentHPDraw += (HP-CurrentHPDraw)/Math.Abs(HP-CurrentHPDraw)*
-                    Math.Min(1, Math.Abs(HP - CurrentHPDraw));
+            if (CurrentHPDraw != HP)
+                CurrentHPDraw += (HP - CurrentHPDraw) / Math.Abs(HP - CurrentHPDraw) *
+                    Math.Min(3, Math.Abs(HP - CurrentHPDraw));
 
             if(HpDisplay==null)
             {
@@ -107,7 +107,7 @@ namespace neon
             }
 
             spriteBatch.Draw(HpDisplay, new Vector2(10, 10), null, color, 0f, new Vector2(0, 0),
-                new Vector2(CurrentHPDraw * 4, Game1.PixelScale*2), SpriteEffects.None, 1f);
+                new Vector2(CurrentHPDraw, Game1.PixelScale*2), SpriteEffects.None, 1f);
         }
         
         public override void Damage(int damage, Vector2 direction, World world, ContentManager contentManager)

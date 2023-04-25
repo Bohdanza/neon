@@ -35,8 +35,8 @@ namespace neon
         { }
 
         public Monster(ContentManager contentManager, Vector2 position, float weight,
-            int hp, string hitboxPath, string textureName, float speed, World world):
-            base(contentManager, position, new Vector2(0, 0), weight, hp, hitboxPath, textureName, world)
+            int hp, int maxHp, string hitboxPath, string textureName, float speed, World world):
+            base(contentManager, position, new Vector2(0, 0), weight, hp, maxHp, hitboxPath, textureName, world)
         {
             Speed = speed;
         }

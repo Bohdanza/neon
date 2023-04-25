@@ -17,28 +17,42 @@ namespace neon
         [JsonProperty]
         public int HP { get; protected set; }
         [JsonProperty]
+        public int MaxHP { get; protected set; }
+        [JsonProperty]
         public string Action { get; protected set; }
         [JsonIgnore]
         public int Direction { get; private set; } = 0;
         [JsonIgnore]
         private string pact = "";
 
+        [JsonIgnore]
+        private int HpUpdator = 0;
+
         [JsonConstructor]
         public Mob() : base()
         { }
 
-        public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp,
+        public Mob(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, int hp, int maxHp,
             string hitboxPath, string textureName, World world):
             base(contentManager, position, movement, weight, hitboxPath, textureName+"_id_", 0, world)
         {
             Action = "id";
             HP = hp;
+            MaxHP = maxHp;
 
             TextureName = textureName;
         }
 
         public override void Update(ContentManager contentManager, World world)
         {
+            HpUpdator++;
+
+            if(HpUpdator>=10&&HP>MaxHP)
+            {
+                HpUpdator = 0;
+                HP--;
+            }
+
             if (Action != pact)
             {
                 Texture = new DynamicTexture(contentManager, TextureName + "_" + Action + "_");

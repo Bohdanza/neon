@@ -16,7 +16,7 @@ namespace neon
         public Tersol() : base() { }
 
         public Tersol(ContentManager contentManager, Vector2 position, World world):
-            base(contentManager, position, 5f, 10, 
+            base(contentManager, position, 5f, 10, 10,
                 @"hitboxes\terasol.png",
                 "tersol", 0.3f, world)
         {
@@ -29,7 +29,7 @@ namespace neon
         public ScaryLilGreenman() : base() { }
 
         public ScaryLilGreenman(ContentManager contentManager, Vector2 position, World world) :
-            base(contentManager, position, 4f, 10,
+            base(contentManager, position, 4f, 10, 10,
                 @"hitboxes\greenman",
                 "lilgreenman", 0.3f, world)
         {
@@ -42,7 +42,7 @@ namespace neon
         public MossCrab() : base() { }
 
         public MossCrab(ContentManager contentManager, Vector2 position, World world) :
-            base(contentManager, position, 4f, 300,
+            base(contentManager, position, 4f, 300, 300,
                 @"hitboxes\mosscrab",
                 "mosscrab", 0.1f, world)
         {
