@@ -197,19 +197,16 @@ namespace neon
 
             HashSet<MapObject> mo = new HashSet<MapObject>();
 
-            float bgi = Math.Max(0, Position.X + HitboxMinX - World.GridUnitSize);
-            float eni = Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
-            float bgj = Math.Max(0, Position.Y + HitboxMinY - World.GridUnitSize);
-            float enj = Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
+            int bgi = (int)Math.Floor(Math.Max(0, Position.X + HitboxMinX)/World.GridUnitSize);
+            int eni = (int)Math.Floor(Math.Min(World.WorldSize-0.00001f, Position.X + HitboxMaxX) / World.GridUnitSize);
+            int bgj = (int)Math.Floor(Math.Max(0, Position.Y + HitboxMinY) / World.GridUnitSize);
+            int enj = (int)Math.Floor(Math.Min(World.WorldSize - 0.00001f, Position.Y + HitboxMaxY) / World.GridUnitSize);
 
-            for (float i = bgi; i < eni; i += World.GridUnitSize)
-                for (float j = bgj; j < enj; j += World.GridUnitSize)
+            for (int i = bgi; i <= eni; i += 1)
+                for (int j = bgj; j <= enj; j += 1)
                 {
-                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize),
-                        tmpy = (int)Math.Floor((float)j / World.GridUnitSize);
-
-                    for (int k = 0; k < world.objectGrid[tmpx, tmpy].Count; k++)
-                        mo.Add(world.objectGrid[tmpx, tmpy][k]);
+                    for (int k = 0; k < world.objectGrid[i, j].Count; k++)
+                        mo.Add(world.objectGrid[i, j][k]);
                 }
 
             foreach (var curentObject in mo)
@@ -228,20 +225,16 @@ namespace neon
 
             HashSet<MapObject> mo = new HashSet<MapObject>();
 
+            int bgi = (int)Math.Floor(Math.Max(0, Position.X + HitboxMinX) / World.GridUnitSize);
+            int eni = (int)Math.Floor(Math.Min(World.WorldSize - 0.00001f, Position.X + HitboxMaxX) / World.GridUnitSize);
+            int bgj = (int)Math.Floor(Math.Max(0, Position.Y + HitboxMinY) / World.GridUnitSize);
+            int enj = (int)Math.Floor(Math.Min(World.WorldSize - 0.00001f, Position.Y + HitboxMaxY) / World.GridUnitSize);
 
-            float bgi = Math.Max(0, Position.X + HitboxMinX - World.GridUnitSize);
-            float eni = Math.Min(World.WorldSize, Position.X + HitboxMaxX + World.GridUnitSize);
-            float bgj = Math.Max(0, Position.Y + HitboxMinY - World.GridUnitSize);
-            float enj = Math.Min(World.WorldSize, Position.Y + HitboxMaxY + World.GridUnitSize);
-
-            for (float i = bgi; i < eni; i += World.GridUnitSize)
-                for (float j = bgj; j < enj; j += World.GridUnitSize)
+            for (int i = bgi; i <= eni; i += 1)
+                for (int j = bgj; j <= enj; j += 1)
                 {
-                    int tmpx = (int)Math.Floor((float)i / World.GridUnitSize),
-                        tmpy = (int)Math.Floor((float)j / World.GridUnitSize);
-
-                    for (int k = 0; k < world.objectGrid[tmpx, tmpy].Count; k++)
-                        mo.Add(world.objectGrid[tmpx, tmpy][k]);
+                    for (int k = 0; k < world.objectGrid[i, j].Count; k++)
+                        mo.Add(world.objectGrid[i, j][k]);
                 }
 
             foreach (var curentObject in mo)

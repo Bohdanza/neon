@@ -82,13 +82,13 @@ namespace neon
         }
     }
 
-    public class ThornGrass : MapObject
+    public class Weed : MapObject
     {
-        public ThornGrass() : base() { }
+        public Weed() : base() { }
 
-        public ThornGrass(ContentManager contentManager, float x, float y, World world, int subtype) :
+        public Weed(ContentManager contentManager, float x, float y, World world, int subtype) :
             base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f,
-                null, "thorn" + subtype.ToString() + "_",
+                null, "weed" + subtype.ToString() + "_",
                 1, world)
         {
 

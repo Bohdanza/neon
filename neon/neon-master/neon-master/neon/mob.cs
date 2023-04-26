@@ -47,7 +47,7 @@ namespace neon
         {
             HpUpdator++;
 
-            if(HpUpdator>=10&&HP>MaxHP)
+            if(HpUpdator>=5&&HP>MaxHP)
             {
                 HpUpdator = 0;
                 HP--;

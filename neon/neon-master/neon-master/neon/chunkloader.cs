@@ -98,6 +98,20 @@ namespace neon
 
                     world.AddObject(path);
                 }
+                
+                pathcount = rnd.Next(10, 20);
+
+                for (int i = 0; i < pathcount; i++)
+                {
+                    double tmpx = xOffset + rnd.Next(0, (int)Math.Floor(chunkSize / Game1.PixelScale))
+                        * Game1.PixelScale;
+                    double tmpy = yOffset + rnd.Next(0, (int)Math.Floor(chunkSize / Game1.PixelScale))
+                        * Game1.PixelScale;
+
+                    MapObject path = new Weed(contentManager, (float)tmpx, (float)tmpy, world, rnd.Next(0, 5));
+
+                    world.AddObject(path);
+                }
             }
             else if (biome == 2)
             { 
