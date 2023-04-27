@@ -193,6 +193,8 @@ namespace neon
 
         public bool HitboxClear(World world)
         {
+            List<MapObject>[,] lst = world.CollisionArray.GetCollisionLayer(CollsionLevel);
+
             var collisionChecker = new CollisionDetector();
 
             HashSet<MapObject> mo = new HashSet<MapObject>();
@@ -205,8 +207,8 @@ namespace neon
             for (int i = bgi; i <= eni; i += 1)
                 for (int j = bgj; j <= enj; j += 1)
                 {
-                    for (int k = 0; k < world.objectGrid[i, j].Count; k++)
-                        mo.Add(world.objectGrid[i, j][k]);
+                    for (int k = 0; k < lst[i, j].Count; k++)
+                        mo.Add(lst[i, j][k]);
                 }
 
             foreach (var curentObject in mo)
@@ -219,6 +221,7 @@ namespace neon
 
         protected HashSet<MapObject> HitboxObstructions(World world)
         {
+            List<MapObject>[,] lst = world.CollisionArray.GetCollisionLayer(CollsionLevel);
             HashSet<MapObject> ans = new HashSet<MapObject>();
 
             var collisionChecker = new CollisionDetector();
@@ -233,8 +236,8 @@ namespace neon
             for (int i = bgi; i <= eni; i += 1)
                 for (int j = bgj; j <= enj; j += 1)
                 {
-                    for (int k = 0; k < world.objectGrid[i, j].Count; k++)
-                        mo.Add(world.objectGrid[i, j][k]);
+                    for (int k = 0; k < lst[i, j].Count; k++)
+                        mo.Add(lst[i, j][k]);
                 }
 
             foreach (var curentObject in mo)

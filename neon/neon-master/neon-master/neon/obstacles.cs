@@ -69,6 +69,19 @@ namespace neon
         }
     }
 
+    public class SpikeLight : MapObject
+    {
+        public SpikeLight() : base() { }
+
+        public SpikeLight(ContentManager contentManager, float x, float y, World world, int subtype) :
+            base(contentManager, new Vector2(x, y), new Vector2(0f, 0f), 10000000f,
+                @"hitboxes\spikelight" + subtype.ToString(), "spikelight" + subtype.ToString() + "_",
+                0, world)
+        {
+
+        }
+    }
+
     public class Boab : MapObject
     {
         public Boab() : base() { }

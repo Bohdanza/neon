@@ -27,12 +27,12 @@ namespace neon
 
         public int ScreenX { get; set; } = 0;
         public int ScreenY { get; set; } = 0;
-
+        
         public const int UnitSize = 16;
         public const int GridUnitSize = 10;
 
         public List<MapObject> Objects { get; private set; }
-        public List<MapObject>[,] objectGrid { get; private set; }
+        public CollisionGrid CollisionArray { get; private set; }
 
         public Texture2D pxl { get; private set; }
         private Texture2D sand, dark;
@@ -46,21 +46,17 @@ namespace neon
         public World(ContentManager contentManager, string path)
         {
             WorldHitboxFabricator = new HitboxFabricator();
-            objectGrid = new List<MapObject>[WorldSize / GridUnitSize+1, WorldSize / GridUnitSize+1];
+            CollisionArray = new CollisionGrid(WorldSize / GridUnitSize + 1, WorldSize / GridUnitSize + 1);
 
-            for (int i = 0; i <= WorldSize / GridUnitSize; i++)
-                for (int j = 0; j <= WorldSize / GridUnitSize; j++)
-                    objectGrid[i, j] = new List<MapObject>();
-
-                    CurrentChunkX = -1;
+            CurrentChunkX = -1;
             CurrentChunkY = -1;
 
             sand = contentManager.Load<Texture2D>("sand");
             pxl = contentManager.Load<Texture2D>("pxl");
             dark = contentManager.Load<Texture2D>("vnt");
-            mainFont = contentManager.Load<SpriteFont>("File");
+            mainFont = contentManager.Load<SpriteFont>("File");                                                                     
 
-            if (path[path.Length - 1] != '\\')
+            if (path[path.Length - 1] != '\\') 
                 path += "\\";
 
             Path = path;
@@ -110,10 +106,12 @@ namespace neon
             int bgj = (int)Math.Floor(Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY) / GridUnitSize);
             int enj = (int)Math.Floor(Math.Min(WorldSize - 0.00001f, mapObject.Position.Y + mapObject.HitboxMaxY) / GridUnitSize);
 
+            List<MapObject>[,] lst = CollisionArray.GetCollisionLayer(mapObject.CollsionLevel);
+
             for (int i = bgi; i <= eni; i += 1)
                 for (int j = bgj; j <= enj; j += 1)
-                    if (!objectGrid[i, j].Contains(mapObject))
-                        objectGrid[i, j].Remove(mapObject);
+                    if (lst[i, j].Contains(mapObject))
+                        lst[i, j].Remove(mapObject);
         }
 
         public void AddToGrid(MapObject mapObject)
@@ -123,10 +121,15 @@ namespace neon
             int bgj = (int)Math.Floor(Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY) / GridUnitSize);
             int enj = (int)Math.Floor(Math.Min(WorldSize - 0.00001f, mapObject.Position.Y + mapObject.HitboxMaxY) / GridUnitSize);
 
+            CollisionArray.AddCollisionLayer(mapObject.CollsionLevel);
+            List<MapObject>[,] lst = CollisionArray.GetCollisionLayer(mapObject.CollsionLevel);
+
             for (int i = bgi; i <= eni; i += 1)
                 for (int j = bgj; j <= enj; j += 1)
-                    if (!objectGrid[i, j].Contains(mapObject))
-                        objectGrid[i, j].Add(mapObject);
+                {
+                    if (!lst[i, j].Contains(mapObject))
+                        lst[i, j].Add(mapObject);
+                }
         }
 
         public void SetHero(MapObject hero)

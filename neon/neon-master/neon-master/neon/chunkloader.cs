@@ -85,7 +85,7 @@ namespace neon
                         world.AddObject(man);
                 }
 
-                int pathcount = rnd.Next(10, 21);
+                int pathcount = rnd.Next(16, 25);
 
                 for(int i=0; i<pathcount; i++)
                 {
@@ -94,7 +94,7 @@ namespace neon
                     double tmpy = yOffset + rnd.Next(0, (int)Math.Floor(chunkSize / Game1.PixelScale))
                         * Game1.PixelScale;
 
-                    MapObject path = new GroundPath(contentManager, (float)tmpx, (float)tmpy, world, rnd.Next(0, 2));
+                    MapObject path = new GroundPath(contentManager, (float)tmpx, (float)tmpy, world, rnd.Next(0, 5));
 
                     world.AddObject(path);
                 }
@@ -133,18 +133,18 @@ namespace neon
 
                 for (int k = 0; k < rockCount; k++)
                 {
-                    int tp = 2;
+                    int tp = 0;
 
-                    if (j == 0)
+                    /*if (j == 0)
                         tp = 1;
                     if (j == 1)
                         tp = rnd.Next(0, 2);
                     else if (j < ringCount / 2)
-                        tp = 0;
+                        tp = 0;*/
 
                     double nrad = rad + rnd.NextDouble() * 10;
 
-                    MapObject cher = new Cheerock(contentManager,
+                    MapObject cher = new SpikeLight(contentManager,
                         (float)(cx + Math.Cos(crot) * nrad), (float)(cy + Math.Sin(crot) * nrad),
                         world, tp);
 
