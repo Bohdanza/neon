@@ -63,22 +63,20 @@ namespace neon
         /// </summary>
         public void Update(ContentManager contentManager)
         {
-            TimeSinceLastUpdate++;
-
-            if (TimeSinceLastUpdate > FrameDelay)
+            if (Textures == null)
             {
-                TimeSinceLastUpdate = 0;
+                Load(contentManager);
+            }
+            else if (Textures.Count != 0)
+            {
+                TimeSinceLastUpdate++;
 
-                if (Textures == null)
+                if (TimeSinceLastUpdate > FrameDelay)
                 {
-                    Load(contentManager);
-                }
-                else
-                {
+                    TimeSinceLastUpdate = 0;
+
                     CurrentTexture++;
-
-                    if (CurrentTexture >= Textures.Count)
-                        CurrentTexture = 0;
+                    CurrentTexture %= Textures.Count;
                 }
             }
         }

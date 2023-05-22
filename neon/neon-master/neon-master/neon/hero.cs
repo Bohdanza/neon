@@ -24,6 +24,7 @@ namespace neon
         public float GunRotationSpeed { get; protected set; } = 0.1f;
         private Texture2D HpDisplay=null;
         private int CurrentHPDraw = 0;
+        private float sq2 = (float)Math.Sqrt(2);
 
         public Hero() : base() { }
     
@@ -51,20 +52,41 @@ namespace neon
             if (Action != "die")
             {
                 var ms = Mouse.GetState();
+                var ks = Keyboard.GetState();
 
                 float dir = Game1.GetDirection(world.GetScreenPosition(this),
                     new Vector2(ms.X, ms.Y)) + (float)Math.PI;
 
-                Vector2 vct = Game1.DirectionToVector(dir);
+                Vector2 vct=new Vector2(0, 0);
+
+                if (ks.IsKeyDown(Keys.W))
+                {
+                    vct=new Vector2(vct.X, vct.Y- Speed);
+                }
+                
+                if (ks.IsKeyDown(Keys.A))
+                {
+                    vct = new Vector2(vct.X - Speed, vct.Y);
+                }
+                
+                if (ks.IsKeyDown(Keys.D))
+                {
+                    vct = new Vector2(vct.X + Speed, vct.Y);
+                }
+                
+                if (ks.IsKeyDown(Keys.S))
+                {
+                    vct = new Vector2(vct.X, vct.Y + Speed);
+                }
+
+                if (vct.Y == 0 || vct.X == 0)
+                    vct = new Vector2(vct.X * sq2, vct.Y * sq2);
+
+                ChangeMovement(vct);
 
                 if (Math.Abs(Movement.X) < 0.00001f)
                     SetMovement(vct.X * 0.00001f, Movement.Y);
-
-                if (ms.RightButton==ButtonState.Pressed)
-                {
-                    ChangeMovement(vct.X * Speed, vct.Y * Speed);
-                }
-
+                
                 if (GunInHand != null)
                 {
                     GunInHand.Position = new Vector2(Position.X, Position.Y - GunOffsetY);

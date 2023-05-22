@@ -31,7 +31,7 @@ namespace neon
 
         public Particle(ContentManager contentManager, Vector2 position, Vector2 offsetMovement,
             int offsetX, int offsetY, int lifeTime, string textureName, World world) :
-            base(contentManager, position, new Vector2(0, 0), 4f, null, textureName, 2, world)
+            base(contentManager, position, new Vector2(0, 0), 4f, null, textureName, 1, world)
         {
             OffsetX = offsetX;
             OffsetY = offsetY;

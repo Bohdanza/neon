@@ -79,12 +79,12 @@ namespace neon
                     double tmpx = xOffset + rnd.NextDouble() * chunkSize;
                     double tmpy = yOffset + rnd.NextDouble() * chunkSize;
 
-                    MapObject man = new MossCrab(contentManager, new Vector2((float)tmpx, (float)tmpy), world);
+                    MapObject man = new Crawler(contentManager, new Vector2((float)tmpx, (float)tmpy), world);
 
                     if (man.HitboxClear(world))
                         world.AddObject(man);
                 }
-
+                
                 int pathcount = rnd.Next(16, 25);
 
                 for(int i=0; i<pathcount; i++)
@@ -94,14 +94,14 @@ namespace neon
                     double tmpy = yOffset + rnd.Next(0, (int)Math.Floor(chunkSize / Game1.PixelScale))
                         * Game1.PixelScale;
 
-                    MapObject path = new GroundPath(contentManager, (float)tmpx, (float)tmpy, world, rnd.Next(0, 5));
+                    MapObject path = new GroundPath(contentManager, (float)tmpx, (float)tmpy, world, rnd.Next(0, 6));
 
                     world.AddObject(path);
                 }
                 
                 pathcount = rnd.Next(10, 20);
 
-                for (int i = 0; i < pathcount; i++)
+                for (int i = 0; i < pathcount; i++) 
                 {
                     double tmpx = xOffset + rnd.Next(0, (int)Math.Floor(chunkSize / Game1.PixelScale))
                         * Game1.PixelScale;
@@ -109,7 +109,7 @@ namespace neon
                         * Game1.PixelScale;
 
                     MapObject path = new Weed(contentManager, (float)tmpx, (float)tmpy, world, rnd.Next(0, 5));
-
+                     
                     world.AddObject(path);
                 }
             }

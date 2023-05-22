@@ -314,41 +314,43 @@ namespace neon
                      spriteBatch.Draw(sand, new Vector2(i, j), null, Color.White,
                          0f, new Vector2(0,0), Game1.PixelScale, SpriteEffects.None, 0f);
 
-            int darkX = (int)(Hero.Position.X * UnitSize + ScreenX)-dark.Width/2;
-            int darkY = (int)(Hero.Position.Y * UnitSize + ScreenY)-dark.Height/2;
-             
-            spriteBatch.Draw(dark, new Vector2(darkX, darkY), null, Color.White, 0f, 
-                new Vector2(0,0), 1f, SpriteEffects.None, 0.95f);
+            int darkX = (int)(Hero.Position.X * UnitSize + ScreenX-dark.Width*7.5/2); 
+            int darkY = (int)(Hero.Position.Y * UnitSize + ScreenY-dark.Height*7.5/2);
+            int dh = (int)(dark.Height * 7.5f);
+            int dw = (int)(dark.Width * 7.5f);
 
-            spriteBatch.Draw(dark, new Vector2(darkX, 0), new Rectangle(0, 0, dark.Width, 1), 
+            spriteBatch.Draw(dark, new Vector2(darkX, darkY), null, Color.White, 0f, 
+                new Vector2(0,0), 7.5f, SpriteEffects.None, 0.95f);
+
+            spriteBatch.Draw(dark, new Vector2(darkX, 0), new Rectangle(0, 0, dw, 1), 
                 Color.White, 0f, new Vector2(0, 0),
                 new Vector2(1, darkY), SpriteEffects.None, 0.95f);
 
-            spriteBatch.Draw(dark, new Vector2(darkX, darkY+dark.Height),
-                new Rectangle(0, dark.Height-1, dark.Width, 1),
+            spriteBatch.Draw(dark, new Vector2(darkX, darkY+dh),
+                new Rectangle(0, dh-1, dw, 1),
                 Color.White, 0f, new Vector2(0, 0),
-                new Vector2(1, 1080-darkY-dark.Height), SpriteEffects.None, 0.95f);
+                new Vector2(1, 1080-darkY-dh), SpriteEffects.None, 0.95f);
 
-            spriteBatch.Draw(dark, new Vector2(0, darkY), new Rectangle(0, 0, 1, dark.Height),
+            spriteBatch.Draw(dark, new Vector2(0, darkY), new Rectangle(0, 0, 1, dh),
                 Color.White, 0f, new Vector2(0, 0),
                 new Vector2(darkX, 1), SpriteEffects.None, 0.95f);
 
-            spriteBatch.Draw(dark, new Vector2(darkX+dark.Width, darkY), 
-                new Rectangle(dark.Width-1, 0, 1, dark.Height),
+            spriteBatch.Draw(dark, new Vector2(darkX+dw, darkY),    
+                new Rectangle(dw-1, 0, 1, dh),
                 Color.White, 0f, new Vector2(0, 0),
-                new Vector2(1920-darkX-dark.Width, 1), SpriteEffects.None, 0.95f);
+                new Vector2(1920-darkX-dw, 1), SpriteEffects.None, 0.95f);
 
 
             spriteBatch.Draw(dark, new Vector2(0, 0),
-                new Rectangle(0, 0, 1, 1),
+                new Rectangle(0, 0, 1, 1),  
                 Color.White, 0f, new Vector2(0, 0),
                 new Vector2(darkX, darkY),
                 SpriteEffects.None, 0.95f);
 
-            spriteBatch.Draw(dark, new Vector2(darkX + dark.Width, 0),
-                new Rectangle(dark.Width - 1, 0, 1, 1),
+            spriteBatch.Draw(dark, new Vector2(darkX + dw, 0),
+                new Rectangle(dw - 1, 0, 1, 1),
                 Color.White, 0f, new Vector2(0, 0),
-                new Vector2(1920 - darkX - dark.Width, darkY),
+                new Vector2(1920 - darkX - dw, darkY),
                 SpriteEffects.None, 0.95f);
             
             float dpt = 0.1f;

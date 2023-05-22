@@ -72,7 +72,7 @@ namespace neon
         {
             float dst = Game1.GetDistance(Position, world.Hero.Position);
 
-            if (dst < CollectionDistance)
+            if (dst < CollectionDistance/Math.Max(0.000001f, Game1.GetDistance(new Vector2(0, 0), world.Hero.Movement)))
             {
                 if (dst < PickUpDistance)
                 {

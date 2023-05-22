@@ -104,11 +104,97 @@ namespace neon
             }
 
             base.Update(contentManager, world);
-        }
+        } 
 
         public override Bullet Copy(ContentManager contentManager, World world)
         {
             return new Biospike(contentManager, new Vector2(0,0), new Vector2(0,0), world);
+        }
+    }
+
+
+    public class CrawlerBullet : Bullet
+    {
+        private float Height, Hreduce=0.3f, FallingSpeed;
+        public DynamicTexture ShadowTexture=null;
+
+        public CrawlerBullet() : base() { }
+
+        public CrawlerBullet(ContentManager contentManager, Vector2 position, Vector2 movement,
+            World world, int subtype, float verticalSpeed) :
+            base(contentManager, position, movement, 10000f, 18, @"hitboxes\onebyone",
+                "crawlerbullet"+subtype.ToString()+"_", world, 1000)
+        {
+            Height = 2;
+            FallingSpeed = verticalSpeed;
+        }
+
+        public override void Update(ContentManager contentManager, World world)
+        {
+            Height += FallingSpeed;
+            FallingSpeed -= Hreduce;
+
+            if (Height <= 0)
+            {
+                Alive = false;
+
+                var rnd = new Random();
+                int bloodCount = rnd.Next(15, 25);
+                Color clr = new Color(110 + rnd.Next(0, 40), 0, 0);
+
+                for (int i = 0; i < bloodCount; i++)
+                    world.AddObject(new Blood(contentManager, Position, new Vector2((float)(rnd.NextDouble()-0.5)*10, -15),
+                        0, 0, rnd.Next(30, 90), clr, -rnd.Next(0, 10), rnd.Next(0, 3), world));
+
+                HashSet<MapObject> obst = HitboxObstructions(world);
+
+                if (obst.Count > 0)
+                {
+                    foreach (var co in obst)
+                        if (co is Mob&&!(co is Crawler))
+                        {
+                            ((Mob)co).Damage(Damage, Movement, world, contentManager);
+                        }
+                }
+            }
+
+            if (Hitbox == null)
+            {
+                if (HitboxPath != null)
+                    Hitbox = world.WorldHitboxFabricator.CreateHitbox(HitboxPath);
+                else
+                    Hitbox = new List<Vector2>();
+            }
+
+            if (Texture == null)
+                Texture = new DynamicTexture(contentManager, TextureName);
+
+            if (ShadowTexture == null)
+                ShadowTexture = new DynamicTexture(contentManager, "shadow0_");
+
+            Lifetime--;
+
+            if (Lifetime <= 0)
+                Alive = false;
+
+            Texture.Update(contentManager);
+
+            Position = new Vector2(Position.X + Movement.X, Position.Y + Movement.Y);
+
+            ChangeMovement(-Movement.X, -Movement.Y);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)
+        {
+            base.Draw(spriteBatch, x, y-(int)Height, color, depth);
+            spriteBatch.Draw(ShadowTexture.GetCurrentFrame(), new Vector2(x, y), null, color, 0f, new Vector2(0, 0),
+                1f, SpriteEffects.None, depth);
+        }
+
+        public override Bullet Copy(ContentManager contentManager, World world)
+        {
+            return new ShotgunBullet(contentManager, new Vector2(Position.X, Position.Y),
+                new Vector2(Movement.X, Movement.Y), world);
         }
     }
 }

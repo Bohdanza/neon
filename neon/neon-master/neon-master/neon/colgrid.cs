@@ -38,12 +38,10 @@ namespace neon
             if (objectGrid.ContainsKey(collisionLevel))
                 return;
 
-            List<MapObject>[,] lst = new List<MapObject>[Width, Height];
+            List<MapObject>[,] lst;
 
-            for (int i = 0; i < Width; i++)
-                for (int j = 0; j < Height; j++)
-                    lst[i, j] = new List<MapObject>();
-
+            lst=(List<MapObject>[,])Empty.Clone();
+           
             objectGrid[collisionLevel] = lst;
 
             return;

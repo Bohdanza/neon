@@ -14,7 +14,8 @@ namespace neon
 {
     public abstract class Monster:Mob
     {
-        protected int ShootProbability = 2;
+        [JsonProperty]
+        protected int ShootProbability=0;
         [JsonProperty]
         public Gun GunInHand { get; protected set; } = null;
         [JsonProperty]
