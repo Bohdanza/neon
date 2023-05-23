@@ -21,11 +21,10 @@ namespace neon
 
         //objects with different collision levels would ignore each other
         /*CollisionLevel vocab
-         * 0-ground
-         * 1-sky
-         * 2-weapons, items*/
+         WRITE IT
+        */
         [JsonProperty("coll")]
-        public int CollsionLevel { get; private set; }
+        public int CollsionLevel { get; protected set; }
         [JsonIgnore]
         public List<Vector2> Hitbox { get; protected set; } = null;
         [JsonProperty("pth")]
@@ -101,7 +100,7 @@ namespace neon
                 else
                     Hitbox = new List<Vector2>();
             }
-                
+
             if (Texture == null)
                 Texture = new DynamicTexture(contentManager, TextureName);
 
@@ -136,16 +135,19 @@ namespace neon
 
         public virtual void DrawHitbox(SpriteBatch spriteBatch, int x, int y, Color color, float depth, World world)
         {
-            for (int i = 0; i < Hitbox.Count; i++)
+            if (Hitbox != null)
             {
-                Vector2 v1 = Hitbox[i];
-                Vector2 v2 = Hitbox[(i + 1) % Hitbox.Count];
+                for (int i = 0; i < Hitbox.Count; i++)
+                {
+                    Vector2 v1 = Hitbox[i];
+                    Vector2 v2 = Hitbox[(i + 1) % Hitbox.Count];
 
-                float rot = Game1.GetDirection(v1, v2) + (float)Math.PI;
-                float scale = Game1.GetDistance(v1, v2) * World.UnitSize;
+                    float rot = Game1.GetDirection(v1, v2) + (float)Math.PI;
+                    float scale = Game1.GetDistance(v1, v2) * World.UnitSize;
 
-                spriteBatch.Draw(world.pxl, new Vector2(x + Hitbox[i].X * World.UnitSize, y + Hitbox[i].Y * World.UnitSize),
-                    null, color, rot, new Vector2(0, 0), new Vector2(scale, 2), SpriteEffects.None, depth);
+                    spriteBatch.Draw(world.pxl, new Vector2(x + Hitbox[i].X * World.UnitSize, y + Hitbox[i].Y * World.UnitSize),
+                        null, color, rot, new Vector2(0, 0), new Vector2(scale, 2), SpriteEffects.None, depth);
+                }
             }
         }
 
@@ -161,7 +163,7 @@ namespace neon
 
             if (axis == 0)
             {
-                if (Math.Abs(Movement.X) < World.MinimalCollisionDistance)
+                if (Math.Abs(Movement.X) < World.MinimalBorder)
                     return;
 
                 Position = new Vector2(Position.X + Movement.X, Position.Y);
@@ -176,7 +178,7 @@ namespace neon
             }
             else
             {
-                if (Math.Abs(Movement.Y) < World.MinimalCollisionDistance)
+                if (Math.Abs(Movement.Y) < World.MinimalBorder)
                     return;
 
                 Position = new Vector2(Position.X, Position.Y + Movement.Y);
@@ -200,9 +202,9 @@ namespace neon
             HashSet<MapObject> mo = new HashSet<MapObject>();
 
             int bgi = (int)Math.Floor(Math.Max(0, Position.X + HitboxMinX)/World.GridUnitSize);
-            int eni = (int)Math.Floor(Math.Min(World.WorldSize-0.00001f, Position.X + HitboxMaxX) / World.GridUnitSize);
+            int eni = (int)Math.Floor(Math.Min(World.WorldSize-World.MinimalBorder, Position.X + HitboxMaxX) / World.GridUnitSize);
             int bgj = (int)Math.Floor(Math.Max(0, Position.Y + HitboxMinY) / World.GridUnitSize);
-            int enj = (int)Math.Floor(Math.Min(World.WorldSize - 0.00001f, Position.Y + HitboxMaxY) / World.GridUnitSize);
+            int enj = (int)Math.Floor(Math.Min(World.WorldSize - World.MinimalBorder, Position.Y + HitboxMaxY) / World.GridUnitSize);
 
             for (int i = bgi; i <= eni; i += 1)
                 for (int j = bgj; j <= enj; j += 1)
@@ -229,9 +231,9 @@ namespace neon
             HashSet<MapObject> mo = new HashSet<MapObject>();
 
             int bgi = (int)Math.Floor(Math.Max(0, Position.X + HitboxMinX) / World.GridUnitSize);
-            int eni = (int)Math.Floor(Math.Min(World.WorldSize - 0.00001f, Position.X + HitboxMaxX) / World.GridUnitSize);
+            int eni = (int)Math.Floor(Math.Min(World.WorldSize - World.MinimalBorder, Position.X + HitboxMaxX) / World.GridUnitSize);
             int bgj = (int)Math.Floor(Math.Max(0, Position.Y + HitboxMinY) / World.GridUnitSize);
-            int enj = (int)Math.Floor(Math.Min(World.WorldSize - 0.00001f, Position.Y + HitboxMaxY) / World.GridUnitSize);
+            int enj = (int)Math.Floor(Math.Min(World.WorldSize - World.MinimalBorder, Position.Y + HitboxMaxY) / World.GridUnitSize);
 
             for (int i = bgi; i <= eni; i += 1)
                 for (int j = bgj; j <= enj; j += 1)
@@ -242,6 +244,35 @@ namespace neon
 
             foreach (var curentObject in mo)
                 if (curentObject.CollsionLevel == CollsionLevel && curentObject != this &&
+                    collisionChecker.ObjectsCollide(this, curentObject))
+                    ans.Add(curentObject);
+
+            return ans;
+        }
+
+        protected HashSet<MapObject> HitboxObstructions(World world, int level)
+        {
+            List<MapObject>[,] lst = world.CollisionArray.GetCollisionLayer(level);
+            HashSet<MapObject> ans = new HashSet<MapObject>();
+
+            var collisionChecker = new CollisionDetector();
+
+            HashSet<MapObject> mo = new HashSet<MapObject>();
+
+            int bgi = (int)Math.Floor(Math.Max(0, Position.X + HitboxMinX) / World.GridUnitSize);
+            int eni = (int)Math.Floor(Math.Min(World.WorldSize - World.MinimalBorder, Position.X + HitboxMaxX) / World.GridUnitSize);
+            int bgj = (int)Math.Floor(Math.Max(0, Position.Y + HitboxMinY) / World.GridUnitSize);
+            int enj = (int)Math.Floor(Math.Min(World.WorldSize - World.MinimalBorder, Position.Y + HitboxMaxY) / World.GridUnitSize);
+
+            for (int i = bgi; i <= eni; i += 1)
+                for (int j = bgj; j <= enj; j += 1)
+                {
+                    for (int k = 0; k < lst[i, j].Count; k++)
+                        mo.Add(lst[i, j][k]);
+                }
+
+            foreach (var curentObject in mo)
+                if (curentObject != this &&
                     collisionChecker.ObjectsCollide(this, curentObject))
                     ans.Add(curentObject);
 

@@ -113,8 +113,9 @@ namespace neon
             if (Action != "die" || Texture.CurrentTexture != Texture.Textures.Count - 1 || !Texture.BaseName.EndsWith("die_"))
             {
                 var rnd = new Random();
+                Color clr = new Color(110 + rnd.Next(0, 40), 0, 0);
 
-                AddBlood(new Color(232 + rnd.Next(-50, 20), 11, 0),
+                AddBlood(clr,
                     Math.Min(100, rnd.Next(damage / 4, (int)(damage / 1.5))),
                     new Vector2(direction.X * 7, direction.Y * 7),
                     world, contentManager, rnd);
@@ -145,11 +146,11 @@ namespace neon
                 return;
 
             var rnd = new Random();
-            int cnt = rnd.Next(10, 23);
+            int cnt = rnd.Next(5, 11);
 
             for (int i = 0; i < cnt; i++)
             {
-                double ndir = Direction + rnd.NextDouble() * 2 * Math.PI;
+                double ndir = Direction + (rnd.NextDouble()-0.5) * Math.PI*0.6;
                 float nspd = 0.1f + (float)rnd.NextDouble() * 0.1f;
 
                 world.Objects.Add(new CrawlerBullet(contentManager,

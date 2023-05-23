@@ -18,7 +18,7 @@ namespace neon
     {
         public HitboxFabricator WorldHitboxFabricator;
         public const int WorldSize = 360;
-        public const float MinimalCollisionDistance = 0.0001f;
+        public const float MinimalBorder = 0.0001f;
         public int KillCount = 0;
         private SpriteFont mainFont;
 
@@ -102,9 +102,9 @@ namespace neon
         public void DeleteFromGrid(MapObject mapObject)
         {
             int bgi = (int)Math.Floor(Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX) / GridUnitSize);
-            int eni = (int)Math.Floor(Math.Min(WorldSize - 0.00001f, mapObject.Position.X + mapObject.HitboxMaxX) / GridUnitSize);
+            int eni = (int)Math.Floor(Math.Min(WorldSize - MinimalBorder, mapObject.Position.X + mapObject.HitboxMaxX) / GridUnitSize);
             int bgj = (int)Math.Floor(Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY) / GridUnitSize);
-            int enj = (int)Math.Floor(Math.Min(WorldSize - 0.00001f, mapObject.Position.Y + mapObject.HitboxMaxY) / GridUnitSize);
+            int enj = (int)Math.Floor(Math.Min(WorldSize - MinimalBorder, mapObject.Position.Y + mapObject.HitboxMaxY) / GridUnitSize);
 
             List<MapObject>[,] lst = CollisionArray.GetCollisionLayer(mapObject.CollsionLevel);
 
@@ -117,9 +117,9 @@ namespace neon
         public void AddToGrid(MapObject mapObject)
         {
             int bgi = (int)Math.Floor(Math.Max(0, mapObject.Position.X + mapObject.HitboxMinX) / GridUnitSize);
-            int eni = (int)Math.Floor(Math.Min(WorldSize - 0.00001f, mapObject.Position.X + mapObject.HitboxMaxX) / GridUnitSize);
+            int eni = (int)Math.Floor(Math.Min(WorldSize - MinimalBorder, mapObject.Position.X + mapObject.HitboxMaxX) / GridUnitSize);
             int bgj = (int)Math.Floor(Math.Max(0, mapObject.Position.Y + mapObject.HitboxMinY) / GridUnitSize);
-            int enj = (int)Math.Floor(Math.Min(WorldSize - 0.00001f, mapObject.Position.Y + mapObject.HitboxMaxY) / GridUnitSize);
+            int enj = (int)Math.Floor(Math.Min(WorldSize - MinimalBorder, mapObject.Position.Y + mapObject.HitboxMaxY) / GridUnitSize);
 
             CollisionArray.AddCollisionLayer(mapObject.CollsionLevel);
             List<MapObject>[,] lst = CollisionArray.GetCollisionLayer(mapObject.CollsionLevel);

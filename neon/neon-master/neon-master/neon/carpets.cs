@@ -19,7 +19,7 @@ namespace neon
             : base(contentManager, new Vector2(x, y),
             new Vector2(0f, 0f), 10000000f,
             null,
-            "groundpatch_" + subtype.ToString() + "_", 1, world)
+            "groundpatch_" + subtype.ToString() + "_", 3, world)
         { }
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y, Color color, float depth)

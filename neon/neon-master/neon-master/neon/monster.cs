@@ -83,6 +83,10 @@ namespace neon
 
                 AutoAction();
             }
+            else
+            {
+
+            }
 
             base.Update(contentManager, world);
         }

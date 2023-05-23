@@ -19,11 +19,13 @@ namespace neon
         [JsonProperty]
         public int Lifetime { get; protected set; }
 
-        public Bullet() : base() { }
+        public Bullet() : base()
+        { 
+        }
 
         public Bullet(ContentManager contentManager, Vector2 position, Vector2 movement, float weight, 
             int damage, string hitboxPath, string textureName, World world, int lifetime):
-            base(contentManager, position, movement, weight, hitboxPath, textureName, 0, world)
+            base(contentManager, position, movement, weight, hitboxPath, textureName, 1, world)
         {
             Damage = damage;
             Lifetime = lifetime;
@@ -55,7 +57,7 @@ namespace neon
 
             if (Alive && (int)ppos.X != (int)Position.X)
             {
-                HashSet<MapObject> obst = HitboxObstructions(world);
+                HashSet<MapObject> obst = HitboxObstructions(world, 0);
 
                 if (obst.Count > 0)
                 {
@@ -73,7 +75,7 @@ namespace neon
 
             if (Alive && (int)ppos.Y != (int)Position.Y)
             {
-                HashSet<MapObject> obst = HitboxObstructions(world);
+                HashSet<MapObject> obst = HitboxObstructions(world, 0);
 
                 if (obst.Count > 0)
                 {

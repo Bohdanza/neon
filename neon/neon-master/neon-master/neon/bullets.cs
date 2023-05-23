@@ -139,12 +139,17 @@ namespace neon
                 Alive = false;
 
                 var rnd = new Random();
-                int bloodCount = rnd.Next(15, 25);
+                int bloodCount = rnd.Next(10, 17);
                 Color clr = new Color(110 + rnd.Next(0, 40), 0, 0);
 
                 for (int i = 0; i < bloodCount; i++)
-                    world.AddObject(new Blood(contentManager, Position, new Vector2((float)(rnd.NextDouble()-0.5)*10, -15),
-                        0, 0, rnd.Next(30, 90), clr, -rnd.Next(0, 10), rnd.Next(0, 3), world));
+                {
+                    float ym = (float)(rnd.NextDouble() - 0.5) * 20;
+
+                    world.AddObject(new Blood(contentManager, Position, 
+                        new Vector2(ym, rnd.Next(-7, 17)),
+                        0, 0, rnd.Next(30, 90), clr, -rnd.Next(0, 20), rnd.Next(0, 3), world));
+                }
 
                 HashSet<MapObject> obst = HitboxObstructions(world);
 

@@ -27,18 +27,19 @@ namespace neon
 
         [JsonConstructor]
         public Particle():base()
-        { }
+        {
+        }
 
         public Particle(ContentManager contentManager, Vector2 position, Vector2 offsetMovement,
             int offsetX, int offsetY, int lifeTime, string textureName, World world) :
-            base(contentManager, position, new Vector2(0, 0), 4f, null, textureName, 1, world)
+            base(contentManager, position, new Vector2(0, 0), 4f, null, textureName, 2, world)
         {
             OffsetX = offsetX;
             OffsetY = offsetY;
             LifeTime = lifeTime;
             OffsetMovement = offsetMovement;
         }
-        
+
         public override void Update(ContentManager contentManager, World world)
         {
             LifeTime--;
@@ -49,7 +50,17 @@ namespace neon
             OffsetX += (int)OffsetMovement.X;
             OffsetY += (int)OffsetMovement.Y;
 
-            base.Update(contentManager, world);
+
+            if (Texture == null)
+                Texture = new DynamicTexture(contentManager, TextureName);
+
+            Texture.Update(contentManager);
+
+            Vector2 ppos = new Vector2(Position.X, Position.Y);
+
+            Move(0, world); Move(1, world);
+
+            ChangeMovement(-Movement.X, -Movement.Y);
         }
 
         public void ChangeOffsetMovement(float x, float y)
